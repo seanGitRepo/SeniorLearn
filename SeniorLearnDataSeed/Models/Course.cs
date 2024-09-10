@@ -11,14 +11,10 @@ namespace SeniorLearnDataSeed.Models
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
-        // [ForeignKey("Member")]
+       // [ForeignKey("Member")]
+        public int MemberId { get; set; }
         
-        public int OrganiserId { get; set; }
-
-        
-        public MemberCourse MemberCourse{ get; set; }
-        
-        //public Member Member { get; set; }
+        public Member Member { get; set; }
         public List<Session> Sessions { get; set; }
         public bool isStandAlone { get; set; }
         

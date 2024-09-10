@@ -15,36 +15,11 @@ namespace SeniorLearnDataSeed.Data
             //    .HasOne(m=>m.Payment)
             //    .WithOne(p.)
 
-            modelBuilder.Entity<Enrollment>()
-                .HasKey(c => new { c.MemberId, c.SessionId });
-            modelBuilder.Entity<Enrollment>()
-                .HasOne(c => c.Session)
-                .WithMany(e => e.EnrolledMembers)
-                .HasForeignKey(c => c.SessionId);
-            modelBuilder.Entity<Enrollment>()
-                .HasOne(m => m.Member)
-                .WithMany(e => e.Enrollments)
-                .HasForeignKey(c => c.MemberId);
-
-
-            modelBuilder.Entity<MemberCourse>()
-                .HasKey(c => new { c.OrganiserId, c.CourseId });
-            modelBuilder.Entity<MemberCourse>()
-                .HasOne(m => m.Course)
-                .WithOne(c => c.MemberCourse);
-                
-                
-            modelBuilder.Entity<MemberCourse>()
-                .HasOne(m => m.Organiser)
-                .WithMany(e => e.CreatedCourses)
-                .HasForeignKey(c => c.OrganiserId);
-
-
-
-            modelBuilder.Entity<Member>()
-                .Property(m => m.Type)
-                .HasConversion<string>();
-
+            //modelBuilder.Entity<Course>()
+            //    .HasOne(c => c.Organiser)
+            //    .WithMany(m => m.CreatedCourses)
+            //    .HasForeignKey(c => c.MemberId)
+            //    .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
         }
 

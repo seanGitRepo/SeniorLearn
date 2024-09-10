@@ -8,8 +8,6 @@ namespace SeniorLearnDataSeed.Models
         [Key]
         public int SessionId { get; set; }
         public  DateTime Date {  get; set; }
-        public int CourseId { get; set; }
-        public Course Course { get; set; }
         
         public List<Enrollment> EnrolledMembers {  get; set; }
 
@@ -52,7 +50,8 @@ namespace SeniorLearnDataSeed.Models
 
     public class Enrollment
     {
-        
+        [Key]
+        public int EnrollmentId { get; set; }
         public int MemberId { get; set; }
         
         public Member Member { get; set; }

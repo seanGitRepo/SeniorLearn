@@ -19,7 +19,7 @@ namespace SeniorLearnDataSeed.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -35,9 +35,8 @@ namespace SeniorLearnDataSeed.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrganiserId = table.Column<int>(type: "int", nullable: false),
-                    isStandAlone = table.Column<bool>(type: "bit", nullable: false),
-                    MemberId = table.Column<int>(type: "int", nullable: true)
+                    MemberId = table.Column<int>(type: "int", nullable: false),
+                    isStandAlone = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,7 +45,8 @@ namespace SeniorLearnDataSeed.Migrations
                         name: "FK_Courses_Members_MemberId",
                         column: x => x.MemberId,
                         principalTable: "Members",
-                        principalColumn: "MemberId");
+                        principalColumn: "MemberId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,38 +71,14 @@ namespace SeniorLearnDataSeed.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MemberCourse",
-                columns: table => new
-                {
-                    OrganiserId = table.Column<int>(type: "int", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MemberCourse", x => new { x.OrganiserId, x.CourseId });
-                    table.ForeignKey(
-                        name: "FK_MemberCourse_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "CourseId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MemberCourse_Members_OrganiserId",
-                        column: x => x.OrganiserId,
-                        principalTable: "Members",
-                        principalColumn: "MemberId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sessions",
                 columns: table => new
                 {
                     SessionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -111,20 +87,21 @@ namespace SeniorLearnDataSeed.Migrations
                         name: "FK_Sessions_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
-                        principalColumn: "CourseId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CourseId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Enrollments",
                 columns: table => new
                 {
+                    EnrollmentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     MemberId = table.Column<int>(type: "int", nullable: false),
                     SessionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Enrollments", x => new { x.MemberId, x.SessionId });
+                    table.PrimaryKey("PK_Enrollments", x => x.EnrollmentId);
                     table.ForeignKey(
                         name: "FK_Enrollments_Members_MemberId",
                         column: x => x.MemberId,
@@ -145,15 +122,14 @@ namespace SeniorLearnDataSeed.Migrations
                 column: "MemberId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_MemberId",
+                table: "Enrollments",
+                column: "MemberId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Enrollments_SessionId",
                 table: "Enrollments",
                 column: "SessionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MemberCourse_CourseId",
-                table: "MemberCourse",
-                column: "CourseId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_MemberId",
@@ -171,9 +147,6 @@ namespace SeniorLearnDataSeed.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Enrollments");
-
-            migrationBuilder.DropTable(
-                name: "MemberCourse");
 
             migrationBuilder.DropTable(
                 name: "Payments");

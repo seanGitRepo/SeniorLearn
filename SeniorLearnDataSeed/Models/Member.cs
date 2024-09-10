@@ -9,9 +9,9 @@ namespace SeniorLearnDataSeed.Models
         public int MemberId { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
-        public List<Course> EnrolledCourses { get; set; }
+        //public List<Course> EnrolledCourses { get; set; }
 
-        public List<MemberCourse>? CreatedCourses { get; set; }
+        public List<Course>? CreatedCourses { get; set; }
         public MemberType Type { get; set; }
         public List<Payment> Payments {  get; set; }
         
@@ -21,7 +21,7 @@ namespace SeniorLearnDataSeed.Models
 
         public Member()
         {
-            EnrolledCourses = new List<Course>();
+            
             Enrollments = new List<Enrollment>();
             Payments = new List<Payment>();
         }
