@@ -1,21 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SeniorLearnDataSeed.Models
+namespace SeniorLearnDataSeed.Data
 {
     public class Session
     {
         [Key]
         public int SessionId { get; set; }
-        public  DateTime Date {  get; set; }
-        
-        public List<Enrollment> EnrolledMembers {  get; set; }
+        public DateTime Date { get; set; }
 
+        //Many to Many relationship with members through Enrollment class below.
+        public List<Enrollment> EnrolledMembers { get; set; }
         public SessionStatus Status { get; set; }
 
         public Session()
         {
-            
+
             EnrolledMembers = new List<Enrollment>();
         }
 
@@ -40,10 +40,10 @@ namespace SeniorLearnDataSeed.Models
 
     public enum SessionStatus
     {
-        Cancelled, 
+        Cancelled,
         Scheduled,
-        Draft, 
-        Complete, 
+        Draft,
+        Complete,
         Closed
 
     }
@@ -53,11 +53,12 @@ namespace SeniorLearnDataSeed.Models
         [Key]
         public int EnrollmentId { get; set; }
         public int MemberId { get; set; }
-        
+
         public Member Member { get; set; }
 
         public int SessionId { get; set; }
         public Session Session { get; set; }
+
         public DateTime EnrolledDate = DateTime.Now;
     }
 

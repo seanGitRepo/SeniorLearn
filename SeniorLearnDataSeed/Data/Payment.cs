@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SeniorLearnDataSeed.Models
+namespace SeniorLearnDataSeed.Data
 {
     public class Payment
     {
@@ -10,13 +10,13 @@ namespace SeniorLearnDataSeed.Models
         public double AmountPaid { get; set; }
         public int MemberId { get; set; }
         public Member Member { get; set; }
-        
-        
+
+
     }
 
     public enum PaymentClassifications
     {
-        Cash, 
+        Cash,
         Cheque,
         BankTransfer,
         DebitCard,

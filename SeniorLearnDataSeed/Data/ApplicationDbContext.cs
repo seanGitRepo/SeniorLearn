@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SeniorLearnDataSeed.Models;
 
 namespace SeniorLearnDataSeed.Data
 {
