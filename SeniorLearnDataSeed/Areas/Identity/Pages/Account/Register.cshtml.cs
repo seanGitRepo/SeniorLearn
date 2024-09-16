@@ -15,9 +15,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models;
 
 namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
@@ -101,12 +104,34 @@ namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string? Role {  get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> RoleList {  get; set; }
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-
+            //if these roles do not exist create all the new ones
+            if (!_roleManager.RoleExistsAsync(RoleDetail.Role_User_Standard).GetAwaiter().GetResult() || _roleManager.RoleExistsAsync(RoleDetail.Role_User_Pro).GetAwaiter().GetResult() || _roleManager.RoleExistsAsync(RoleDetail.Role_User_Hon).GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole(RoleDetail.Role_User_Standard)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(RoleDetail.Role_User_Pro)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(RoleDetail.Role_User_Hon)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(RoleDetail.Role_Admin)).GetAwaiter().GetResult();
+            }
+            //creating a new input
+            //selecting a list of the names of roles and adding
+            //to a select list item
+            Input = new()
+            {
+                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                })
+            };
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -127,7 +152,16 @@ namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    //if user selects drop down, add role to the user
+                    //if they don't select anything then assign standard member
+                    if (!String.IsNullOrEmpty(Input.Role))
+                    {
+                        await _userManager.AddToRoleAsync(user, Input.Role);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, RoleDetail.Role_User_Standard);
+                    }
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
