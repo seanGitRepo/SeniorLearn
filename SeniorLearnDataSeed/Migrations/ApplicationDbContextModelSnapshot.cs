@@ -48,7 +48,7 @@ namespace SeniorLearnDataSeed.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Enrollment", b =>
@@ -71,7 +71,7 @@ namespace SeniorLearnDataSeed.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("Enrollments");
+                    b.ToTable("Enrollments", (string)null);
                 });
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Member", b =>
@@ -102,7 +102,7 @@ namespace SeniorLearnDataSeed.Migrations
 
                     b.HasKey("MemberId");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Payment", b =>
@@ -126,7 +126,7 @@ namespace SeniorLearnDataSeed.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Session", b =>
@@ -150,7 +150,7 @@ namespace SeniorLearnDataSeed.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", (string)null);
                 });
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Course", b =>
