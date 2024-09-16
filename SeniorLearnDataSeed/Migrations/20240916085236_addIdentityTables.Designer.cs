@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeniorLearnDataSeed.Data;
 
@@ -11,9 +12,11 @@ using SeniorLearnDataSeed.Data;
 namespace SeniorLearnDataSeed.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240916085236_addIdentityTables")]
+    partial class addIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,11 +89,6 @@ namespace SeniorLearnDataSeed.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -142,10 +140,6 @@ namespace SeniorLearnDataSeed.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -241,9 +235,6 @@ namespace SeniorLearnDataSeed.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -260,8 +251,6 @@ namespace SeniorLearnDataSeed.Migrations
 
                     b.HasKey("CourseId");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("MemberId");
 
                     b.ToTable("Courses");
@@ -275,9 +264,6 @@ namespace SeniorLearnDataSeed.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnrollmentId"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
@@ -285,8 +271,6 @@ namespace SeniorLearnDataSeed.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("EnrollmentId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("MemberId");
 
@@ -337,9 +321,6 @@ namespace SeniorLearnDataSeed.Migrations
                     b.Property<double>("AmountPaid")
                         .HasColumnType("float");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
@@ -347,8 +328,6 @@ namespace SeniorLearnDataSeed.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("PaymentId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("MemberId");
 
@@ -377,39 +356,6 @@ namespace SeniorLearnDataSeed.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Sessions");
-                });
-
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StreetAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -465,10 +411,6 @@ namespace SeniorLearnDataSeed.Migrations
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Course", b =>
                 {
-                    b.HasOne("SeniorLearnDataSeed.Models.ApplicationUser", null)
-                        .WithMany("CreatedCourses")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("SeniorLearnDataSeed.Data.Core.Member", "Member")
                         .WithMany("CreatedCourses")
                         .HasForeignKey("MemberId")
@@ -480,10 +422,6 @@ namespace SeniorLearnDataSeed.Migrations
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Enrollment", b =>
                 {
-                    b.HasOne("SeniorLearnDataSeed.Models.ApplicationUser", null)
-                        .WithMany("Enrollments")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("SeniorLearnDataSeed.Data.Core.Member", "Member")
                         .WithMany("Enrollments")
                         .HasForeignKey("MemberId")
@@ -503,10 +441,6 @@ namespace SeniorLearnDataSeed.Migrations
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Payment", b =>
                 {
-                    b.HasOne("SeniorLearnDataSeed.Models.ApplicationUser", null)
-                        .WithMany("Payments")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("SeniorLearnDataSeed.Data.Core.Member", "Member")
                         .WithMany("Payments")
                         .HasForeignKey("MemberId")
@@ -542,15 +476,6 @@ namespace SeniorLearnDataSeed.Migrations
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Session", b =>
                 {
                     b.Navigation("EnrolledMembers");
-                });
-
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("CreatedCourses");
-
-                    b.Navigation("Enrollments");
-
-                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

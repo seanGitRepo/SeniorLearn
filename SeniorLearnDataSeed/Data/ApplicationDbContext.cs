@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Data.Core;
+using SeniorLearnDataSeed.Models;
 
 namespace SeniorLearnDataSeed.Data
 {
@@ -116,5 +117,6 @@ namespace SeniorLearnDataSeed.Data
         public DbSet<Member> Members { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }
