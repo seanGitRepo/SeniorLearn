@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SeniorLearnDataSeed.Data
+namespace SeniorLearnDataSeed.Data.Core
 {
     public class Session
     {
@@ -11,6 +11,10 @@ namespace SeniorLearnDataSeed.Data
 
         //Many to Many relationship with members through Enrollment class below.
         public List<Enrollment> EnrolledMembers { get; set; }
+
+        public int? CourseId { get; set; }
+        public Course Course { get; set; }
+
         public SessionStatus Status { get; set; }
 
         public Session()

@@ -12,8 +12,8 @@ using SeniorLearnDataSeed.Data;
 namespace SeniorLearnDataSeed.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240909110508_Initial")]
-    partial class Initial
+    [Migration("20240915035514_connectionInit")]
+    partial class connectionInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace SeniorLearnDataSeed.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Course", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Course", b =>
                 {
                     b.Property<int>("CourseId")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace SeniorLearnDataSeed.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Enrollment", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Enrollment", b =>
                 {
                     b.Property<int>("EnrollmentId")
                         .ValueGeneratedOnAdd()
@@ -77,7 +77,7 @@ namespace SeniorLearnDataSeed.Migrations
                     b.ToTable("Enrollments");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Member", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Member", b =>
                 {
                     b.Property<int>("MemberId")
                         .ValueGeneratedOnAdd()
@@ -85,11 +85,15 @@ namespace SeniorLearnDataSeed.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MemberId"));
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -104,7 +108,7 @@ namespace SeniorLearnDataSeed.Migrations
                     b.ToTable("Members");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Payment", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Payment", b =>
                 {
                     b.Property<int>("PaymentId")
                         .ValueGeneratedOnAdd()
@@ -128,7 +132,7 @@ namespace SeniorLearnDataSeed.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Session", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Session", b =>
                 {
                     b.Property<int>("SessionId")
                         .ValueGeneratedOnAdd()
@@ -152,9 +156,9 @@ namespace SeniorLearnDataSeed.Migrations
                     b.ToTable("Sessions");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Course", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Course", b =>
                 {
-                    b.HasOne("SeniorLearnDataSeed.Models.Member", "Member")
+                    b.HasOne("SeniorLearnDataSeed.Data.Member", "Member")
                         .WithMany("CreatedCourses")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -163,15 +167,15 @@ namespace SeniorLearnDataSeed.Migrations
                     b.Navigation("Member");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Enrollment", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Enrollment", b =>
                 {
-                    b.HasOne("SeniorLearnDataSeed.Models.Member", "Member")
+                    b.HasOne("SeniorLearnDataSeed.Data.Member", "Member")
                         .WithMany("Enrollments")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SeniorLearnDataSeed.Models.Session", "Session")
+                    b.HasOne("SeniorLearnDataSeed.Data.Session", "Session")
                         .WithMany("EnrolledMembers")
                         .HasForeignKey("SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -182,9 +186,9 @@ namespace SeniorLearnDataSeed.Migrations
                     b.Navigation("Session");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Payment", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Payment", b =>
                 {
-                    b.HasOne("SeniorLearnDataSeed.Models.Member", "Member")
+                    b.HasOne("SeniorLearnDataSeed.Data.Member", "Member")
                         .WithMany("Payments")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -193,19 +197,21 @@ namespace SeniorLearnDataSeed.Migrations
                     b.Navigation("Member");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Session", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Session", b =>
                 {
-                    b.HasOne("SeniorLearnDataSeed.Models.Course", null)
+                    b.HasOne("SeniorLearnDataSeed.Data.Course", "Course")
                         .WithMany("Sessions")
                         .HasForeignKey("CourseId");
+
+                    b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Course", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Course", b =>
                 {
                     b.Navigation("Sessions");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Member", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Member", b =>
                 {
                     b.Navigation("CreatedCourses");
 
@@ -214,7 +220,7 @@ namespace SeniorLearnDataSeed.Migrations
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("SeniorLearnDataSeed.Models.Session", b =>
+            modelBuilder.Entity("SeniorLearnDataSeed.Data.Session", b =>
                 {
                     b.Navigation("EnrolledMembers");
                 });

@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SeniorLearnDataSeed.Data
+namespace SeniorLearnDataSeed.Data.Core
 {
     public class Course
     {
         // Unique identifier for all members (primary key)
         [Key]
         public int CourseId { get; set; }
-        
+
         //TODO: why is "required" here but not in Member class?
         [Required]
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace SeniorLearnDataSeed.Data
 
 
         //Foreign Key for who crated the Course.
-            //TODO: a way to switch course creators
+        //TODO: a way to switch course creators
         public int MemberId { get; set; }
         public Member Member { get; set; }
 

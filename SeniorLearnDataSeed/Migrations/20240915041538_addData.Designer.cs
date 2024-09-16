@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeniorLearnDataSeed.Data;
 
@@ -11,9 +12,11 @@ using SeniorLearnDataSeed.Data;
 namespace SeniorLearnDataSeed.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240915041538_addData")]
+    partial class addData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,7 +138,7 @@ namespace SeniorLearnDataSeed.Migrations
                             Email = "saxon.cadet@gelos.com",
                             FirstName = "Saxon",
                             LastName = "Cadet",
-                            StartDate = new DateTime(2024, 9, 15, 22, 2, 14, 70, DateTimeKind.Local).AddTicks(626),
+                            StartDate = new DateTime(2024, 9, 15, 14, 15, 38, 71, DateTimeKind.Local).AddTicks(9212),
                             Type = 0
                         },
                         new
@@ -144,7 +147,7 @@ namespace SeniorLearnDataSeed.Migrations
                             Email = "sean.saap@gelos.com",
                             FirstName = "Sean",
                             LastName = "Saap",
-                            StartDate = new DateTime(2024, 9, 15, 22, 2, 14, 70, DateTimeKind.Local).AddTicks(664),
+                            StartDate = new DateTime(2024, 9, 15, 14, 15, 38, 71, DateTimeKind.Local).AddTicks(9254),
                             Type = 1
                         });
                 });
@@ -203,13 +206,13 @@ namespace SeniorLearnDataSeed.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("session_type")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
 
                     b.HasKey("SessionId");
 
@@ -217,7 +220,7 @@ namespace SeniorLearnDataSeed.Migrations
 
                     b.ToTable("Sessions");
 
-                    b.HasDiscriminator<string>("session_type").HasValue("session_base");
+                    b.HasDiscriminator().HasValue("Session");
 
                     b.UseTphMappingStrategy();
                 });
@@ -238,14 +241,14 @@ namespace SeniorLearnDataSeed.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("session_onprem");
+                    b.HasDiscriminator().HasValue("OnPremSession");
 
                     b.HasData(
                         new
                         {
                             SessionId = 2,
                             CourseId = 2,
-                            Date = new DateTime(2024, 9, 15, 22, 2, 14, 70, DateTimeKind.Local).AddTicks(845),
+                            Date = new DateTime(2024, 9, 15, 14, 15, 38, 74, DateTimeKind.Local).AddTicks(1610),
                             Status = 1,
                             StreetName = "Pitt Street",
                             StreetNumber = "25A",
@@ -268,14 +271,14 @@ namespace SeniorLearnDataSeed.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("session_online");
+                    b.HasDiscriminator().HasValue("OnlineSession");
 
                     b.HasData(
                         new
                         {
                             SessionId = 1,
                             CourseId = 1,
-                            Date = new DateTime(2024, 9, 15, 22, 2, 14, 70, DateTimeKind.Local).AddTicks(826),
+                            Date = new DateTime(2024, 9, 15, 14, 15, 38, 73, DateTimeKind.Local).AddTicks(1461),
                             Status = 1,
                             AdditionalDetails = "Cameras are required",
                             OnlineLink = "microsoft.com"

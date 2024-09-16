@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography.X509Certificates;
 
-namespace SeniorLearnDataSeed.Data
+namespace SeniorLearnDataSeed.Data.Core
 {
     public class Member
     {
         // Unique identifier for all members (primary key)
         [Key]
-        public int MemberId { get; set; } 
-        public string FirstName { get; set; } 
+        public int MemberId { get; set; }
+        public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
 
 
         //All members will have a createdcourses list, however not all members will need to have the correct status in order to create a course.
-        public List<Course>? CreatedCourses { get; set; }  
+        public List<Course>? CreatedCourses { get; set; }
 
         //The Type class controls the "level" a member will have. as per the instructions from the client with "honoary/member/promember"
         public MemberType Type { get; set; }

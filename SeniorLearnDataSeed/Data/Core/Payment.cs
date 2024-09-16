@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SeniorLearnDataSeed.Data
+namespace SeniorLearnDataSeed.Data.Core
 {
     public class Payment
     {
