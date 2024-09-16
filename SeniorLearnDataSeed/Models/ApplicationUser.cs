@@ -23,10 +23,10 @@ namespace SeniorLearnDataSeed.Models
         public MemberType Type { get; set; }
 
 
-        public List<Payment> Payments { get; set; }
+        public List<Payment>? Payments { get; set; }
 
         //This variable will be needed to monitor when they started and when their due date is required for payment.
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; } = DateTime.Now;
 
         //Enrollments will display and keep track of the members currenly enrolled sesssions they wish to attend.
         public List<Enrollment>? Enrollments { get; set; }
