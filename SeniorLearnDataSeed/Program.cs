@@ -16,6 +16,7 @@ namespace SeniorLearnDataSeed
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddRazorPages();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,8 +31,10 @@ namespace SeniorLearnDataSeed
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            //checks if username or password is valid
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
