@@ -17,16 +17,16 @@ namespace SeniorLearnDataSeed.Data
             //    .HasOne(m=>m.Payment)
             //    .WithOne(p.)
 
-            //modelBuilder.Entity<Course>()
-            //    .HasOne(c => c.Organiser)
-            //    .WithMany(m => m.CreatedCourses)
+            //modelBuilder.Entity<Member>()
+            //    .HasMany(e => e.Enrollments)
+            //    .WithOne(m => m.Member)
             //    .HasForeignKey(c => c.MemberId)
             //    .OnDelete(DeleteBehavior.Restrict);
-            //modelBuilder.Entity<Session>()
-            //   .HasDiscriminator<string>("session_type")
-            //   .HasValue<Session>("session_base")
-            //   .HasValue<OnPremSession>("session_onprem")
-            //   .HasValue<OnlineSession>("session_online");
+            modelBuilder.Entity<Session>()
+               .HasDiscriminator<string>("session_type")
+               .HasValue<Session>("session_base")
+               .HasValue<OnPremSession>("session_onprem")
+               .HasValue<OnlineSession>("session_online");
             //modelBuilder.Entity<Member>().HasData(
             //   new Member
             //   {
