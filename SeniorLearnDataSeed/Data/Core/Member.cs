@@ -6,7 +6,7 @@ namespace SeniorLearnDataSeed.Data.Core
     public class Member
     {
         // Unique identifier for all members (primary key)
-        [Key]
+     
         public int MemberId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -40,9 +40,9 @@ namespace SeniorLearnDataSeed.Data.Core
 
     public enum MemberType
     {
-        Pro,
-        Standard,
-        Honourary
+        Pro = 1,
+        Standard = 2,
+        Honourary = 3
     }
 
 
