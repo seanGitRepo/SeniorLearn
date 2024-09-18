@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SeniorLearnDataSeed.Data.Core;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.ExceptionServices;
 
 namespace SeniorLearnDataSeed.Models.Course
 {

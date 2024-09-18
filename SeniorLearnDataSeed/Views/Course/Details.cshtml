@@ -9,5 +9,7 @@
 <p>@Model.CourseId</p>
 <p>@Model.Name</p>
 <p>Organiser: @Model.MemberId </p>
-<p>Organiser Name: @Model.MemberName </p>
+
 <p>Is the course stand alone: @Model.isStandAlone</p>
+
+<a asp-action="Index" asp-route-id="@Model.CourseId">List</a> 

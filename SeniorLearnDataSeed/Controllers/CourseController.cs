@@ -43,6 +43,9 @@ namespace SeniorLearnDataSeed.Controllers
                         isStandAlone = m.isStandAlone
                     };
 
+                  
+                    
+
                     _context.Add(course);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index");
@@ -69,6 +72,7 @@ namespace SeniorLearnDataSeed.Controllers
 
             var c = new Edit
             {
+                CourseId = course.CourseId,
                 Name = course.Name,
                 Description = course.Description,
                 MemberId = course.MemberId,
@@ -82,10 +86,7 @@ namespace SeniorLearnDataSeed.Controllers
         public async Task<IActionResult> Edit(Edit model)
         {
            
-
-            if (ModelState.IsValid)
-            {
-                
+ 
                     var course = await _context.Courses.FirstOrDefaultAsync(c => c.CourseId == model.CourseId);
                  
                     if (course == null)
@@ -100,13 +101,12 @@ namespace SeniorLearnDataSeed.Controllers
                     
 
                     // Add any additional properties that can be updated in your edit model
-                    _context.Update(course);
+                    
                     await _context.SaveChangesAsync();
                 
                
                 return RedirectToAction("Index");
-            }
-            return View(model); //TODO: why is this here
+      
         }
 
         // GET: Course/Delete/5
@@ -162,6 +162,7 @@ namespace SeniorLearnDataSeed.Controllers
                 Name = course.Name,
                 Description = course.Description,
                 MemberId = course.MemberId,
+              //  MemberName = $"{course.Member.FirstName} {course.Member.LastName}",
                 isStandAlone = course.isStandAlone
             };
 

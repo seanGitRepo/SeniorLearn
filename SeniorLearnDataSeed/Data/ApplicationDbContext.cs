@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Data.Core;
+using SeniorLearnDataSeed.Models.Course;
 
 namespace SeniorLearnDataSeed.Data
 {
@@ -21,5 +22,7 @@ namespace SeniorLearnDataSeed.Data
         public DbSet<Member> Members { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<SeniorLearnDataSeed.Models.Course.Details> Details { get; set; } = default!;
+        public DbSet<SeniorLearnDataSeed.Models.Course.Edit> Edit { get; set; } = default!;
     }
 }
