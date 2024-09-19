@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SeniorLearnDataSeed.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SeniorLearnDataSeed.Data.Core
 {
@@ -8,8 +9,8 @@ namespace SeniorLearnDataSeed.Data.Core
         public int PaymentId { get; set; }
         public PaymentClassifications PaymentType { get; set; }
         public double AmountPaid { get; set; }
-        public int MemberId { get; set; }
-        public Member Member { get; set; }
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
 
     }

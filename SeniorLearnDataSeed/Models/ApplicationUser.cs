@@ -20,7 +20,7 @@ namespace SeniorLearnDataSeed.Models
         public List<Course>? CreatedCourses { get; set; }
 
         //The Type class controls the "level" a member will have. as per the instructions from the client with "honoary/member/promember"
-        public MemberType Type { get; set; }
+        //public MemberType Type { get; set; }
 
 
         public List<Payment>? Payments { get; set; }

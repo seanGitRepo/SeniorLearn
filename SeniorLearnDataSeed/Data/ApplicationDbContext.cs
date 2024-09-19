@@ -13,6 +13,8 @@ namespace SeniorLearnDataSeed.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            
             //modelBuilder.Entity<Member>()
             //    .HasOne(m=>m.Payment)
             //    .WithOne(p.)
@@ -27,6 +29,7 @@ namespace SeniorLearnDataSeed.Data
                .HasValue<Session>("session_base")
                .HasValue<OnPremSession>("session_onprem")
                .HasValue<OnlineSession>("session_online");
+            
             //modelBuilder.Entity<Member>().HasData(
             //   new Member
             //   {

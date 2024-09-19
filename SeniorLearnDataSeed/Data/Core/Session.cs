@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SeniorLearnDataSeed.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SeniorLearnDataSeed.Data.Core
@@ -56,9 +57,9 @@ namespace SeniorLearnDataSeed.Data.Core
     {
         [Key]
         public int EnrollmentId { get; set; }
-        public int MemberId { get; set; }
+        public string ApplicationUserId { get; set; }
 
-        public Member Member { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         public int SessionId { get; set; }
         public Session Session { get; set; }

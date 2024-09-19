@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SeniorLearnDataSeed.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SeniorLearnDataSeed.Data.Core
@@ -18,8 +19,8 @@ namespace SeniorLearnDataSeed.Data.Core
 
         //Foreign Key for who crated the Course.
         //TODO: a way to switch course creators
-        public int MemberId { get; set; }
-        public Member Member { get; set; }
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         //A one to many connection to list all the corresponding sessions with the course.
         public List<Session> Sessions { get; set; }
