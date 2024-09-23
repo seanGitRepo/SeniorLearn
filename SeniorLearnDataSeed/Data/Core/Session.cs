@@ -25,7 +25,7 @@ namespace SeniorLearnDataSeed.Data.Core
 
     }
 
-    public class OnlineSession : Session
+    public class OnlineSession : Session //not to sure how to link these ones up.
     {
         public string OnlineLink { get; set; }
         public string? MeetingCode { get; set; }

@@ -110,6 +110,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         // GET: Course/Delete/5
+        [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
           
@@ -140,7 +141,11 @@ namespace SeniorLearnDataSeed.Controllers
             return RedirectToAction("Index");
         }
 
-       
+        public async Task<IActionResult> SessionsRedirect(int id)
+        {
+            
+            return RedirectToAction($"session/list/{id}");
+        }
 
         // GET: Course/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -156,19 +161,14 @@ namespace SeniorLearnDataSeed.Controllers
                 return NotFound();
             }
 
-            var c = new Details
-            {
-                CourseId = course.CourseId,
-                Name = course.Name,
-                Description = course.Description,
-                MemberId = course.MemberId,
-              //  MemberName = $"{course.Member.FirstName} {course.Member.LastName}",
-                isStandAlone = course.isStandAlone
-            };
+            var m = new Details(course);
+
+            
+           
 
             
 
-            return View(c);
+            return View(m);
         }
 
       

@@ -10,6 +10,20 @@
 <p>@Model.Name</p>
 <p>Organiser: @Model.MemberId </p>
 
+<tbody>
+    @foreach (var item in Model.Sessions)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SessionId)
+            </td>
+           
+           
+        </tr>
+    }
+</tbody>
+
+
 <p>Is the course stand alone: @Model.isStandAlone</p>
 
 <a asp-action="Index" asp-route-id="@Model.CourseId">List</a> 
