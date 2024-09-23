@@ -36,3 +36,15 @@ namespace SeniorLearnDataSeed.Data.Core
     }
 
 }
+
+//TODO: MVC for courses
+//TODO: View for avalible courses and there sessions.
+//TODO: Logic with the cookie with if u are a proemmeber you can create a course.
+
+//TODO: TO be completed by the weekend.
+
+//TODO: Ensure that there is a nice page, edit, delete, view a course, by monday we want to have the same thing working for session.
+//TODO: useBoot strap is a complete ui overhall, pick the style.
+
+
+//TODO: have discussion about ui, calender for the sessions.

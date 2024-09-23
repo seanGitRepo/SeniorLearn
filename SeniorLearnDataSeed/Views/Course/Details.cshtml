@@ -1,0 +1,29 @@
+﻿@model SeniorLearnDataSeed.Models.Course.Details
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<h1>Details</h1>
+
+<p>@Model.CourseId</p>
+<p>@Model.Name</p>
+<p>Organiser: @Model.ApplicationUserId </p>
+
+<tbody>
+    @foreach (var item in Model.Sessions)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SessionId)
+            </td>
+           
+           
+        </tr>
+    }
+</tbody>
+
+
+<p>Is the course stand alone: @Model.isStandAlone</p>
+
+<a asp-action="Index" asp-route-id="@Model.CourseId">List</a> 

@@ -2,6 +2,7 @@
 using SeniorLearnDataSeed.Data.Core;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace SeniorLearnDataSeed.Models
 {
     public class ApplicationUser : IdentityUser
@@ -17,7 +18,7 @@ namespace SeniorLearnDataSeed.Models
 
 
         
-        public List<Course>? CreatedCourses { get; set; }
+        public List<Data.Core.Course>? CreatedCourses { get; set; }
 
         //The Type class controls the "level" a member will have. as per the instructions from the client with "honoary/member/promember"
         //public MemberType Type { get; set; }
