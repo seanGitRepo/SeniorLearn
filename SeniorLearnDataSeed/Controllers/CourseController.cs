@@ -5,6 +5,7 @@ using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Models.Course;
 using Microsoft.Win32;
+using Microsoft.Identity.Client;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -20,6 +21,10 @@ namespace SeniorLearnDataSeed.Controllers
 
         // GET: Course/Index
         public async Task<IActionResult> Index() => View(await _context.Courses.Select(p => new Models.Course.Details(p)).ToListAsync()); //returns one person
+
+        
+
+
 
         // GET: Course/Create
         public IActionResult Create()
@@ -166,8 +171,18 @@ namespace SeniorLearnDataSeed.Controllers
             {
                 return NotFound();
             }
+            var listOfSession = course.Sessions.ToList();
 
+            List<DateTime> sessionDates = new List<DateTime>();
 
+            foreach (var item in listOfSession)
+            {
+
+                sessionDates.Add(item.Date);
+
+            }
+
+            ViewData["Events"] = Json(sessionDates);
 
             var m = new Details(course);
 

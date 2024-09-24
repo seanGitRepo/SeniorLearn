@@ -3,19 +3,40 @@
     ViewData["Title"] = "Details";
 }
 
-@* <div id="calendar"></div>
-@section scripts{
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.min.css" />
-} *@
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: @Html.Raw(ViewData[("Events")])
+      
+            });
+           calendar.render()
+        });
+
+        //TODO: create a JSON list helper to setup the calender view. sort of the same thing with a model, but for json (which i am still not certain of)
+ </script>
+
 
 <h1>Details</h1>
 
-<p>@Model.CourseId</p>
-<p>@Model.Name</p>
-<p>Organiser: @Model.ApplicationUserId </p>
-
+<tbody>
+    <td>
+        @Model.CourseId |
+    </td>
+    <td>
+       @Model.Name |
+    </td>
+    <td>
+        Organiser: @Model.ApplicationUserId 
+    </td>
+</tbody>
 <p>Is the course stand alone: @Model.isStandAlone</p>
+
+
+
+
 
 <tbody>
     @foreach (var item in Model.Sessions)
@@ -30,40 +51,17 @@
                 @Html.DisplayFor(modelItem => item.StartTime)
                
             </td>
-          @*   <td>
-                @Html.DisplayFor(modelItem => item.sessionStatus.ToString())
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
 
-            </td> *@
+            </td>
            
         </tr>
        
     }
 </tbody>
 
-@* <script>
-    $(document).ready(function () {
-        $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,basicWeek,basicDay'
-            },
-            defaultView: 'month',
-            events: [
-                {
-                    title: 'Event 1',
-                    start: '2023-02-01'
-                },
-                {
-                    title: 'Event 2',
-                    start: '2023-02-05',
-                    end: '2023-02-07'
-                }
-            ]
-        });
-    });
-
-</script> *@
+<div id='calendar'></div>
 
 
 
