@@ -29,7 +29,11 @@ namespace SeniorLearnDataSeed.Data
                .HasValue<Session>("session_base")
                .HasValue<OnPremSession>("session_onprem")
                .HasValue<OnlineSession>("session_online");
-            
+
+            modelBuilder.Entity<Session>()
+            .Property(s => s.Status)
+            .HasConversion<int>();
+
             //modelBuilder.Entity<Member>().HasData(
             //   new Member
             //   {

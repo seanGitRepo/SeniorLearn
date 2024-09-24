@@ -15,7 +15,7 @@ namespace SeniorLearnDataSeed.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index() => View(await _context.Sessions.Select(p => new Models.Session.Details(p)).ToListAsync());// this will show every session in the databas.
+        public async Task<IActionResult> Index() => View(await _context.Sessions.Select(p => new Models.Session.SessionDetails(p)).ToListAsync());// this will show every session in the databas.
 
         [HttpGet("list/{id}")]
 

@@ -15,7 +15,7 @@ namespace SeniorLearnDataSeed.Models.Course
             Description = c.Description;
             ApplicationUserId = c.ApplicationUserId;
 
-            Sessions = c.Sessions.Select(s => new Session.Details(s)).ToList();
+            Sessions = c.Sessions.Select(s => new Session.SessionDetails(s)).ToList();
             //MemberName = $"{c.Member.FirstName} {c.Member.LastName}"; // Assuming Member has FirstName and LastName
             //SessionsCount = c.Sessions?.Count ?? 0;
             isStandAlone = c.isStandAlone;
@@ -37,7 +37,7 @@ namespace SeniorLearnDataSeed.Models.Course
 
         //public int SessionsCount { get; set; }
 
-        public List<Models.Session.Details> Sessions { get; set; }
+        public List<Models.Session.SessionDetails> Sessions { get; set; }
         public bool isStandAlone { get; set; }
 
         // Additional properties or calculations < to discuss in next code review if we would like to keep these.

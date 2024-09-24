@@ -45,11 +45,11 @@ namespace SeniorLearnDataSeed.Data.Core
 
     public enum SessionStatus
     {
-        Cancelled,
-        Scheduled,
-        Draft,
-        Complete,
-        Closed
+        Cancelled =1,
+        Scheduled = 2,
+        Draft = 3,
+        Complete=4,
+        Closed =5
 
     }
 

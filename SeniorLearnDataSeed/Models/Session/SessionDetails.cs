@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SeniorLearnDataSeed.Models.Session
 {
-    public class Details
+    public class SessionDetails
     {
         [Key]
         public int SessionId { get; set; }
@@ -17,28 +17,30 @@ namespace SeniorLearnDataSeed.Models.Session
         [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
 
-        public SessionStatus sessionStatus { get; set; }
+       // public SessionStatus sessionStatus { get; set; }
 
-        public Details() { }
+        public SessionDetails() { }
 
-        public Details(Data.Core.Session session)
+        public SessionDetails(Data.Core.Session session)
         {
             SessionId = session.SessionId;
             CourseId = session.CourseId;
             StartTime = session.Date;
-            sessionStatus = (SessionStatus)session.Status; ;
+            
+            status = (SessionStatus)session.Status;
         }
 
+        public SessionStatus status { get; set; }
 
     }
 
-     public enum SessionStatus
+    public enum SessionStatus
     {
         Cancelled = 1,
         Scheduled = 2,
-        Draft= 3,
-        Complete= 4,
-        Closed =5
+        Draft = 3,
+        Complete = 4,
+        Closed = 5
 
     }
 }

@@ -3,6 +3,11 @@
     ViewData["Title"] = "Details";
 }
 
+@* <div id="calendar"></div>
+@section scripts{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.min.css" />
+} *@
 
 <h1>Details</h1>
 
@@ -10,20 +15,57 @@
 <p>@Model.Name</p>
 <p>Organiser: @Model.ApplicationUserId </p>
 
+<p>Is the course stand alone: @Model.isStandAlone</p>
+
 <tbody>
     @foreach (var item in Model.Sessions)
     {
+      
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.SessionId)
+               
             </td>
-           
+             <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+               
+            </td>
+          @*   <td>
+                @Html.DisplayFor(modelItem => item.sessionStatus.ToString())
+
+            </td> *@
            
         </tr>
+       
     }
 </tbody>
 
+@* <script>
+    $(document).ready(function () {
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek,basicDay'
+            },
+            defaultView: 'month',
+            events: [
+                {
+                    title: 'Event 1',
+                    start: '2023-02-01'
+                },
+                {
+                    title: 'Event 2',
+                    start: '2023-02-05',
+                    end: '2023-02-07'
+                }
+            ]
+        });
+    });
 
-<p>Is the course stand alone: @Model.isStandAlone</p>
+</script> *@
+
+
+
 
 <a asp-action="Index" asp-route-id="@Model.CourseId">List</a> 

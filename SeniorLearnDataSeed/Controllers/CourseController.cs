@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Models.Course;
+using Microsoft.Win32;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -145,30 +146,33 @@ namespace SeniorLearnDataSeed.Controllers
         // GET: Course/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-          
 
-               var course = await _context.Courses
-                .Include(c => c.Sessions)
-                .FirstOrDefaultAsync(m => m.CourseId == id);
+
+                var course = await _context.Courses
+                  .Include(c => c.Sessions)
+                  .FirstOrDefaultAsync(m => m.CourseId == id);
+
+            //List<Models.Session.Details> sesh = new List<Models.Session.Details> ();
+
+            //foreach (var item in course.Sessions)
+            //{
+            //    var m = new Models.Session.Details(item);
+
+            //    sesh.Add(m);
+
+            //}
 
             if (course == null)
             {
                 return NotFound();
             }
 
-            var c = new Details
-            {
-                CourseId = course.CourseId,
-                Name = course.Name,
-                Description = course.Description,
-                ApplicationUserId = course.ApplicationUserId,
-              //  MemberName = $"{course.Member.FirstName} {course.Member.LastName}",
-                isStandAlone = course.isStandAlone
-            };
 
-            
 
-            return View(c);
+            var m = new Details(course);
+
+
+            return View(m);
         }
 
       
