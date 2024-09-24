@@ -117,7 +117,7 @@ namespace SeniorLearnDataSeed.Data
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<Session> Sessions { get; set; }
-        public DbSet<Member> Members { get; set; }
+      
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
