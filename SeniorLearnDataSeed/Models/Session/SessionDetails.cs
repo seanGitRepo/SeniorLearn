@@ -26,7 +26,7 @@ namespace SeniorLearnDataSeed.Models.Session
             SessionId = session.SessionId;
             CourseId = session.CourseId;
             StartTime = session.Date;
-            
+            EndTime = session.Date;
             status = (SessionStatus)session.Status;
         }
 
