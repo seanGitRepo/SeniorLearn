@@ -21,7 +21,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using SeniorLearnDataSeed.Data.Core;
-using SeniorLearnDataSeed.Models;
 
 namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
 {

@@ -1,0 +1,55 @@
+﻿@model SeniorLearnDataSeed.Models.Session.SessionCreate
+
+@{
+    ViewData["Title"] = "Create";
+   
+}
+
+<h1>Create</h1>
+
+<h4>SessionCreate</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" class="form-control" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="status" class="control-label"></label>
+                <input asp-for="status" class="form-control" />
+                <span asp-validation-for="status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="session_type" class="control-label"></label>
+                <input asp-for="session_type" class="form-control" />
+                <span asp-validation-for="session_type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="location" class="control-label"></label>
+                <input asp-for="location" class="form-control" />
+                <span asp-validation-for="location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MeetingLink" class="control-label"></label>
+                <input asp-for="MeetingLink" class="form-control" />
+                <span asp-validation-for="MeetingLink" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="courseId" value="@Model.courseId" />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<a asp-controller="Course" asp-action="Details" asp-route-id="@Model.courseId">Back to course</a>
+

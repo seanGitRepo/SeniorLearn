@@ -1,5 +1,4 @@
-﻿using SeniorLearnDataSeed.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SeniorLearnDataSeed.Data.Core
@@ -8,8 +7,9 @@ namespace SeniorLearnDataSeed.Data.Core
     {
         [Key]
         public int SessionId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime StartTime { get; set; }
 
+        public DateTime EndTime { get; set; }
         //Many to Many relationship with members through Enrollment class below.
         public List<Enrollment> EnrolledMembers { get; set; }
 
@@ -17,7 +17,7 @@ namespace SeniorLearnDataSeed.Data.Core
         public Course Course { get; set; }
 
         public SessionStatus Status { get; set; }
-
+      
         public Session()
         {
 
@@ -42,10 +42,10 @@ namespace SeniorLearnDataSeed.Data.Core
 
 
     }
-
+  
     public enum SessionStatus
     {
-        Cancelled =1,
+        Cancelled = 1,
         Scheduled = 2,
         Draft = 3,
         Complete=4,

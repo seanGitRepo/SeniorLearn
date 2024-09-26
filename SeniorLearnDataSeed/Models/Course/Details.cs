@@ -16,7 +16,7 @@ namespace SeniorLearnDataSeed.Models.Course
             ApplicationUserId = c.ApplicationUserId;
 
             Sessions = c.Sessions.Select(s => new Session.SessionDetails(s)).ToList();
-            //MemberName = $"{c.Member.FirstName} {c.Member.LastName}"; // Assuming Member has FirstName and LastName
+           // Assuming Member has FirstName and LastName
             //SessionsCount = c.Sessions?.Count ?? 0;
             isStandAlone = c.isStandAlone;
 
@@ -29,11 +29,11 @@ namespace SeniorLearnDataSeed.Models.Course
 
         public string Description { get; set; } = default!;
 
-
+        
         public string ApplicationUserId { get; set; }
 
         //   [Display(Description = "Created By (Member Name):")]
-        //  public string MemberName { get; set; } = default!;
+         public string MemberName { get; set; } 
 
         //public int SessionsCount { get; set; }
 

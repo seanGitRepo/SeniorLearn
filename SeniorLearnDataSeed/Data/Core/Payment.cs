@@ -1,5 +1,4 @@
-﻿using SeniorLearnDataSeed.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SeniorLearnDataSeed.Data.Core
 {

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SeniorLearnDataSeed.Data.Core;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace SeniorLearnDataSeed.Models
+namespace SeniorLearnDataSeed.Data.Core
 {
     public class ApplicationUser : IdentityUser
     {
@@ -17,8 +16,8 @@ namespace SeniorLearnDataSeed.Models
         public string? PostalCode { get; set; }
 
 
-        
-        public List<Data.Core.Course>? CreatedCourses { get; set; }
+
+        public List<Course>? CreatedCourses { get; set; }
 
         //The Type class controls the "level" a member will have. as per the instructions from the client with "honoary/member/promember"
         //public MemberType Type { get; set; }

@@ -19,47 +19,66 @@
  </script>
 
 
-<h1>Details</h1>
+<h1 style=" text-align: center;">Details</h1>
 
-<tbody>
-    <td>
-        @Model.CourseId |
-    </td>
-    <td>
-       @Model.Name |
-    </td>
-    <td>
-        Organiser: @Model.ApplicationUserId 
-    </td>
-</tbody>
-<p>Is the course stand alone: @Model.isStandAlone</p>
+<div style="display: flex; justify-content: space-between; align-items: center;">
 
 
-
-
-
-<tbody>
-    @foreach (var item in Model.Sessions)
-    {
-      
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SessionId)
-               
-            </td>
-             <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-               
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.status)
-
-            </td>
+    <div>
+        <h3>
+            Name: @Model.Name
+        </h3>
+        <ul>
+            <li>
+                Course ID: @Model.CourseId
+            </li>
            
+            <li>
+                Organiser: @Model.MemberName
+            </li>
+            <li>
+                Stand Alone: @Model.isStandAlone
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <a asp-controller="Session" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Add Session</a>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Session ID </th>
+            <th>Start Time </th>
+            <th>Location </th>
+            <th>Status </th>
+            
         </tr>
-       
-    }
-</tbody>
+    </thead>
+    <tbody>
+        @if (Model.Sessions != null )
+        {
+            @foreach (var item in Model.Sessions)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.SessionId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.eventLocation)</td>
+                    <td>@Html.DisplayFor(modelItem => item.status)</td>
+                    <td><a asp-controller="Session" asp-action="Edit" asp-route-SessionId="@item.SessionId" class="btn btn-primary">Edit</a> </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">No sessions available</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <div id='calendar'></div>
 
@@ -67,3 +86,5 @@
 
 
 <a asp-action="Index" asp-route-id="@Model.CourseId">List</a> 
+
+

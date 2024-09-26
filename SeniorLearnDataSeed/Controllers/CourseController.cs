@@ -4,9 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Models.Course;
+using SeniorLearnDataSeed.Models.Session;
 using Microsoft.Win32;
 using Microsoft.Identity.Client;
 using SeniorLearnDataSeed.Helpers;
+using SeniorLearnDataSeed.Models.Session;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -21,7 +24,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         // GET: Course/Index
-        public async Task<IActionResult> Index() => View(await _context.Courses.Select(p => new Models.Course.Details(p)).ToListAsync()); //returns one person
+        public async Task<IActionResult> Index() => View(await _context.Courses.Select(p => new Models.Course.Details(p)).ToListAsync()); //returns all courses
 
         
 
@@ -147,9 +150,10 @@ namespace SeniorLearnDataSeed.Controllers
             return RedirectToAction("Index");
         }
 
-       
+
 
         // GET: Course/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
 
@@ -158,21 +162,23 @@ namespace SeniorLearnDataSeed.Controllers
                   .Include(c => c.Sessions)
                   .FirstOrDefaultAsync(m => m.CourseId == id);
 
-            //List<Models.Session.Details> sesh = new List<Models.Session.Details> ();
 
-            //foreach (var item in course.Sessions)
-            //{
-            //    var m = new Models.Session.Details(item);
 
-            //    sesh.Add(m);
-
-            //}
-
+           
             if (course == null)
             {
                 return NotFound();
             }
             var m = new Details(course);
+
+
+            m.Sessions = await SessoinReturn(course.CourseId);
+
+
+            var courseCreator = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId); 
+
+
+            m.MemberName = $"{courseCreator.FirstName} {courseCreator.LastName}"; 
 
             ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions);
 
@@ -184,7 +190,60 @@ namespace SeniorLearnDataSeed.Controllers
 
       
         
+        public async Task<List<SessionDetails>>SessoinReturn(int courseId)
+        {
+            List<SessionDetails> sessions = new List<SessionDetails>();
+            
 
+            var onPremSessions =  _context.Sessions.OfType<OnPremSession>().ToListAsync();
+            var onlineSessions = _context.Sessions.OfType<OnlineSession>().ToListAsync();
+
+            var toDisplay = new SessionDetails();
+
+            foreach (var session in await onPremSessions)
+            {
+
+                if (session.CourseId == courseId)
+                {
+
+                    toDisplay = new SessionDetails()
+                    {
+                        status = (SessionStatusModel)session.Status,
+                        SessionId = session.SessionId,
+                        CourseId = session.CourseId,
+                        eventLocation = session.StreetName //TODO: we would have the automation variable in here for the type of session with the drop down menu.
+                    };
+
+
+                    sessions.Add(toDisplay);
+                }
+            }
+
+
+            foreach (var session in await onlineSessions)
+            {
+                if (session.CourseId == courseId)
+                {
+
+                    toDisplay = new SessionDetails()
+                    {
+                        status = (SessionStatusModel)session.Status,
+                        SessionId = session.SessionId,
+                        CourseId = session.CourseId,
+                        eventLocation = session.OnlineLink //TODO: we would have the automation variable in here for the type of session with the drop down menu.
+                    };
+
+                    sessions.Add(toDisplay);
+                }
+            }
+
+
+
+
+
+
+            return sessions;
+        }
        
 
     }

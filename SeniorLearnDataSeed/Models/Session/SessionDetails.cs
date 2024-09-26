@@ -19,22 +19,25 @@ namespace SeniorLearnDataSeed.Models.Session
 
        // public SessionStatus sessionStatus { get; set; }
 
+        public string eventLocation { get; set; }  
+
         public SessionDetails() { }
 
         public SessionDetails(Data.Core.Session session)
         {
             SessionId = session.SessionId;
             CourseId = session.CourseId;
-            StartTime = session.Date;
-            EndTime = session.Date;
-            status = (SessionStatus)session.Status;
+            StartTime = session.StartTime;
+            EndTime = session.EndTime;
+            status = (SessionStatusModel)session.Status;
+          
         }
 
-        public SessionStatus status { get; set; }
+        public SessionStatusModel status { get; set; }
 
     }
 
-    public enum SessionStatus
+    public enum SessionStatusModel
     {
         Cancelled = 1,
         Scheduled = 2,
@@ -43,4 +46,6 @@ namespace SeniorLearnDataSeed.Models.Session
         Closed = 5
 
     }
+
+  
 }
