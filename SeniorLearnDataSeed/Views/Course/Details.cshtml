@@ -21,7 +21,7 @@
 
 <h1 style=" text-align: center;">Details</h1>
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
+<div >
 
 
     <div>
@@ -42,22 +42,21 @@
         </ul>
     </div>
 
-    <div>
-        <a asp-controller="Session" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Add Session</a>
-    </div>
+    
 </div>
 
-<table>
+<table >
     <thead>
         <tr>
             <th>Session ID </th>
             <th>Start Time </th>
             <th>Location </th>
             <th>Status </th>
+            <th> </th>
             
         </tr>
     </thead>
-    <tbody>
+    <tbody 
         @if (Model.Sessions != null )
         {
             @foreach (var item in Model.Sessions)
@@ -67,7 +66,7 @@
                     <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
                     <td>@Html.DisplayFor(modelItem => item.eventLocation)</td>
                     <td>@Html.DisplayFor(modelItem => item.status)</td>
-                    <td><a asp-controller="Session" asp-action="Edit" asp-route-SessionId="@item.SessionId" class="btn btn-primary">Edit</a> </td>
+                    <td style="display: flex; justify-content: center"><a asp-controller="Session" asp-action="Edit" asp-route-SessionId="@item.SessionId" class="btn btn-primary">Edit</a> </td>
                 </tr>
             }
         }
@@ -79,12 +78,38 @@
         }
     </tbody>
 </table>
+<p> </p>
 
+<div style=" display:flex; justify-content: flex-end">
+    <a asp-controller="Session" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Add Session</a>
+</div>
+<p> </p>
+<p> </p>
 <div id='calendar'></div>
 
 
 
 
-<a asp-action="Index" asp-route-id="@Model.CourseId">List</a> 
+<a asp-action="Index" asp-route-id="@Model.CourseId">List</a>
 
 
+<style> /*Ripped straight from chat GPT*/
+    table {
+        width: 100%; /* Make the table occupy the full width of the parent */
+        border-collapse: collapse; /* Combine borders for a cleaner look */
+    }
+
+    th, td {
+        padding: 10px; /* Add padding for better spacing */
+        text-align: left; /* Align text to the left */
+        border: 1px solid #ddd; /* Add a border to the table cells */
+    }
+
+    th {
+        background-color: #f2f2f2; /* Set a background color for header */
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Add a background color for even rows */
+    }
+</style>

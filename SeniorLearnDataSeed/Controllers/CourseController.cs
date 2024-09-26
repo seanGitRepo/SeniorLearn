@@ -189,8 +189,8 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
       
-        
-        public async Task<List<SessionDetails>>SessoinReturn(int courseId)
+        //TODO:spelling error.
+        public async Task<List<SessionDetails>>SessoinReturn(int courseId) // Returns a course list of sessions, with location.
         {
             List<SessionDetails> sessions = new List<SessionDetails>();
             
@@ -206,12 +206,15 @@ namespace SeniorLearnDataSeed.Controllers
                 if (session.CourseId == courseId)
                 {
 
-                    toDisplay = new SessionDetails()
+                    toDisplay = new SessionDetails() //TODO: add the remaining variables needed for onPrem and Online.
                     {
                         status = (SessionStatusModel)session.Status,
                         SessionId = session.SessionId,
                         CourseId = session.CourseId,
-                        eventLocation = session.StreetName //TODO: we would have the automation variable in here for the type of session with the drop down menu.
+                        eventLocation = session.StreetName,
+                        StartTime = session.StartTime,
+                        EndTime = session.EndTime,  
+                        
                     };
 
 
@@ -230,7 +233,9 @@ namespace SeniorLearnDataSeed.Controllers
                         status = (SessionStatusModel)session.Status,
                         SessionId = session.SessionId,
                         CourseId = session.CourseId,
-                        eventLocation = session.OnlineLink //TODO: we would have the automation variable in here for the type of session with the drop down menu.
+                        eventLocation = session.OnlineLink,
+                        StartTime = session.StartTime,
+                        EndTime = session.EndTime,
                     };
 
                     sessions.Add(toDisplay);

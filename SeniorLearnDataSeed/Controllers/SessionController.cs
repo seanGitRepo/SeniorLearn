@@ -99,6 +99,8 @@ namespace SeniorLearnDataSeed.Controllers
             var onPremSessions = await _context.Sessions.OfType<OnPremSession>().ToListAsync();
             var onlineSessions = await _context.Sessions.OfType<OnlineSession>().ToListAsync();
 
+           
+
             var toEdit = new SessionEdit();
 
             foreach (var session in onPremSessions)
