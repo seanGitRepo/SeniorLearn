@@ -180,7 +180,7 @@ namespace SeniorLearnDataSeed.Controllers
 
             m.MemberName = $"{courseCreator.FirstName} {courseCreator.LastName}"; 
 
-            ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions);
+            ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
 
            
 
