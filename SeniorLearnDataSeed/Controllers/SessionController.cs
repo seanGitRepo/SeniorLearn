@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models.Course;
 using SeniorLearnDataSeed.Models.Session;
+using SeniorLearnDataSeed.Models.Course;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -23,12 +25,13 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         [HttpGet]
-        [Route("/Session/Create/{courseId}", Name = "CreaterSesh")]
+        [Route("/Session/Create/{CourseId}", Name = "CreaterSesh")]
         public IActionResult Create(int courseId)
         {
             var model = new SessionCreate
             {
-                courseId = courseId
+                CourseId = courseId
+
             };
 
             
@@ -37,11 +40,11 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         [HttpPost]
-        [Route("/Session/Create/{courseId}")]
+        [Route("/Session/Create/{CourseId}")]
         public async Task<IActionResult> Create(SessionCreate m)
         {
 
-
+          
 
 
             if (ModelState.IsValid)
@@ -54,7 +57,7 @@ namespace SeniorLearnDataSeed.Controllers
                 {
                     session = new OnPremSession
                     {
-                        CourseId = m.courseId, // Set CourseId for the session
+                        CourseId = m.CourseId, // Set CourseId for the session
                         StartTime = m.StartTime,
                         EndTime = m.EndTime,
                         Status = (SessionStatus)m.status,
@@ -65,7 +68,7 @@ namespace SeniorLearnDataSeed.Controllers
                 {
                     session = new OnlineSession
                     {
-                        CourseId = m.courseId, // Set CourseId for the session
+                        CourseId = m.CourseId, // Set CourseId for the session
                         StartTime = m.StartTime,
                         EndTime = m.EndTime,
                         Status = (SessionStatus)m.status,
@@ -84,7 +87,7 @@ namespace SeniorLearnDataSeed.Controllers
                 _context.Sessions.Add(session);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction($"Course/Details/{m.courseId}");
+                return RedirectToAction("Index","Course");
             }
 
             return View(m);
@@ -112,7 +115,7 @@ namespace SeniorLearnDataSeed.Controllers
                     toEdit = new SessionEdit()
                     {
                         SessionId = m.SessionId,
-                        courseId = m.CourseId,
+                        CourseId = m.CourseId,
                         session_type = "session_onprem" //TODO: we would have the automation variable in here for the type of session with the drop down menu.
                     };
                 }
@@ -127,7 +130,7 @@ namespace SeniorLearnDataSeed.Controllers
                    toEdit = new SessionEdit()
                     {
                         SessionId = m.SessionId,
-                        courseId = m.CourseId,
+                       CourseId = m.CourseId,
                        session_type = "session_online"
                    };
                 }
@@ -137,6 +140,9 @@ namespace SeniorLearnDataSeed.Controllers
            
             return View(toEdit);
         }
+
+
+
 
         [HttpPost]
         [Route("/Session/Edit/{SessionId}")]
@@ -201,12 +207,114 @@ namespace SeniorLearnDataSeed.Controllers
 
             
 
-            return RedirectToAction($"Course/Details/{m.courseId}");
+            return RedirectToAction("Details", "Course", m.SessionId);
 
 
            
         }
 
+        [HttpGet]
+        [Route("/Session/Delete/{SessionId}", Name = "DeleteSesh")]
+        public async Task<IActionResult> Delete(int SessionId)
+        {
+
+
+            var sesh = await _context.Sessions.FindAsync(SessionId); //returns the session with the requested Id.
+
+            
+
+            if (sesh == null)
+            {
+                return NotFound();
+            }
+
+            var m = new SessionDetails
+            {
+                SessionId = sesh.SessionId,
+                StartTime = sesh.StartTime,
+                EndTime = sesh.EndTime,
+                status = (SessionStatusModel)sesh.Status
+            };
+           
+
+            return View(m); //passing the sessiondetails to the delte screen to display which session to delete.
+            //then the post will delete the _contesxt sessions when the user confirsm it on the delte screen.
+        }
+
+        // POST: Course/Delete/5
+        [HttpPost]
+        [Route("/Session/Delete/{SessionId}")]
+        public async Task<IActionResult> DeleteConfirmed(int SessionId)
+        {
+            var session = await _context.Sessions.FirstOrDefaultAsync(m => m.SessionId == id);
+
+            if (session != null)
+            {
+                _context.Sessions.Remove(session);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Details","Course",id);
+        }
+
+        public async Task<SessionDetails> SessoinReturn(int sessionId) // Returns a course list of sessions, with location.
+        {
+            SessionDetails sessions = new SessionDetails();
+
+
+            var onPremSessions = _context.Sessions.OfType<OnPremSession>().ToListAsync();
+            var onlineSessions = _context.Sessions.OfType<OnlineSession>().ToListAsync();
+
+            var toDisplay = new SessionDetails();
+
+            foreach (var session in await onPremSessions)
+            {
+
+                if (session.SessionId == sessionId)
+                {
+
+                    toDisplay = new SessionDetails() //TODO: add the remaining variables needed for onPrem and Online.
+                    {
+                        status = (SessionStatusModel)session.Status,
+                        SessionId = session.SessionId,
+                        CourseId = session.CourseId,
+                        eventLocation = session.StreetName,
+                        StartTime = session.StartTime,
+                        EndTime = session.EndTime,
+
+                    };
+
+
+                    sessions = toDisplay;
+                }
+            }
+
+
+            foreach (var session in await onlineSessions)
+            {
+                if (session.SessionId == sessionId)
+                {
+
+                    toDisplay = new SessionDetails()
+                    {
+                        status = (SessionStatusModel)session.Status,
+                        SessionId = session.SessionId,
+                        CourseId = session.CourseId,
+                        eventLocation = session.OnlineLink,
+                        StartTime = session.StartTime,
+                        EndTime = session.EndTime,
+                    };
+
+                    sessions = toDisplay;
+                }
+            }
+
+
+
+
+
+
+            return sessions;
+        }
 
 
     }

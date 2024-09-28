@@ -38,6 +38,7 @@ namespace SeniorLearnDataSeed.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<SeniorLearnDataSeed.Models.Session.SessionEdit> SessionEdit { get; set; } = default!;
+        public DbSet<SeniorLearnDataSeed.Models.Session.SessionDetails> SessionDetails { get; set; } = default!;
        
     }
 }

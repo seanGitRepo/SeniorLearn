@@ -51,6 +51,7 @@
             <th>Location </th>
             <th>Status </th>
             <th> </th>
+            <th> </th>
             
         </tr>
     </thead>
@@ -64,7 +65,8 @@
                     <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
                     <td>@Html.DisplayFor(modelItem => item.eventLocation)</td>
                     <td>@Html.DisplayFor(modelItem => item.status)</td>
-                    <td style="display: flex; justify-content: center"><a asp-controller="Session" asp-action="Edit" asp-route-SessionId="@item.SessionId" class="btn btn-primary">Edit</a> </td>
+                    <td style="display: flex; justify-content: center"><a href="/Session/Edit/@item.SessionId" class="btn btn-primary">Edit</a></td>
+                    <td style="display: flex; justify-content: center"><a href="/Session/Delete/@item.SessionId" class="btn btn-primary">Delete</a></td>
                 </tr>
             }
         }
@@ -79,7 +81,8 @@
 <p> </p>
 
 <div style=" display:flex; justify-content: flex-end">
-    <a asp-controller="Session" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn btn-primary">Add Session</a>
+    <a asp-controller="Session" asp-action="Create" asp-route-CourseId="@Model.CourseId" class="btn btn-primary">Add Session</a>
+    
 </div>
 <p> </p>
 <p> </p>

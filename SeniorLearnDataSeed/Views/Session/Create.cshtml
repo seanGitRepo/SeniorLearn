@@ -43,7 +43,7 @@
                 <input asp-for="MeetingLink" class="form-control" />
                 <span asp-validation-for="MeetingLink" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="courseId" value="@Model.courseId" />
+            <input type="hidden" asp-for="CourseId" value="@Model.CourseId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -51,5 +51,5 @@
     </div>
 </div>
 
-<a asp-controller="Course" asp-action="Details" asp-route-id="@Model.courseId">Back to course</a>
+<a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId">Back to course</a>
 

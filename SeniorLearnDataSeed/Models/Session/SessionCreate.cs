@@ -8,7 +8,7 @@ namespace SeniorLearnDataSeed.Models.Session
 
 
         
-        public int? courseId { get; set; }
+        public int? CourseId { get; set; }
 
         [Required]
         public DateTime StartTime { get; set; } = DateTime.Now;

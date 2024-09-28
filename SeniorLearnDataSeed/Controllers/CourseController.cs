@@ -211,7 +211,7 @@ namespace SeniorLearnDataSeed.Controllers
                         status = (SessionStatusModel)session.Status,
                         SessionId = session.SessionId,
                         CourseId = session.CourseId,
-                        eventLocation = session.StreetName,
+                        eventLocation = session.StreetNumber,
                         StartTime = session.StartTime,
                         EndTime = session.EndTime,  
                         
