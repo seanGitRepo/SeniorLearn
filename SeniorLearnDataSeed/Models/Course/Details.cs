@@ -16,8 +16,7 @@ namespace SeniorLearnDataSeed.Models.Course
             ApplicationUserId = c.ApplicationUserId;
 
             Sessions = c.Sessions.Select(s => new Session.SessionDetails(s)).ToList();
-           // Assuming Member has FirstName and LastName
-            //SessionsCount = c.Sessions?.Count ?? 0;
+          
             isStandAlone = c.isStandAlone;
 
         }

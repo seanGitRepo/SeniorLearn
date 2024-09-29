@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models.Session;
+using SeniorLearnDataSeed.Models.Course;
 
 namespace SeniorLearnDataSeed.Data
 {
@@ -17,16 +18,24 @@ namespace SeniorLearnDataSeed.Data
             
            
             modelBuilder.Entity<Session>()
-               .HasDiscriminator<string>("session_type")
-               .HasValue<Session>("session_base")
-               .HasValue<OnPremSession>("session_onprem")
-               .HasValue<OnlineSession>("session_online");
+                .HasDiscriminator<string>("session_type")
+                .HasValue<Session>("session_base")
+                .HasValue<OnPremSession>("session_onprem")
+                .HasValue<OnlineSession>("session_online");
 
             modelBuilder.Entity<Session>()
-            .Property(s => s.Status)
-            .HasConversion<int>();
+                .Property(s => s.Status)
+                .HasConversion<int>();
 
-           
+         
+
+            modelBuilder.Entity<Payment>()
+                .Property(x=> x.PaymentType)
+                .HasConversion<string>();
+            modelBuilder.Entity<Payment>()
+               .Property(x => x.PaymentStatus)
+               .HasConversion<string>();
+
 
             base.OnModelCreating(modelBuilder);
         }
@@ -37,6 +46,7 @@ namespace SeniorLearnDataSeed.Data
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<SeniorLearnDataSeed.Models.Course.Details> Details { get; set; } = default!;
 
        
     }

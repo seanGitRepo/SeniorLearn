@@ -7,14 +7,14 @@ using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Helpers;
 using SeniorLearnDataSeed.Models;
 using SeniorLearnDataSeed.Models.Session;
-using SQLitePCL;
-using System.Collections.Immutable;
+
+
 using System.Diagnostics;
 
 namespace SeniorLearnDataSeed.Controllers
 {
     //if a user tries to access the index method then they will need to be authorised
-
+    //everyone at the momen has the ability to access this screen.
    // [Area("Admin")]
     //[Authorize(Roles = RoleDetail.Role_Admin)]
     public class HomeController : Controller
@@ -33,6 +33,19 @@ namespace SeniorLearnDataSeed.Controllers
 
         public async Task<IActionResult> Index()
         {
+
+         
+            //TODO: Check if a payment has been sucessful, or a way to manage all
+
+
+
+            return RedirectToAction("HomeScreen", "Home");
+        }
+
+
+        public async Task<IActionResult> HomeScreen()
+        {
+
             List<SessionDetails> ListToSend = new List<SessionDetails>();
 
             var c = await _context.Courses.ToListAsync();
@@ -40,11 +53,13 @@ namespace SeniorLearnDataSeed.Controllers
             foreach (var item in c)
             {
                 var listCourseSesisoins = await SessionDetailsList(item.CourseId);
-
+                
 
                 foreach (var sesh in listCourseSesisoins)
                 {
-                    ListToSend.Add(sesh);
+                        
+
+                    ListToSend.Add(sesh); // this is not passing the organiser ID which means that a hacker wouldnt be able to get the info on the course ID or role.
                 }
                
                 
@@ -55,8 +70,13 @@ namespace SeniorLearnDataSeed.Controllers
             ViewBag.UserName = user;
 
             ViewData["Events"] = JSONListHelper.GetEventListJsonString(ListToSend);
-            return View(0);
+
+            return View();
         }
+
+
+
+
 
         public IActionResult Privacy()
         {
@@ -81,8 +101,9 @@ namespace SeniorLearnDataSeed.Controllers
                 .AsNoTracking()
                 .OfType<OnPremSession>();
 
-
-            var onlineSessions = _context.Sessions.AsNoTracking().OfType<OnlineSession>();
+            var onlineSessions = _context.Sessions
+                .AsNoTracking()
+                .OfType<OnlineSession>();
 
             var toDisplay = new SessionDetails();
 

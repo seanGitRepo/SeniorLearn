@@ -30,5 +30,10 @@ namespace SeniorLearnDataSeed.Data.Core
 
         //Enrollments will display and keep track of the members currenly enrolled sesssions they wish to attend.
         public List<Enrollment>? Enrollments { get; set; }
+
+       
     }
+
+
+   
 }

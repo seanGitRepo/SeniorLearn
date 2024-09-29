@@ -11,13 +11,14 @@ namespace SeniorLearnDataSeed.Models.Session
         public int? CourseId { get; set; }
 
         [Required]
+        
         public DateTime StartTime { get; set; } = DateTime.Now;
 
         [Required]
         public DateTime EndTime { get; set; }= DateTime.Now;
 
         public string SelectedStatus { get; set; }
-
+       
      
         public string? session_type { get; set; }
 

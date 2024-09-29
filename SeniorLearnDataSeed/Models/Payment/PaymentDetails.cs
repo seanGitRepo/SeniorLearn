@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Contracts;
+﻿using SeniorLearnDataSeed.Data.Core;
+using System.ComponentModel.DataAnnotations;
 
-namespace SeniorLearnDataSeed.Data.Core
+namespace SeniorLearnDataSeed.Models.Payment
 {
-    public class Payment
+    public class PaymentDetails
     {
+
         [Key]
         public int PaymentId { get; set; }
         public PaymentType PaymentType { get; set; }
@@ -14,7 +15,7 @@ namespace SeniorLearnDataSeed.Data.Core
         public ApplicationUser? User { get; set; }
         public DateTime userRegistrationDate { get; set; }
 
-    }
+    }    
 
     public enum PaymentType
     {
@@ -22,7 +23,7 @@ namespace SeniorLearnDataSeed.Data.Core
         EFT,
         CreditCard,
         Cheque,
-    
+
     }
 
     public enum PaymentStatus
@@ -33,5 +34,7 @@ namespace SeniorLearnDataSeed.Data.Core
         Success,
     }
 
-  
+
+
+    
 }

@@ -29,23 +29,34 @@ namespace SeniorLearnDataSeed.Controllers
         [Route("/Session/Create/{CourseId}", Name = "CreaterSesh")]
         public IActionResult Create(int courseId)
         {
-            var model = new SessionCreate
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro") //TODO: check if this would be sufficent security (note, i dont think it would be enough security, but it would be a nice way to check if it was a correct user.
             {
-                CourseId = courseId
 
-            };
 
-            var statuslist = new List<string>
-          {
-              "Cancelled","Scheduled", "Draft", "Complete", "Closed"
-          };
+                var model = new SessionCreate
+                {
+                    CourseId = courseId
 
-            // Pass the list to the view via ViewBag or ViewModel
-            ViewBag.StatusOptions = new SelectList(statuslist);
+                };
 
-            
+                var statuslist = new List<string>
+                {
+                    "Cancelled","Scheduled", "Draft", "Complete", "Closed"
+                };
 
-            return View(model);
+
+
+                // Pass the list to the view via ViewBag or ViewModel
+                ViewBag.StatusOptions = new SelectList(statuslist);
+
+                return View(model);
+
+
+            }
+
+            return Forbid();
         }
 
         [HttpPost]
@@ -53,114 +64,125 @@ namespace SeniorLearnDataSeed.Controllers
         public async Task<IActionResult> Create(SessionCreate m)
         {
 
-          
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
-
-            if (ModelState.IsValid)
+            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro") 
             {
-                Session session;
 
-               
-                // Check session type (discriminator)
-                if (m.StreetName != null)
+
+                if (ModelState.IsValid)
                 {
-                    session = new OnPremSession
+                    Session session;
+
+
+                    // Check session type (discriminator)
+                    if (m.StreetName != null)
                     {
+                        session = new OnPremSession
+                        {
 
-                        CourseId = m.CourseId, // Set CourseId for the session
-                        StartTime = m.StartTime,
-                        EndTime = m.EndTime,
-                        Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
-                        StreetNumber = m.StreetNumber, // OnPrem specific property
-                        StreetName = m.StreetName,
-                        Suburb = m.Suburb
+                            CourseId = m.CourseId, // Set CourseId for the session
+                            StartTime = m.StartTime,
+                            EndTime = m.EndTime,
+                            Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                            StreetNumber = m.StreetNumber, // OnPrem specific property
+                            StreetName = m.StreetName,
+                            Suburb = m.Suburb
 
 
-                    };
-                }
-                else if (m.MeetingLink != null)
-                {
-                    session = new OnlineSession
+                        };
+                    }
+                    else if (m.MeetingLink != null)
                     {
-                        CourseId = m.CourseId, // Set CourseId for the session
-                        StartTime = m.StartTime,
-                        EndTime = m.EndTime,
-                        Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
-                        OnlineLink = m.MeetingLink // OnPrem specific property
-                    };
+                        session = new OnlineSession
+                        {
+                            CourseId = m.CourseId, // Set CourseId for the session
+                            StartTime = m.StartTime,
+                            EndTime = m.EndTime,
+                            Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                            OnlineLink = m.MeetingLink // OnPrem specific property
+                        };
+                    }
+                    else
+                    {
+                        Console.WriteLine("failed");
+                        return BadRequest("Invalid session type");
+                    }
+
+
+
+
+                    _context.Sessions.Add(session);
+                    await _context.SaveChangesAsync();
+                    //TODO:Redirect this to the same course page.
+                    return RedirectToAction("Index", "Course");
                 }
-                else
-                {
-                    Console.WriteLine("failed");
-                    return BadRequest("Invalid session type");
-                }
 
-
-              
-
-                _context.Sessions.Add(session);
-                await _context.SaveChangesAsync();
-                //TODO:Redirect this to the same course page.
-                return RedirectToAction("Index","Course");
             }
-
-            return View(m);
+            return Forbid();
         }
 
         [HttpGet]
         [Route("/Session/Edit/{SessionId}", Name = "EditSesh")]
         public async Task<IActionResult> Edit(int SessionId)
         {
-            var m = await _context.Sessions.FindAsync(SessionId);
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
-            var onPremSessions = await _context.Sessions.OfType<OnPremSession>().ToListAsync();
-            var onlineSessions = await _context.Sessions.OfType<OnlineSession>().ToListAsync();
-
-            var statuslist = new List<string>
-          {
-              "Cancelled","Scheduled", "Draft", "Complete", "Closed"
-          };
-
-            // Pass the list to the view via ViewBag or ViewModel
-            ViewBag.StatusOptions = new SelectList(statuslist);
-
-            var toEdit = new SessionEdit();
-
-            foreach (var session in onPremSessions)
+            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro")
             {
 
-                if (session.SessionId == SessionId)
+                var m = await _context.Sessions.FindAsync(SessionId);
+
+                var onPremSessions = await _context.Sessions.OfType<OnPremSession>().ToListAsync();
+                var onlineSessions = await _context.Sessions.OfType<OnlineSession>().ToListAsync();
+
+                var statuslist = new List<string>
+                      {
+                          "Cancelled","Scheduled", "Draft", "Complete", "Closed"
+                      };
+
+                // Pass the list to the view via ViewBag or ViewModel
+                ViewBag.StatusOptions = new SelectList(statuslist);
+
+                var toEdit = new SessionEdit();
+
+                foreach (var session in onPremSessions)
                 {
 
-                    toEdit = new SessionEdit()
+                    if (session.SessionId == SessionId)
                     {
-                        SessionId = m.SessionId,
-                        CourseId = m.CourseId,
-                        session_type = "session_onprem" 
-                    };
+
+                        toEdit = new SessionEdit()
+                        {
+                            SessionId = m.SessionId,
+                            CourseId = m.CourseId,
+                            session_type = "session_onprem"
+                        };
+                    }
                 }
-            }
 
-            //TODO: what happens when a customer changes an entity from onprem to online and vise versa
+                //TODO: what happens when a customer changes an entity from onprem to online and vise versa
 
 
-            foreach (var session in onlineSessions)
-            {
-                if (session.SessionId == SessionId)
+                foreach (var session in onlineSessions)
                 {
-
-                   toEdit = new SessionEdit()
+                    if (session.SessionId == SessionId)
                     {
-                        SessionId = m.SessionId,
-                       CourseId = m.CourseId,
-                       session_type = "session_online"
-                   };
+
+                        toEdit = new SessionEdit()
+                        {
+                            SessionId = m.SessionId,
+                            CourseId = m.CourseId,
+                            session_type = "session_online"
+                        };
+                    }
                 }
+
+
+
+                return View(toEdit);
             }
-
-
-           
-            return View(toEdit);
+            return Forbid();
         }
 
 
@@ -171,69 +193,76 @@ namespace SeniorLearnDataSeed.Controllers
         public async Task<IActionResult> Edit(SessionEdit m)
         {
 
-         
-
-            if (m.session_type == "session_onprem")
-            {
-                var session = await _context.Sessions
-                    .OfType<OnPremSession>()
-                    .FirstOrDefaultAsync(c => c.SessionId == m.SessionId);
-
-
-
-                if (session == null)
-                {
-                    return NotFound();
-                }
-
-                session.StartTime = m.StartTime;
-                session.EndTime = m.EndTime;
-                session.Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus);
-                session.StreetNumber = m.StreetNumber; // OnPrem specific property
-                session.StreetName = m.StreetName; // OnPrem specific property
-                session.Suburb = m.Suburb;
-
-
-                await _context.SaveChangesAsync();
-
-            }
-            else if (m.session_type == "session_online")
-            {
-
-                var session = await _context.Sessions
-                 .OfType<OnlineSession>()
-                 .FirstOrDefaultAsync(c => c.SessionId == m.SessionId);
-
-
-
-                if (session == null)
-                {
-                    return NotFound();
-                }
-
-                session.StartTime = m.StartTime;
-                session.EndTime = m.EndTime;
-                session.Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus);
-                session.MeetingCode = m.MeetingLink;
-
-               
-                await _context.SaveChangesAsync();
-
-            }
-            else
-            {
-                Console.WriteLine("failed");
-                return BadRequest("Invalid session type");
-            }
-
-
-
-
+            var c = await _context.Courses.FindAsync(m.CourseId);
             
-            //TODO: get this to link back to course page.
-            return RedirectToAction("Details", "Course", m.SessionId);
+            var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro" && userID == c.ApplicationUserId)
+            {
+
+                if (m.session_type == "session_onprem")
+                {
+                    var session = await _context.Sessions
+                        .OfType<OnPremSession>()
+                        .FirstOrDefaultAsync(c => c.SessionId == m.SessionId);
 
 
+
+                    if (session == null)
+                    {
+                        return NotFound();
+                    }
+
+                    session.StartTime = m.StartTime;
+                    session.EndTime = m.EndTime;
+                    session.Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus);
+                    session.StreetNumber = m.StreetNumber; // OnPrem specific property
+                    session.StreetName = m.StreetName; // OnPrem specific property
+                    session.Suburb = m.Suburb;
+
+
+                    await _context.SaveChangesAsync();
+
+                }
+                else if (m.session_type == "session_online")
+                {
+
+                    var session = await _context.Sessions
+                     .OfType<OnlineSession>()
+                     .FirstOrDefaultAsync(c => c.SessionId == m.SessionId);
+
+
+
+                    if (session == null)
+                    {
+                        return NotFound();
+                    }
+
+                    session.StartTime = m.StartTime;
+                    session.EndTime = m.EndTime;
+                    session.Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus);
+                    session.MeetingCode = m.MeetingLink;
+
+
+                    await _context.SaveChangesAsync();
+
+                }
+                else
+                {
+                    Console.WriteLine("failed");
+                    return BadRequest("Invalid session type");
+                }
+
+
+
+
+
+                //TODO: get this to link back to course page.
+                return RedirectToAction("Details", "Course", m.SessionId);
+
+            }
+            return Forbid();
            
         }
 
@@ -241,29 +270,34 @@ namespace SeniorLearnDataSeed.Controllers
         [Route("/Session/Delete/{SessionId}", Name = "DeleteSesh")]
         public async Task<IActionResult> Delete(int SessionId)
         {
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
-
-            var sesh = await _context.Sessions.FindAsync(SessionId); //returns the session with the requested Id.
-
-            
-
-            if (sesh == null)
+            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro")
             {
-                return NotFound();
+
+                var sesh = await _context.Sessions.FindAsync(SessionId); //returns the session with the requested Id.
+
+
+
+                if (sesh == null)
+                {
+                    return NotFound();
+                }
+
+                var m = new SessionDetails
+                {
+                    CourseId = sesh.CourseId,
+                    SessionId = sesh.SessionId,
+                    StartTime = sesh.StartTime,
+                    EndTime = sesh.EndTime,
+                    status = (SessionStatusModel)sesh.Status
+                };
+              
+
+                return View(m); //passing the sessiondetails to the delte screen to display which session to delete.
+                                //then the post will delete the _contesxt sessions when the user confirsm it on the delte screen.
             }
-
-            var m = new SessionDetails
-            {
-                CourseId = sesh.CourseId,
-                SessionId = sesh.SessionId,
-                StartTime = sesh.StartTime,
-                EndTime = sesh.EndTime,
-                status = (SessionStatusModel)sesh.Status
-            };
-            await _context.SaveChangesAsync();
-
-            return View(m); //passing the sessiondetails to the delte screen to display which session to delete.
-            //then the post will delete the _contesxt sessions when the user confirsm it on the delte screen.
+            return Forbid(); 
         }
 
         // POST: Course/Delete/5
@@ -271,19 +305,30 @@ namespace SeniorLearnDataSeed.Controllers
         [Route("/Session/Delete/{SessionId}")]
         public async Task<IActionResult> DeleteConfirmed(int SessionId)
         {
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            var UserID =User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var sesh = await _context.Sessions.FindAsync(SessionId);
-
-            int? id = sesh.CourseId;
+            var course = await _context.Courses.FindAsync(sesh.CourseId);
+           
             
-            if (sesh != null)
+
+
+            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro" && UserID == course.ApplicationUserId) // this also checks if the current user is the creator of the course.
             {
-                _context.Sessions.Remove(sesh);
-                await _context.SaveChangesAsync();
+                
+
+                int? id = sesh.CourseId;
+
+                if (sesh != null)
+                {
+                    _context.Sessions.Remove(sesh);
+                    await _context.SaveChangesAsync();
+                }
+                //TODO: get this to redirect back to the course page.
+                return RedirectToAction("Index", "Course");
             }
-            //TODO: get this to redirect back to the course page.
-            return RedirectToAction("Index","Course");
+            return Forbid();
         }
-        
         
 
 

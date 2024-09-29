@@ -86,6 +86,15 @@
                     event.preventDefault();  // Prevent form submission
                 }
             }
-        } 
+        } else if (!Suburb && !StreetN && !StreetNum && !meetingLink){
+            alert("Please input an address option.");
+            event.preventDefault();
+        }
     });
+
+   
 </script>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial"/>
+}
