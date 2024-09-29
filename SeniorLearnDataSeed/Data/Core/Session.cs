@@ -25,7 +25,7 @@ namespace SeniorLearnDataSeed.Data.Core
         }
 
     }
-
+    
     public class OnlineSession : Session
     {
         public string OnlineLink { get; set; }

@@ -156,9 +156,10 @@ namespace SeniorLearnDataSeed.Controllers
         
         public async Task<IActionResult> Details(int? id)
         {
-
+            //TODO:have a button on the details page that selects edit, which brings up all the buttons to make changes, rather than having all the buttons at once.
 
                 var course = await _context.Courses
+                 .AsNoTracking()  
                   .Include(c => c.Sessions)
                   .FirstOrDefaultAsync(m => m.CourseId == id);
 
@@ -172,10 +173,13 @@ namespace SeniorLearnDataSeed.Controllers
             var m = new Details(course);
 
 
-            m.Sessions = await SessoinReturn(course.CourseId);
+            var sessions = await SessionDetailsList(m.CourseId);
 
+            m.Sessions = sessions;
 
-            var courseCreator = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId); 
+            var courseCreator = await _context.ApplicationUsers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId); 
 
 
             m.MemberName = $"{courseCreator.FirstName} {courseCreator.LastName}"; 
@@ -183,38 +187,44 @@ namespace SeniorLearnDataSeed.Controllers
             ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
 
            
-
+            
 
             return View(m);
         }
 
-      
-        //TODO:spelling error.
-        public async Task<List<SessionDetails>>SessoinReturn(int courseId) // Returns a course list of sessions, with location.
+        public async Task<List<SessionDetails>> SessionDetailsList(int CourseID)
         {
-            List<SessionDetails> sessions = new List<SessionDetails>();
-            
 
-            var onPremSessions =  _context.Sessions.OfType<OnPremSession>().ToListAsync();
-            var onlineSessions = _context.Sessions.OfType<OnlineSession>().ToListAsync();
+
+            List<SessionDetails> sessions = new List<SessionDetails>();
+
+
+            var onPremSessions = _context.Sessions
+                .AsNoTracking()
+                .OfType<OnPremSession>();
+
+            var course = await _context.Courses.FindAsync(CourseID);
+
+            var onlineSessions = _context.Sessions.AsNoTracking().OfType<OnlineSession>();
 
             var toDisplay = new SessionDetails();
 
-            foreach (var session in await onPremSessions)
+            foreach (var session in onPremSessions)
             {
 
-                if (session.CourseId == courseId)
+                if (session.CourseId == CourseID)
                 {
+                    string locationtopost = $"{session.StreetNumber} {session.StreetName} {session.Suburb}";
 
-                    toDisplay = new SessionDetails() //TODO: add the remaining variables needed for onPrem and Online.
+                    toDisplay = new SessionDetails() 
                     {
                         status = (SessionStatusModel)session.Status,
                         SessionId = session.SessionId,
                         CourseId = session.CourseId,
-                        eventLocation = session.StreetNumber,
+                        eventLocation = locationtopost,
                         StartTime = session.StartTime,
-                        EndTime = session.EndTime,  
-                        
+                        EndTime = session.EndTime,
+                        CourseName = course.Name
                     };
 
 
@@ -223,33 +233,35 @@ namespace SeniorLearnDataSeed.Controllers
             }
 
 
-            foreach (var session in await onlineSessions)
+            foreach (var sessiono in onlineSessions)
             {
-                if (session.CourseId == courseId)
+                if (sessiono.CourseId == CourseID)
                 {
 
                     toDisplay = new SessionDetails()
                     {
-                        status = (SessionStatusModel)session.Status,
-                        SessionId = session.SessionId,
-                        CourseId = session.CourseId,
-                        eventLocation = session.OnlineLink,
-                        StartTime = session.StartTime,
-                        EndTime = session.EndTime,
+                        status = (SessionStatusModel)sessiono.Status,
+                        SessionId = sessiono.SessionId,
+                        CourseId = sessiono.CourseId,
+                        eventLocation = sessiono.OnlineLink,
+                        StartTime = sessiono.StartTime,
+                        EndTime = sessiono.EndTime,
+                        CourseName = course.Name
                     };
-
+                    
                     sessions.Add(toDisplay);
                 }
             }
-
-
-
 
 
 
             return sessions;
         }
-       
+
+
+
+
+
 
     }
 }

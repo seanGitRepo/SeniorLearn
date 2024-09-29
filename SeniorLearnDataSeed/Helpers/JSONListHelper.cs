@@ -15,6 +15,10 @@ namespace SeniorLearnDataSeed.Helpers
                     id = e.SessionId,
                     start = e.StartTime,
                     end = e.EndTime,
+                    description = e.eventLocation,
+                    title = e.CourseName
+                   
+
                 };
 
                 eventlist.Add(myevent);
@@ -31,8 +35,12 @@ namespace SeniorLearnDataSeed.Helpers
         public DateTime start { get; set; }
         public DateTime end { get; set; }
 
+        public string description { get; set; }
+        public string title { get; set; }
+        
+
 
     }
 
- 
+   
 }

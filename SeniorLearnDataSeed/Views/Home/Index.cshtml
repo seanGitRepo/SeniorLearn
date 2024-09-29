@@ -1,8 +1,37 @@
-﻿@{
+﻿
+
+@{
     ViewData["Title"] = "Home Page";
 }
+@{//currently this page displays all the courses that are in the database.
+
+}
+
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    
+    <h5>Welcome @ViewBag.UserName!</h5>
+    <p>This page is currently listing all the sessions in the entire database.</p>
+
 </div>
+<div id='calendar'></div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: @Html.Raw(ViewData[("Events")]),
+            headerToolbar: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'timeGridWeek,dayGridMonth,listMonth'
+            },
+                });
+        calendar.render()
+    });
+
+    //TODO: create a JSON list helper to setup the calender view. sort of the same thing with a model, but for json (which i am still not certain of)
+</script>

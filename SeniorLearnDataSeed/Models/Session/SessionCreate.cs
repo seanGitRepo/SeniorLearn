@@ -16,16 +16,25 @@ namespace SeniorLearnDataSeed.Models.Session
         [Required]
         public DateTime EndTime { get; set; }= DateTime.Now;
 
-        public int status { get; set; }
+        public string SelectedStatus { get; set; }
 
+     
         public string? session_type { get; set; }
 
-        public string? location { get; set; } = null;
+        [StringLength(50)]
+        public string? StreetName { get; set; } = null;
+
+        [StringLength(4)] // can use these to set a bunch of rules in the form.
+        public string? Suburb { get; set; } = null;
+
+        [StringLength(10)]
+        public string? StreetNumber { get; set; } = null;
+
 
         public string? MeetingLink { get; set; } = null;
 
 
-
+        
 
     }
 

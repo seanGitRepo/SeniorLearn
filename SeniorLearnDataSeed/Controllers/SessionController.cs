@@ -7,6 +7,7 @@ using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models.Course;
 using SeniorLearnDataSeed.Models.Session;
 using SeniorLearnDataSeed.Models.Course;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -34,6 +35,14 @@ namespace SeniorLearnDataSeed.Controllers
 
             };
 
+            var statuslist = new List<string>
+          {
+              "Cancelled","Scheduled", "Draft", "Complete", "Closed"
+          };
+
+            // Pass the list to the view via ViewBag or ViewModel
+            ViewBag.StatusOptions = new SelectList(statuslist);
+
             
 
             return View(model);
@@ -53,25 +62,30 @@ namespace SeniorLearnDataSeed.Controllers
 
                
                 // Check session type (discriminator)
-                if (m.session_type == "session_onprem")
+                if (m.StreetName != null)
                 {
                     session = new OnPremSession
                     {
+
                         CourseId = m.CourseId, // Set CourseId for the session
                         StartTime = m.StartTime,
                         EndTime = m.EndTime,
-                        Status = (SessionStatus)m.status,
-                        StreetNumber = m.location // OnPrem specific property
+                        Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                        StreetNumber = m.StreetNumber, // OnPrem specific property
+                        StreetName = m.StreetName,
+                        Suburb = m.Suburb
+
+
                     };
                 }
-                else if (m.session_type == "session_online")
+                else if (m.MeetingLink != null)
                 {
                     session = new OnlineSession
                     {
                         CourseId = m.CourseId, // Set CourseId for the session
                         StartTime = m.StartTime,
                         EndTime = m.EndTime,
-                        Status = (SessionStatus)m.status,
+                        Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
                         OnlineLink = m.MeetingLink // OnPrem specific property
                     };
                 }
@@ -86,7 +100,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 _context.Sessions.Add(session);
                 await _context.SaveChangesAsync();
-
+                //TODO:Redirect this to the same course page.
                 return RedirectToAction("Index","Course");
             }
 
@@ -102,7 +116,13 @@ namespace SeniorLearnDataSeed.Controllers
             var onPremSessions = await _context.Sessions.OfType<OnPremSession>().ToListAsync();
             var onlineSessions = await _context.Sessions.OfType<OnlineSession>().ToListAsync();
 
-           
+            var statuslist = new List<string>
+          {
+              "Cancelled","Scheduled", "Draft", "Complete", "Closed"
+          };
+
+            // Pass the list to the view via ViewBag or ViewModel
+            ViewBag.StatusOptions = new SelectList(statuslist);
 
             var toEdit = new SessionEdit();
 
@@ -116,10 +136,12 @@ namespace SeniorLearnDataSeed.Controllers
                     {
                         SessionId = m.SessionId,
                         CourseId = m.CourseId,
-                        session_type = "session_onprem" //TODO: we would have the automation variable in here for the type of session with the drop down menu.
+                        session_type = "session_onprem" 
                     };
                 }
             }
+
+            //TODO: what happens when a customer changes an entity from onprem to online and vise versa
 
 
             foreach (var session in onlineSessions)
@@ -166,10 +188,12 @@ namespace SeniorLearnDataSeed.Controllers
 
                 session.StartTime = m.StartTime;
                 session.EndTime = m.EndTime;
-                session.Status = (SessionStatus)m.status;
-                session.StreetNumber = m.location; // OnPrem specific property
+                session.Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus);
+                session.StreetNumber = m.StreetNumber; // OnPrem specific property
+                session.StreetName = m.StreetName; // OnPrem specific property
+                session.Suburb = m.Suburb;
 
-               
+
                 await _context.SaveChangesAsync();
 
             }
@@ -189,8 +213,8 @@ namespace SeniorLearnDataSeed.Controllers
 
                 session.StartTime = m.StartTime;
                 session.EndTime = m.EndTime;
-                session.Status = (SessionStatus)m.status;
-                session.MeetingCode = m.location;
+                session.Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus);
+                session.MeetingCode = m.MeetingLink;
 
                
                 await _context.SaveChangesAsync();
@@ -206,7 +230,7 @@ namespace SeniorLearnDataSeed.Controllers
 
 
             
-
+            //TODO: get this to link back to course page.
             return RedirectToAction("Details", "Course", m.SessionId);
 
 
@@ -230,12 +254,13 @@ namespace SeniorLearnDataSeed.Controllers
 
             var m = new SessionDetails
             {
+                CourseId = sesh.CourseId,
                 SessionId = sesh.SessionId,
                 StartTime = sesh.StartTime,
                 EndTime = sesh.EndTime,
                 status = (SessionStatusModel)sesh.Status
             };
-           
+            await _context.SaveChangesAsync();
 
             return View(m); //passing the sessiondetails to the delte screen to display which session to delete.
             //then the post will delete the _contesxt sessions when the user confirsm it on the delte screen.
@@ -246,75 +271,20 @@ namespace SeniorLearnDataSeed.Controllers
         [Route("/Session/Delete/{SessionId}")]
         public async Task<IActionResult> DeleteConfirmed(int SessionId)
         {
-            var session = await _context.Sessions.FirstOrDefaultAsync(m => m.SessionId == id);
+            var sesh = await _context.Sessions.FindAsync(SessionId);
 
-            if (session != null)
+            int? id = sesh.CourseId;
+            
+            if (sesh != null)
             {
-                _context.Sessions.Remove(session);
+                _context.Sessions.Remove(sesh);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction("Details","Course",id);
+            //TODO: get this to redirect back to the course page.
+            return RedirectToAction("Index","Course");
         }
-
-        public async Task<SessionDetails> SessoinReturn(int sessionId) // Returns a course list of sessions, with location.
-        {
-            SessionDetails sessions = new SessionDetails();
-
-
-            var onPremSessions = _context.Sessions.OfType<OnPremSession>().ToListAsync();
-            var onlineSessions = _context.Sessions.OfType<OnlineSession>().ToListAsync();
-
-            var toDisplay = new SessionDetails();
-
-            foreach (var session in await onPremSessions)
-            {
-
-                if (session.SessionId == sessionId)
-                {
-
-                    toDisplay = new SessionDetails() //TODO: add the remaining variables needed for onPrem and Online.
-                    {
-                        status = (SessionStatusModel)session.Status,
-                        SessionId = session.SessionId,
-                        CourseId = session.CourseId,
-                        eventLocation = session.StreetName,
-                        StartTime = session.StartTime,
-                        EndTime = session.EndTime,
-
-                    };
-
-
-                    sessions = toDisplay;
-                }
-            }
-
-
-            foreach (var session in await onlineSessions)
-            {
-                if (session.SessionId == sessionId)
-                {
-
-                    toDisplay = new SessionDetails()
-                    {
-                        status = (SessionStatusModel)session.Status,
-                        SessionId = session.SessionId,
-                        CourseId = session.CourseId,
-                        eventLocation = session.OnlineLink,
-                        StartTime = session.StartTime,
-                        EndTime = session.EndTime,
-                    };
-
-                    sessions = toDisplay;
-                }
-            }
-
-
-
-
-
-
-            return sessions;
-        }
+        
+        
 
 
     }
