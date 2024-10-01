@@ -97,7 +97,7 @@ namespace SeniorLearnDataSeed.Controllers
                             ModelState.AddModelError("", "Oopst daisy, bummer try again");//generic for the user
                         }
                     
-
+                    //TODO: return forbid if role is wrong, or check with saxon on what he wants to do.
                     return Forbid();
                 }
             }
@@ -127,6 +127,8 @@ namespace SeniorLearnDataSeed.Controllers
                     isStandAlone = course.isStandAlone
                 };
                 return View(c);
+            
+            //TODO: fix edit to take corrrect application id.
             }
             return RedirectToAction("HomeScreen", "Home");
         }
