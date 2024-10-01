@@ -32,7 +32,7 @@ namespace SeniorLearnDataSeed.Models.Course
         {
             Name = course.Name;
             Description = course.Description;
-            ApplicationUserId = course.ApplicationUserId;
+         
             isStandAlone = course.isStandAlone;
         }
 

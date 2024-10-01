@@ -70,12 +70,12 @@ namespace SeniorLearnDataSeed.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
                 if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro")
                 {
-
-                    if (ModelState.IsValid)
-                    {
+                    m.ApplicationUserId = userID;
+                   
                         try
                         {
 
@@ -96,9 +96,9 @@ namespace SeniorLearnDataSeed.Controllers
                             _logger.LogError(ex, ex.Message);//for the developer
                             ModelState.AddModelError("", "Oopst daisy, bummer try again");//generic for the user
                         }
-                    }
+                    
 
-                    return View(m);
+                    return Forbid();
                 }
             }
             return RedirectToAction("HomeScreen","Home");
