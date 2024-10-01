@@ -2,6 +2,7 @@ using SeniorLearnDataSeed.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using SeniorLearnDataSeed.Data.Core;
+using SeniorLearnDataSeed.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace SeniorLearnDataSeed
@@ -17,7 +18,7 @@ namespace SeniorLearnDataSeed
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            
+            //builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             builder.Services.ConfigureApplicationCookie(options =>
             {

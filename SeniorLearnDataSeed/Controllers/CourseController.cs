@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Models.Course;
+using Microsoft.AspNetCore.Identity;
+using SeniorLearnDataSeed.Models;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -11,10 +13,13 @@ namespace SeniorLearnDataSeed.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<CourseController> _logger;
+        //private readonly UserManager<IdentityUser> _userManager;
 
-        public CourseController(ApplicationDbContext context)
+        public CourseController(ApplicationDbContext context,  ILogger<CourseController> logger)
         {
+            _logger = logger;
             _context = context;
+            
         }
 
         // GET: Course/Index
@@ -23,40 +28,57 @@ namespace SeniorLearnDataSeed.Controllers
         // GET: Course/Create
         public IActionResult Create()
         {
-            return View();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+
+            return RedirectToAction("HomeScreen", "Home");
+
         }
 
         // POST: Course/Create
         [HttpPost]
         public async Task<IActionResult> Create(Create m)
         {
-            if (ModelState.IsValid)
+            if (User.Identity.IsAuthenticated)
             {
-                try
-                {
+                var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-                    var course = new Course
-                    {
-                        Name = m.Name,
-                        Description = m.Description,
-                        ApplicationUserId = m.ApplicationUserId,
-                        isStandAlone = m.isStandAlone
-                    };
+                if (userRole == "Admin"  || userRole == "Honourary"  || userRole == "Pro")
+           {
 
-                  
+                    
+                    
+                        try
+                        {
+
+                            var course = new Course
+                            {
+                                Name = m.Name,
+                                Description = m.Description,
+                                ApplicationUserId = userID,
+                                
+                                isStandAlone = m.isStandAlone
+                            };
+
+                            _context.Add(course);
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction("Index");
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, ex.Message);//for the developer
+                            ModelState.AddModelError("", "Oopst daisy, bummer try again");//generic for the user
+                        }
                     
 
-                    _context.Add(course);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
-                }catch (Exception ex)
-                {
-                    _logger.LogError(ex, ex.Message);//for the developer
-                    ModelState.AddModelError("", "Oopst daisy, bummer try again");//generic for the user
+                    return View(m);
                 }
             }
-
-            return View(m);
+            return RedirectToAction("HomeScreen", "Home");
         }
 
 
