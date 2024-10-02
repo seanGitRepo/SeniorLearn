@@ -35,12 +35,19 @@
                         @if(User.IsInRole(RoleDetail.Role_Admin) || User.IsInRole(RoleDetail.Role_User_Pro) 
                         || User.IsInRole(RoleDetail.Role_User_Hon)){
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="MyCourses">My Created Courses</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Create">Create Course</a>
                             </li>
                         }
+                        @if (User.IsInRole(RoleDetail.Role_Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
+                            </li>
+                        }
+
                         
                     </ul>
                     <partial name="_LoginPartial" />

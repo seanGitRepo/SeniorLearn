@@ -10,6 +10,7 @@ using Microsoft.Identity.Client;
 using SeniorLearnDataSeed.Helpers;
 using SeniorLearnDataSeed.Models.Session;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 
 
 //TODO: there is no security when trying to access pages.
@@ -24,6 +25,45 @@ namespace SeniorLearnDataSeed.Controllers
         public CourseController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        //GET :course/mycourses
+
+        public async Task<IActionResult> MyCourses()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                var proMemberCourses = await _context.Courses
+                    .Where(c => c.ApplicationUserId == userID)
+                    .ToListAsync();
+
+                var cd = new List<Details>();
+                foreach (var item in proMemberCourses)
+                {
+                    cd.Add(new Models.Course.Details(item));
+                }
+
+                if (cd.IsNullOrEmpty())
+                {
+                    return View("Empty");
+                }
+                else
+                {
+                    return View(cd);
+                }
+
+                
+            }
+            
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+
+            
+            
         }
 
         // GET: Course/Index
@@ -89,7 +129,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                             _context.Add(course);
                             await _context.SaveChangesAsync();
-                            return RedirectToAction("Index");
+                            return RedirectToAction("MyCourses");
                         }
                         catch (Exception ex)
                         {
@@ -123,7 +163,7 @@ namespace SeniorLearnDataSeed.Controllers
                     CourseId = course.CourseId,
                     Name = course.Name,
                     Description = course.Description,
-                    ApplicationUserId = course.ApplicationUserId,
+                    //ApplicationUserId = course.ApplicationUserId,
                     isStandAlone = course.isStandAlone
                 };
                 return View(c);
@@ -147,7 +187,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 course.Name = model.Name;
                 course.Description = model.Description;
-                course.ApplicationUserId = model.ApplicationUserId; // not sure if this should be removed
+                //course.ApplicationUserId = model.ApplicationUserId; // not sure if this should be removed
                 course.isStandAlone = model.isStandAlone;
 
 
