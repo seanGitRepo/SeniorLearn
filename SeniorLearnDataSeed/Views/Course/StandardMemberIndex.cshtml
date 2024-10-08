@@ -1,0 +1,66 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<SeniorLearnDataSeed.Models.Course.Details>
+
+@{
+    ViewData["Title"] = "StandardMemberIndex";
+
+}
+
+<h1>Available Courses</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isStandAlone)
+            </th>
+            <th>Sessions</th> <!--New column for sessions-->
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationUserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isStandAlone)
+                </td>
+                <td>
+                    @if(item.Sessions != null && item.Sessions.Any())
+                    {
+                        <a asp-action="Details" asp-controller="Course" asp-route-courseId="@item.CourseId">Sessions</a>
+ 
+                    }
+                    else
+                    {
+                        <span>No sessions available</span>
+                    }
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>

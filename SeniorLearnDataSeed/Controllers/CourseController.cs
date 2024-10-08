@@ -29,6 +29,36 @@ namespace SeniorLearnDataSeed.Controllers
 
         //GET :course/mycourses
 
+        public async Task<IActionResult> StandardMemberIndex()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var courses = await _context.Courses
+                    .Where(c => c.ApplicationUserId != userID)
+                    .Include(c=> c.Sessions)
+                    .ToListAsync();
+
+                var cd = new List<Details>();
+                foreach (var item in courses)
+                {
+                    cd.Add(new Models.Course.Details(item));
+                }
+                if (cd.IsNullOrEmpty())
+                {
+                    return View("Empty");
+                }
+                else
+                {
+                    return View(cd);
+                }
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+        }
+
         public async Task<IActionResult> MyCourses()
         {
             if (User.Identity.IsAuthenticated)

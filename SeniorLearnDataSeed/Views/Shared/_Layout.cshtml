@@ -47,6 +47,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
                             </li>
                         }
+                        @if (User.Identity.IsAuthenticated )
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="StandardMemberIndex">Available Courses</a>
+                            </li>
+                        }
 
                         
                     </ul>
