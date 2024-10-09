@@ -49,10 +49,10 @@
                     @Html.DisplayFor(modelItem => item.isStandAlone)
                 </td>
                 <td>
-                    @if(item.Sessions != null && item.Sessions.Any())
+                    @if (item.Sessions != null && item.Sessions.Any())
                     {
-                        <a asp-action="Details" asp-controller="Course" asp-route-courseId="@item.CourseId">Sessions</a>
- 
+                        <a asp-action="EnrollDetails" asp-route-id="@item.CourseId">Details</a>
+
                     }
                     else
                     {
@@ -60,7 +60,10 @@
                     }
                 </td>
                 
+
             </tr>
+            
         }
+        
     </tbody>
 </table>

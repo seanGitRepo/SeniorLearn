@@ -5,6 +5,8 @@ namespace SeniorLearnDataSeed.Models.Enrollments
     public class EnrollmentRepository
     {
         //for data separation
+
+        public EnrollmentRepository() { }
         public EnrollmentRepository(Data.Core.Enrollment e) {
             EnrollmentId = e.EnrollmentId;
             ApplicationUserId = e.ApplicationUserId;

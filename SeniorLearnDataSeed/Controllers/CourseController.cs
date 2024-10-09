@@ -77,6 +77,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 if (cd.IsNullOrEmpty())
                 {
+                    //return Forbid();
                     return View("Empty");
                 }
                 else
@@ -324,7 +325,52 @@ namespace SeniorLearnDataSeed.Controllers
 
             
         }
+        public async Task<IActionResult> EnrollDetails(int? id)
+        {
+            //TODO:have a button on the details page that selects edit, which brings up all the buttons to make changes, rather than having all the buttons at once.
 
+            if (User.Identity.IsAuthenticated)
+            {
+                var course = await _context.Courses
+                 .AsNoTracking()
+                  .Include(c => c.Sessions)
+                  .FirstOrDefaultAsync(m => m.CourseId == id);
+
+
+
+
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                var m = new Details(course);
+
+
+                var sessions = await SessionDetailsList(m.CourseId);
+
+                m.Sessions = sessions;
+
+                var courseCreator = await _context.ApplicationUsers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
+
+
+                m.MemberName = $"{courseCreator.FirstName} {courseCreator.LastName}";
+
+                ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
+
+
+
+                return View("EnrollDetails", m);
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+
+
+
+        }
         public async Task<List<SessionDetails>> SessionDetailsList(int CourseID)
         {
 
@@ -350,7 +396,7 @@ namespace SeniorLearnDataSeed.Controllers
                     string locationtopost = $"{session.StreetNumber} {session.StreetName} {session.Suburb}";
 
                     toDisplay = new SessionDetails() 
-                    {
+                    { 
                         status = (SessionStatusModel)session.Status,
                         SessionId = session.SessionId,
                         CourseId = session.CourseId,

@@ -1,0 +1,136 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model SeniorLearnDataSeed.Models.Course.Details
+@{
+    ViewData["Title"] = "EnrollDetails";
+}
+
+
+
+
+<h1 style=" text-align: center;">@Model.Name</h1>
+
+<div>
+
+
+    <div>
+
+        <ul>
+            <li>
+                Course ID: @Model.CourseId
+            </li>
+
+            <li>
+                Organiser: @Model.MemberName
+            </li>
+            <li>
+                Stand Alone: @Model.isStandAlone
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Session ID </th>
+            <th>Start Date </th>
+            <th>Location </th>
+            <th>Status </th>
+            <th> </th>
+            <th> </th>
+
+        </tr>
+    </thead>
+    <tbody @if (Model.Sessions != null)
+    {
+        @foreach (var item in Model.Sessions)
+        {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.SessionId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
+                            <td>@Html.DisplayFor(modelItem => item.eventLocation)</td>
+                            <td>@Html.DisplayFor(modelItem => item.status)</td>
+                            
+                        </tr>
+        }
+    }
+    else
+    {
+                <tr>
+                    <td colspan="3">No sessions available</td>
+                </tr>
+    }
+    </tbody>
+</table>
+<p> </p>
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form asp-action="Enroll" asp-controller="Enrollment" asp-route-courseId = "@Model.CourseId" method="post">
+          
+            <button type="submit" class="btn btn-primary">Enroll</button>
+        </form>
+    }
+</div>
+
+<div style=" display:flex; justify-content: flex-end">
+    
+
+</div>
+<p> </p>
+<p> </p>
+<div id='calendar'></div>
+
+
+
+
+<a asp-action="Index" asp-route-id="@Model.CourseId">List</a>
+
+
+<style>
+    /*Ripped straight from chat GPT*/
+    table {
+        width: 100%; /* Make the table occupy the full width of the parent */
+        border-collapse: collapse; /* Combine borders for a cleaner look */
+    }
+
+    th, td {
+        padding: 10px; /* Add padding for better spacing */
+        text-align: left; /* Align text to the left */
+        border: 1px solid #ddd; /* Add a border to the table cells */
+    }
+
+    th {
+        background-color: #f2f2f2; /* Set a background color for header */
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Add a background color for even rows */
+    }
+</style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: @Html.Raw(ViewData[("Events")]),
+            headerToolbar: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'timeGridWeek,dayGridMonth,listMonth'
+            },
+
+        });
+        calendar.render()
+    });
+
+    //TODO: create a JSON list helper to setup the calender view. sort of the same thing with a model, but for json (which i am still not certain of)
+</script>
