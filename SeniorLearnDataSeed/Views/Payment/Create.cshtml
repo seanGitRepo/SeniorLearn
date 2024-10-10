@@ -1,1 +1,26 @@
-﻿<h1>Create Payment</h1>
+﻿
+@model SeniorLearnDataSeed.Models.PaymentViewModel
+
+<h1>Create Payment</h1>
+
+<form asp-action="Create" method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Create Payment</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="SelectedPaymentType" class="form-label">Payment Type</label>
+            <select asp-for="SelectedPaymentType" class="form-select" asp-items="Model.PaymentTypes">
+                <option value="">Select Payment Type</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="AmountPaid" class="form-label">Amount Paid</label>
+            <input asp-for="AmountPaid" class="form-control" />
+            <span asp-validation-for="AmountPaid" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </div>
+</form>

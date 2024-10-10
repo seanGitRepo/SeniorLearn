@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SeniorLearnDataSeed.Data;
+using SeniorLearnDataSeed.Data.Core;
+using SeniorLearnDataSeed.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -25,9 +29,53 @@ namespace SeniorLearnDataSeed.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return View();
+                var model = new PaymentViewModel
+                {
+                    PaymentTypes = Enum.GetValues(typeof(PaymentType))
+                    .Cast<PaymentType>()
+                    .Select(pt => new SelectListItem
+                    {
+                        Value = pt.ToString(),
+                        Text = pt.ToString()
+                    }).ToList()
+                };
+                return View(model);
             }
-            return RedirectToAction("HomeScreen", "Home");
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(PaymentViewModel model)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var user =  await _context.ApplicationUsers
+                           .FirstOrDefaultAsync(u => u.Id == userID);
+                var payment = new Payment
+                {
+
+                    PaymentType = model.SelectedPaymentType,
+                    AmountPaid = model.AmountPaid,
+                    ApplicationUserId = userID,
+                    userRegistrationDate = DateTime.UtcNow,
+                };
+
+                _context.Payments.Add(payment);
+                user.Payments.Add(payment);
+                _context.SaveChangesAsync();
+                TempData["success"] = "Payment created successfully";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+            
         }
 
     }
