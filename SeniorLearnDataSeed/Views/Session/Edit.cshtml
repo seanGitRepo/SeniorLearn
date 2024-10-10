@@ -1,0 +1,99 @@
+﻿@model SeniorLearnDataSeed.Models.Session.SessionEdit
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SessionEdit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" id="sessionForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SessionId" />
+          
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" class="form-control" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SelectedStatus, "Status")
+                @Html.DropDownListFor(model => model.SelectedStatus, (SelectList)ViewBag.StatusOptions, "Select Status", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SelectedStatus)
+            </div>
+            <div class="form-group">
+                <label asp-for="session_type" class="control-label"></label>
+                <input asp-for="session_type" class="form-control" />
+                <span asp-validation-for="session_type" class="text-danger"></span>
+            </div>
+            <p></p>
+            <h5>On Premise Class </h5>
+            <div class="form-group">
+                <label asp-for="StreetNumber" class="control-label"></label>
+                <input asp-for="StreetNumber" class="form-control" />
+                <span asp-validation-for="StreetNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StreetName" class="control-label"></label>
+                <input asp-for="StreetName" class="form-control" />
+                <span asp-validation-for="StreetName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Suburb" class="control-label"></label>
+                <input asp-for="Suburb" class="form-control" />
+                <span asp-validation-for="Suburb" class="text-danger"></span>
+            </div>
+            <p></p>
+            <h5>OnLine Class </h5>
+            <div class="form-group">
+                <label asp-for="MeetingLink" class="control-label"></label>
+                <input asp-for="MeetingLink" class="form-control" />
+                <span asp-validation-for="MeetingLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId">Back to course</a>
+</div>
+
+<script>
+    //script to check if the member selects an input for both online and onprem.
+    document.getElementById('sessionForm').addEventListener('submit', function (event) {
+        var Suburb = document.getElementById('Suburb').value;
+        var StreetN = document.getElementById('StreetName').value;
+        var StreetNum = document.getElementById('StreetNumber').value;
+        var meetingLink = document.getElementById('MeetingLink').value;
+
+        // Check if any part of the street address is filled
+        if (Suburb || StreetN || StreetNum) {
+            // If any part of the address is filled, meetingLink must be empty
+            if (meetingLink) {
+                // Both fields have values, raise an alert
+                alert("Please only enter an on-premise or online class option.");
+                event.preventDefault();  // Prevent form submission
+            } else {
+                // If street address fields are empty, ensure meetingLink is not also empty
+                if (!Suburb || !StreetN || !StreetNum) {
+                    alert("Please correctly enter the full address.");
+                    event.preventDefault();  // Prevent form submission
+                }
+            }
+        } else if (!Suburb && !StreetN && !StreetNum && !meetingLink) {
+            alert("Please input an address option.");
+            event.preventDefault();
+        }
+    });
+</script>
