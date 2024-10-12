@@ -47,7 +47,7 @@
                         <a asp-controller="Payment" asp-action="Edit" asp-route-paymentId="@obj.PaymentId" class="btn btn-primary mx-2">
                             Edit
                         </a>
-                        <a asp-controller="Payment" asp-action="Delete" class="btn btn-primary mx-2">
+                        <a asp-controller="Payment" asp-action="Delete" asp-route-paymentId="@obj.PaymentId" class="btn btn-primary mx-2">
                             Delete
                         </a>
                     </div>

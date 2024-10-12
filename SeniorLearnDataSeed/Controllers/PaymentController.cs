@@ -215,7 +215,7 @@ namespace SeniorLearnDataSeed.Controllers
                 }
 
 
-                return View("Edit", model);
+                return View("Delete", model);
             }
             else
             {
