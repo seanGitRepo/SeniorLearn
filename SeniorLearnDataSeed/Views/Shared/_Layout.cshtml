@@ -61,6 +61,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Payment Index Test</a>
                             </li>
                         }
+                        @if(User.Identity.IsAuthenticated && User.IsInRole(RoleDetail.Role_Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="AdminIndex">Payment Index Admin</a>
+                            </li>
+                        }
 
                     </ul>
                     <partial name="_LoginPartial" />
