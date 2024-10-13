@@ -25,6 +25,12 @@
             </select>
         </div>
         <div class="mb-3">
+            <label asp-for="SelectedPaymentStatus" class="form-label">Payment Status</label>
+            <select asp-for="SelectedPaymentStatus" class="form-select" asp-items="Model.PaymentStatuses">
+                <option value="">Select Payment Status</option>
+            </select>
+        </div>
+        <div class="mb-3">
             <label asp-for="AmountPaid" class="form-label">Amount Paid</label>
             <input asp-for="AmountPaid" class="form-control" />
             <span asp-validation-for="AmountPaid" class="text-danger"></span>

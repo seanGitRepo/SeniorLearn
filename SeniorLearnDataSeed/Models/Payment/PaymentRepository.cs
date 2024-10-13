@@ -11,7 +11,7 @@ namespace SeniorLearnDataSeed.Models.Payment
         {
             PaymentId = p.PaymentId;
             SelectedPaymentType = p.PaymentType;
-            PaymentStatus = p.PaymentStatus;
+            SelectedPaymentStatus = p.PaymentStatus;
             AmountPaid = p.AmountPaid;
             ApplicationUserId = p.ApplicationUserId;
             userRegistrationDate = p.userRegistrationDate;
@@ -24,9 +24,10 @@ namespace SeniorLearnDataSeed.Models.Payment
 
         [Key]
         public int PaymentId { get; set; }
+        public List<SelectListItem> PaymentStatuses { get; set; }
         public PaymentType SelectedPaymentType { get; set; } // Property for selected payment type
         public List<SelectListItem> PaymentTypes { get; set; } // List of payment types as select list items
-        public PaymentStatus PaymentStatus { get; set; }
+        public PaymentStatus SelectedPaymentStatus { get; set; }
         public double AmountPaid { get; set; }
         public string? ApplicationUserId { get; set; }
         public ApplicationUser? User { get; set; }

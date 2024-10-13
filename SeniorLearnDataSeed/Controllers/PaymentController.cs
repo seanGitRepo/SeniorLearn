@@ -18,6 +18,11 @@ namespace SeniorLearnDataSeed.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> SignUp()
+        {
+            return View("SignUp");
+        }
+
         public async Task<IActionResult> AdminIndex()
         {
 
@@ -122,6 +127,14 @@ namespace SeniorLearnDataSeed.Controllers
                 {
                     SelectedPaymentType = paymentFromDb.PaymentType,
                     AmountPaid = paymentFromDb.AmountPaid,
+                    PaymentStatuses = Enum.GetValues(typeof(PaymentStatus))
+                    .Cast<PaymentStatus>()
+                    .Select(pt => new SelectListItem
+                    {
+                        Value = pt.ToString(),
+                        Text = pt.ToString(),
+                        Selected = pt == paymentFromDb.PaymentStatus
+                    }).ToList(),
                     PaymentTypes = Enum.GetValues(typeof(PaymentType))
                     .Cast<PaymentType>()
                     .Select(pt => new SelectListItem
@@ -170,6 +183,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 
                 payment.PaymentType = model.SelectedPaymentType;
+                payment.PaymentStatus = model.SelectedPaymentStatus;
                 payment.AmountPaid = model.AmountPaid;
 
                 await _context.SaveChangesAsync();
