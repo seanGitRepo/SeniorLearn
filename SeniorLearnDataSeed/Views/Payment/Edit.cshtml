@@ -1,4 +1,5 @@
-﻿@*
+﻿@using SeniorLearnDataSeed.Data.Core
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -35,6 +36,19 @@
             <input asp-for="AmountPaid" class="form-control" />
             <span asp-validation-for="AmountPaid" class="text-danger"></span>
         </div>
+        <div class="mb-3" id="card-details" style="display: @(Model.SelectedPaymentType == PaymentType.EFT || Model.SelectedPaymentType == PaymentType.CreditCard ? "block" : "none")">
+            <label asp-for="CardNumber" class="form-label">Card Number</label>
+            <input asp-for="CardNumber" class="form-control" maxlength="16" minlength="16" />
+            <span asp-validation-for="CardNumber" class="text-danger"></span>
+
+            <label asp-for="CardExpiry" class="form-label">Card Expiry (MM/YY)</label>
+            <input asp-for="CardExpiry" class="form-control" />
+            <span asp-validation-for="CardExpiry" class="text-danger"></span>
+
+            <label asp-for="CVV" class="form-label">CVV</label>
+            <input asp-for="CVV" class="form-control" maxlength="3" minlength="3" />
+            <span asp-validation-for="CVV" class="text-danger"></span>
+        </div>
         <button type="submit" class="btn btn-primary">Edit</button>
         
         <a asp-controller="Payment" asp-action="AdminIndex"  class="btn btn-primary mx-2">
@@ -44,3 +58,24 @@
 
     </div>
 </form>
+<script>
+    document.getElementById('SelectedPaymentType').addEventListener('change', function () {
+        const cardDetails = document.getElementById('card-details');
+        const selectedType = this.value;
+
+        if (selectedType === 'EFT' || selectedType === 'CreditCard') {
+            cardDetails.style.display = 'block';
+            document.querySelector('[name="CardNumber"]').setAttribute('required', 'required');
+            document.querySelector('[name="CardExpiry"]').setAttribute('required', 'required');
+            document.querySelector('[name="CVV"]').setAttribute('required', 'required');
+        } else {
+            cardDetails.style.display = 'none';
+            document.querySelector('[name="CardNumber"]').removeAttribute('required');
+            document.querySelector('[name="CardExpiry"]').removeAttribute('required');
+            document.querySelector('[name="CVV"]').removeAttribute('required');
+        }
+    });
+
+    // Trigger change event on page load to set the initial state
+    document.getElementById('SelectedPaymentType').dispatchEvent(new Event('change'));
+</script>

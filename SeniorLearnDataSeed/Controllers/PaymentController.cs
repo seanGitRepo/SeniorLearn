@@ -76,6 +76,67 @@ namespace SeniorLearnDataSeed.Controllers
             }
             
         }
+        public IActionResult CreateAdmin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var model = new PaymentRepository
+                {
+                    PaymentTypes = Enum.GetValues(typeof(PaymentType))
+                    .Cast<PaymentType>()
+                    .Select(pt => new SelectListItem
+                    {
+                        Value = pt.ToString(),
+                        Text = pt.ToString()
+                    }).ToList()
+                };
+                return View("CreateAdmin", model);
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAdmin(PaymentRepository model)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var user = await _context.ApplicationUsers
+                           .FirstOrDefaultAsync(u => u.Id == userID);
+                var payment = new Payment
+                {
+
+                    PaymentType = model.SelectedPaymentType,
+                    AmountPaid = model.AmountPaid,
+                    ApplicationUserId = userID,
+                    userRegistrationDate = DateTime.UtcNow,
+                };
+
+                if (model.SelectedPaymentType == PaymentType.EFT || model.SelectedPaymentType == PaymentType.CreditCard)
+                {
+                    payment.CardNumber = model.CardNumber;
+                    payment.CardExpiry = model.CardExpiry;
+                    payment.CVV = model.CVV;
+                }
+
+                _context.Payments.Add(payment);
+                user.Payments.Add(payment);
+                await _context.SaveChangesAsync();
+
+
+
+                TempData["success"] = "subscribed successfully";
+                return RedirectToAction("PaymentAdmin");
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(PaymentRepository model)
@@ -94,6 +155,13 @@ namespace SeniorLearnDataSeed.Controllers
                     userRegistrationDate = DateTime.UtcNow,
                 };
 
+                if(model.SelectedPaymentType == PaymentType.EFT || model.SelectedPaymentType == PaymentType.CreditCard)
+                {
+                    payment.CardNumber = model.CardNumber;
+                    payment.CardExpiry = model.CardExpiry;
+                    payment.CVV = model.CVV;
+                }
+
                 _context.Payments.Add(payment);
                 user.Payments.Add(payment);
                 await _context.SaveChangesAsync();
@@ -101,7 +169,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 
                 TempData["success"] = "Payment created successfully";
-                return RedirectToAction("Index");
+                return RedirectToAction("HomeScreen", "Home");
             }
             else
             {
@@ -127,6 +195,9 @@ namespace SeniorLearnDataSeed.Controllers
                 {
                     SelectedPaymentType = paymentFromDb.PaymentType,
                     AmountPaid = paymentFromDb.AmountPaid,
+                    CardNumber = paymentFromDb.CardNumber,
+                    CardExpiry = paymentFromDb.CardExpiry,
+                    CVV = paymentFromDb.CVV,
                     PaymentStatuses = Enum.GetValues(typeof(PaymentStatus))
                     .Cast<PaymentStatus>()
                     .Select(pt => new SelectListItem
@@ -185,6 +256,12 @@ namespace SeniorLearnDataSeed.Controllers
                 payment.PaymentType = model.SelectedPaymentType;
                 payment.PaymentStatus = model.SelectedPaymentStatus;
                 payment.AmountPaid = model.AmountPaid;
+                if(model.SelectedPaymentType == PaymentType.EFT || model.SelectedPaymentType == PaymentType.CreditCard)
+                {
+                    payment.CardNumber = model.CardNumber;
+                    payment.CardExpiry = model.CardExpiry;
+                    payment.CVV = model.CVV;
+                }
 
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Payment updated successfully";
