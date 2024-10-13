@@ -325,6 +325,55 @@ namespace SeniorLearnDataSeed.Controllers
 
             
         }
+        public async Task<IActionResult> EnrollDetailsContinuous(int? id)
+        {
+            //TODO:have a button on the details page that selects edit, which brings up all the buttons to make changes, rather than having all the buttons at once.
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var course = await _context.Courses
+                 .AsNoTracking()
+                  .Include(c => c.Sessions)
+                  .FirstOrDefaultAsync(m => m.CourseId == id);
+
+
+
+
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                var m = new Details(course);
+
+
+                var sessions = await SessionDetailsList(m.CourseId);
+
+                m.Sessions = sessions;
+
+                var courseCreator = await _context.ApplicationUsers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
+
+
+                m.MemberName = $"{courseCreator.FirstName} {courseCreator.LastName}";
+
+                ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
+
+
+                
+                    return View("EnrollDetailsContinuous", m);
+                
+                  
+
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+
+
+
+        }
         public async Task<IActionResult> EnrollDetails(int? id)
         {
             //TODO:have a button on the details page that selects edit, which brings up all the buttons to make changes, rather than having all the buttons at once.
@@ -360,14 +409,9 @@ namespace SeniorLearnDataSeed.Controllers
                 ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
 
 
-                if (course.isStandAlone)
-                {
-                    return View("EnrollDetailsContinuous", m);
-                }
-                else
-                {
+                
                     return View("EnrollDetails", m);
-                }
+                
                 
             }
             else

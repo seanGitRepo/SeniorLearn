@@ -48,7 +48,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
                             </li>
                         }
-                        @if (User.Identity.IsAuthenticated && (User.IsInRole(RoleDetail.Role_User_Standard) || User.IsInRole(RoleDetail.Role_User_Pro) || User.IsInRole(RoleDetail.Role_User_Hon)))
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole(RoleDetail.Role_User_Standard) || User.IsInRole(RoleDetail.Role_User_Pro) || User.IsInRole(RoleDetail.Role_User_Hon) || User.IsInRole(RoleDetail.Role_Admin)))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="StandardMemberIndex">Available Courses</a>

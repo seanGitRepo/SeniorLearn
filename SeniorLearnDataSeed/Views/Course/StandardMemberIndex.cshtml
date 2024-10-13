@@ -49,11 +49,17 @@
                     @Html.DisplayFor(modelItem => item.isStandAlone)
                 </td>
                 <td>
-                    @if (item.Sessions != null && item.Sessions.Any())
+                    @if (item.Sessions != null && item.Sessions.Any() && item.isStandAlone)
                     {
-                        <a asp-action="EnrollDetails" asp-route-id="@item.CourseId">Details</a>
+                        <a asp-action="EnrollDetailsContinuous" asp-route-id="@item.CourseId">Details</a>
 
                     }
+                    else if (item.Sessions != null && item.Sessions.Any())
+                    {
+                        <a asp-action="EnrollDetails" asp-route-id="@item.CourseId">Details</a>
+                    }
+
+                
                     else
                     {
                         <span>No sessions available</span>

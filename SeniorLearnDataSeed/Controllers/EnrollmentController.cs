@@ -3,6 +3,7 @@ using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models.Enrollments;
 using SeniorLearnDataSeed.Data;
 using Microsoft.EntityFrameworkCore;
+using SeniorLearnDataSeed.Helpers;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -19,7 +20,28 @@ namespace SeniorLearnDataSeed.Controllers
         {
             return View();
         }
+
+        public IActionResult EnrollContinuousConfirmation(int courseId, int sessionId)
+        {
+            var course = _context.Courses.FirstOrDefault(x => x.CourseId == courseId);
+            var session = _context.Sessions.FirstOrDefault(s=>s.SessionId == sessionId);
+
+            var model = new EnrollmentConfirmationViewModel
+            {
+                CourseId = course.CourseId,
+                CourseName = course.Name,
+                CourseDescription = course.Description,
+                SessionId = session.SessionId,
+                SessionStartTime = session.StartTime,
+                SessionEndTime = session.EndTime
+            };
+            return View("EnrollContinuousConfirmation", model);
+        }
+            
+        
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnrollContinuous(EnrollmentRepository enrollmentRepository, int courseId, int sessionId)
         {
             if (User.Identity.IsAuthenticated)
@@ -51,7 +73,7 @@ namespace SeniorLearnDataSeed.Controllers
                     {
                         TempData["error"] = "You are already enrolled in this session";
 
-                        return RedirectToAction("EnrollDetails", "Course", new { id = courseId });
+                        return RedirectToAction("EnrollDetailsContinuous", "Course", new { id = courseId });
                     }
 
                     var user = await _context.ApplicationUsers
@@ -69,7 +91,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                     await _context.SaveChangesAsync();
                     TempData["success"] = "Enrolled successfully";
-                    return RedirectToAction("EnrollDetails", "Course", new { id = courseId });
+                    return RedirectToAction("EnrollDetailsContinuous", "Course", new { id = courseId });
 
 
                 }

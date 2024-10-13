@@ -67,14 +67,25 @@
                                     <td>@Html.DisplayFor(modelItem => item.eventLocation)</td>
                                     <td>@Html.DisplayFor(modelItem => item.status)</td>
                                     <td>
-                                        @if (User.Identity.IsAuthenticated)
-                                        {
-                                            <form asp-action="EnrollContinuous" asp-controller="Enrollment" asp-route-courseId="@Model.CourseId" asp-route-SessionId="@item.SessionId"  method="post">
-                                             
-                                                
-                                                <button type="submit" class="btn btn-primary">Enroll</button>
-                                            </form>
-                                        }
+                                        
+                                                          <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="Enrollment" asp-action="EnrollContinuous" 
+                                    asp-route-courseId="@Model.CourseId" 
+                                    asp-route-courseId="item.SessionId"
+                                    asp-route-courseName="@Model.Name"
+                                    asp-route-courseDescription="@Model.Description"
+                                    asp-route-sessionStartTime="@item.StartTime"
+                                    asp-route-sessionEndTime="@item.EndTime"
+                                    class="btn btn-primary mx-2" method="post">
+                                        Enroll
+                                    </a>
+                                    
+                                </div>
+
+                                                       
+                                            
+                                                         
+                                        
                                     </td>
 
                                 </tr>

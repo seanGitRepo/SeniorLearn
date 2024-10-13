@@ -1,0 +1,25 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model SeniorLearnDataSeed.Models.Enrollments.EnrollmentConfirmationViewModel
+<h1>Enroll Confirmation</h1>
+<h3>Are you sure you want to enroll</h3>
+
+<ul>
+    <li>Course: @Model.CourseName</li>
+    <li>Course: @Model.CourseDescription</li>
+    <li>Session: @Model.SessionId</li>
+    <li>Session: @Model.SessionStartTime</li>
+    <li>Session: @Model.SessionEndTime</li>
+
+</ul>
+
+<form method="post" asp-action="EnrollContinuous" asp-controller="Enrollment" asp-route-courseId="@Model.CourseId" asp-route-courseId="@Model.SessionId">
+    <input type="hidden" name="courseId" value="@Model.CourseId" />
+    <input type="hidden" name="sessionId" value="@Model.SessionId" />
+    <button type="submit" class="btn btn-primary">Enroll</button>
+</form>
+
+<a href="@Url.Action("Index", "Course")" class="btn btn-secondary">Cancel</a>
