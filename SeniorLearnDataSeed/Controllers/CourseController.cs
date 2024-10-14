@@ -10,6 +10,7 @@ using Microsoft.Identity.Client;
 using SeniorLearnDataSeed.Helpers;
 using SeniorLearnDataSeed.Models.Session;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 
 
 //TODO: there is no security when trying to access pages.
@@ -24,6 +25,76 @@ namespace SeniorLearnDataSeed.Controllers
         public CourseController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        //GET :course/mycourses
+
+        public async Task<IActionResult> StandardMemberIndex()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var courses = await _context.Courses
+                    .Where(c => c.ApplicationUserId != userID)
+                    .Include(c=> c.Sessions)
+                    .ToListAsync();
+
+                var cd = new List<Details>();
+                foreach (var item in courses)
+                {
+                    cd.Add(new Models.Course.Details(item));
+                }
+                if (cd.IsNullOrEmpty())
+                {
+                    return View("Empty");
+                }
+                else
+                {
+                    return View(cd);
+                }
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+        }
+
+        public async Task<IActionResult> MyCourses()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                var proMemberCourses = await _context.Courses
+                    .Where(c => c.ApplicationUserId == userID)
+                    .ToListAsync();
+
+                var cd = new List<Details>();
+                foreach (var item in proMemberCourses)
+                {
+                    cd.Add(new Models.Course.Details(item));
+                }
+
+                if (cd.IsNullOrEmpty())
+                {
+                    //return Forbid();
+                    return View("Empty");
+                }
+                else
+                {
+                    return View(cd);
+                }
+
+                
+            }
+            
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+
+            
+            
         }
 
         // GET: Course/Index
@@ -89,7 +160,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                             _context.Add(course);
                             await _context.SaveChangesAsync();
-                            return RedirectToAction("Index");
+                            return RedirectToAction("MyCourses");
                         }
                         catch (Exception ex)
                         {
@@ -123,7 +194,7 @@ namespace SeniorLearnDataSeed.Controllers
                     CourseId = course.CourseId,
                     Name = course.Name,
                     Description = course.Description,
-                    ApplicationUserId = course.ApplicationUserId,
+                    //ApplicationUserId = course.ApplicationUserId,
                     isStandAlone = course.isStandAlone
                 };
                 return View(c);
@@ -149,7 +220,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 course.Name = model.Name;
                 course.Description = model.Description;
-                course.ApplicationUserId = model.ApplicationUserId; // not sure if this should be removed
+                //course.ApplicationUserId = model.ApplicationUserId; // not sure if this should be removed
                 course.isStandAlone = model.isStandAlone;
 
 
@@ -256,7 +327,52 @@ namespace SeniorLearnDataSeed.Controllers
 
             
         }
+        public async Task<IActionResult> EnrollDetails(int? id)
+        {
+            //TODO:have a button on the details page that selects edit, which brings up all the buttons to make changes, rather than having all the buttons at once.
 
+            if (User.Identity.IsAuthenticated)
+            {
+                var course = await _context.Courses
+                 .AsNoTracking()
+                  .Include(c => c.Sessions)
+                  .FirstOrDefaultAsync(m => m.CourseId == id);
+
+
+
+
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                var m = new Details(course);
+
+
+                var sessions = await SessionDetailsList(m.CourseId);
+
+                m.Sessions = sessions;
+
+                var courseCreator = await _context.ApplicationUsers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
+
+
+                m.MemberName = $"{courseCreator.FirstName} {courseCreator.LastName}";
+
+                ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
+
+
+
+                return View("EnrollDetails", m);
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+
+
+
+        }
         public async Task<List<SessionDetails>> SessionDetailsList(int CourseID)
         {
 
@@ -282,7 +398,7 @@ namespace SeniorLearnDataSeed.Controllers
                     string locationtopost = $"{session.StreetNumber} {session.StreetName} {session.Suburb}";
 
                     toDisplay = new SessionDetails() 
-                    {
+                    { 
                         status = (SessionStatusModel)session.Status,
                         SessionId = session.SessionId,
                         CourseId = session.CourseId,

@@ -16,9 +16,10 @@ namespace SeniorLearnDataSeed.Models.Session
 
         [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
+        
 
-       // public SessionStatus sessionStatus { get; set; }
-       public string CourseName { get; set; }   
+        // public SessionStatus sessionStatus { get; set; }
+        public string CourseName { get; set; }   
         public string eventLocation { get; set; }  
 
         public SessionDetails() { }

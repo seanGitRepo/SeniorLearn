@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SeniorLearnDataSeed.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
     <link rel="stylesheet" href="~/css/main.css" />
     <script src="~/js/main.js"></script>
@@ -35,12 +36,25 @@
                         @if(User.IsInRole(RoleDetail.Role_Admin) || User.IsInRole(RoleDetail.Role_User_Pro) 
                         || User.IsInRole(RoleDetail.Role_User_Hon)){
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="MyCourses">My Created Courses</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Create">Create Course</a>
                             </li>
                         }
+                        @if (User.IsInRole(RoleDetail.Role_Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated )
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="StandardMemberIndex">Available Courses</a>
+                            </li>
+                        }
+
                         
                     </ul>
                     <partial name="_LoginPartial" />
@@ -50,6 +64,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>
