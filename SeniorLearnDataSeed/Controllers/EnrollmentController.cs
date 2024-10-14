@@ -35,7 +35,7 @@ namespace SeniorLearnDataSeed.Controllers
                 SessionStartTime = session.StartTime,
                 SessionEndTime = session.EndTime
             };
-            return View("EnrollContinuousConfirmation", model);
+            return View("~/Views/Enrollment/EnrollContinuousConfirmation.cshtml", model);
         }
             
         
@@ -61,7 +61,7 @@ namespace SeniorLearnDataSeed.Controllers
                     }
 
                     var session = await _context.Sessions
-                        .Include(c => c.CourseId)
+                        .Where(c => c.CourseId == course.CourseId)
                         .FirstOrDefaultAsync(s => s.SessionId == sessionId);
                     if (session == null)
                     {
