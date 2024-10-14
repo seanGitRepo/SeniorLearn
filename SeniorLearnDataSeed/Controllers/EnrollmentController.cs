@@ -76,7 +76,7 @@ namespace SeniorLearnDataSeed.Controllers
                         return RedirectToAction("EnrollDetailsContinuous", "Course", new { id = courseId });
                     }
 
-                    var user = await _context.ApplicationUsers
+                    var user = await _context.Users.OfType<ApplicationUser>()
                         .Include(u => u.Enrollments)
                         .FirstOrDefaultAsync(u => u.Id == userID);
 
@@ -149,7 +149,7 @@ namespace SeniorLearnDataSeed.Controllers
                     }
                 
                 
-                    var user = await _context.ApplicationUsers
+                    var user = await _context.Users.OfType<ApplicationUser>()
                         .Include(u => u.Enrollments)
                         .FirstOrDefaultAsync(u => u.Id == userID);
 

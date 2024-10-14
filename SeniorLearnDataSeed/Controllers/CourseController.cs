@@ -304,7 +304,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 m.Sessions = sessions;
 
-                var courseCreator = await _context.ApplicationUsers
+                var courseCreator = await _context.Users.OfType<ApplicationUser>()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
 
@@ -350,7 +350,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 m.Sessions = sessions;
 
-                var courseCreator = await _context.ApplicationUsers
+                var courseCreator = await _context.Users.OfType<ApplicationUser>()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
 
@@ -399,7 +399,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 m.Sessions = sessions;
 
-                var courseCreator = await _context.ApplicationUsers
+                var courseCreator = await _context.Users.OfType<ApplicationUser>()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
 

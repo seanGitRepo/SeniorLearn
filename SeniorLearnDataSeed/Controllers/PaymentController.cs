@@ -105,7 +105,7 @@ namespace SeniorLearnDataSeed.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                var user = await _context.ApplicationUsers
+                var user = await _context.Users.OfType<ApplicationUser>()
                            .FirstOrDefaultAsync(u => u.Id == userID);
                 var payment = new Payment
                 {
@@ -144,7 +144,7 @@ namespace SeniorLearnDataSeed.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                var user =  await _context.ApplicationUsers
+                var user =  await _context.Users.OfType<ApplicationUser>()
                            .FirstOrDefaultAsync(u => u.Id == userID);
                 var payment = new Payment
                 {
@@ -236,7 +236,7 @@ namespace SeniorLearnDataSeed.Controllers
             try
             {
                 var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                var user = await _context.ApplicationUsers
+                var user = await _context.Users.OfType<ApplicationUser>()
                            .Include(u => u.Payments)
                            .FirstOrDefaultAsync(u => u.Id == userID);
                 if (user == null)
@@ -320,7 +320,7 @@ namespace SeniorLearnDataSeed.Controllers
             try
             {
                 var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                var user = await _context.ApplicationUsers
+                var user = await _context.Users.OfType<ApplicationUser>()
                            .Include(u => u.Payments)
                            .FirstOrDefaultAsync(u => u.Id == userID);
                 
