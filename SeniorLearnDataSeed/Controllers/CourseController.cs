@@ -168,7 +168,7 @@ namespace SeniorLearnDataSeed.Controllers
                             ModelState.AddModelError("", "Oopst daisy, bummer try again");//generic for the user
                         }
                     
-                    //TODO: return forbid if role is wrong, or check with saxon on what he wants to do.
+
                     return Forbid();
                 }
             }
@@ -198,8 +198,6 @@ namespace SeniorLearnDataSeed.Controllers
                     isStandAlone = course.isStandAlone
                 };
                 return View(c);
-            
-            //TODO: fix edit to take corrrect application id.
             }
             return RedirectToAction("HomeScreen", "Home");
         }
@@ -306,7 +304,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 m.Sessions = sessions;
 
-                var courseCreator = await _context.ApplicationUsers
+                var courseCreator = await _context.Users.OfType<ApplicationUser>()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
 
@@ -326,6 +324,55 @@ namespace SeniorLearnDataSeed.Controllers
 
 
             
+        }
+        public async Task<IActionResult> EnrollDetailsContinuous(int? id)
+        {
+            //TODO:have a button on the details page that selects edit, which brings up all the buttons to make changes, rather than having all the buttons at once.
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var course = await _context.Courses
+                 .AsNoTracking()
+                  .Include(c => c.Sessions)
+                  .FirstOrDefaultAsync(m => m.CourseId == id);
+
+
+
+
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                var m = new Details(course);
+
+
+                var sessions = await SessionDetailsList(m.CourseId);
+
+                m.Sessions = sessions;
+
+                var courseCreator = await _context.Users.OfType<ApplicationUser>()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
+
+
+                m.MemberName = $"{courseCreator.FirstName} {courseCreator.LastName}";
+
+                ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
+
+
+                
+                    return View("EnrollDetailsContinuous", m);
+                
+                  
+
+            }
+            else
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
+
+
+
         }
         public async Task<IActionResult> EnrollDetails(int? id)
         {
@@ -352,7 +399,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 m.Sessions = sessions;
 
-                var courseCreator = await _context.ApplicationUsers
+                var courseCreator = await _context.Users.OfType<ApplicationUser>()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(u => u.Id == course.ApplicationUserId);
 
@@ -362,8 +409,10 @@ namespace SeniorLearnDataSeed.Controllers
                 ViewData["Events"] = JSONListHelper.GetEventListJsonString(m.Sessions); //Gives the JSON helper the list of Sessions and puts it in a class that is accepted by the FullCalender File.
 
 
-
-                return View("EnrollDetails", m);
+                
+                    return View("EnrollDetails", m);
+                
+                
             }
             else
             {

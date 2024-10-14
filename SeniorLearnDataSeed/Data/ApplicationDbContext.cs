@@ -15,8 +15,8 @@ namespace SeniorLearnDataSeed.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            
-           
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Session>()
                 .HasDiscriminator<string>("session_type")
                 .HasValue<Session>("session_base")
@@ -37,7 +37,7 @@ namespace SeniorLearnDataSeed.Data
                .HasConversion<string>();
 
 
-            base.OnModelCreating(modelBuilder);
+            
         }
 
         public DbSet<Course> Courses { get; set; }
@@ -45,8 +45,8 @@ namespace SeniorLearnDataSeed.Data
       
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<SeniorLearnDataSeed.Models.Course.Details> Details { get; set; } = default!;
+        
+        
 
        
     }

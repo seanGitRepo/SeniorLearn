@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeniorLearnDataSeed.Data;
 
@@ -11,9 +12,11 @@ using SeniorLearnDataSeed.Data;
 namespace SeniorLearnDataSeed.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241013084417_addedcarddetailstopayment")]
+    partial class addedcarddetailstopayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,6 +363,76 @@ namespace SeniorLearnDataSeed.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("SeniorLearnDataSeed.Models.Course.Details", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MemberName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isStandAlone")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CourseId");
+
+                    b.ToTable("Details");
+                });
+
+            modelBuilder.Entity("SeniorLearnDataSeed.Models.Session.SessionDetails", b =>
+                {
+                    b.Property<int>("SessionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SessionId"));
+
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CourseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("DetailsCourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("eventLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
+                    b.HasKey("SessionId");
+
+                    b.HasIndex("DetailsCourseId");
+
+                    b.ToTable("SessionDetails");
+                });
+
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -523,6 +596,13 @@ namespace SeniorLearnDataSeed.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("SeniorLearnDataSeed.Models.Session.SessionDetails", b =>
+                {
+                    b.HasOne("SeniorLearnDataSeed.Models.Course.Details", null)
+                        .WithMany("Sessions")
+                        .HasForeignKey("DetailsCourseId");
+                });
+
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Course", b =>
                 {
                     b.Navigation("Sessions");
@@ -531,6 +611,11 @@ namespace SeniorLearnDataSeed.Migrations
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.Session", b =>
                 {
                     b.Navigation("EnrolledMembers");
+                });
+
+            modelBuilder.Entity("SeniorLearnDataSeed.Models.Course.Details", b =>
+                {
+                    b.Navigation("Sessions");
                 });
 
             modelBuilder.Entity("SeniorLearnDataSeed.Data.Core.ApplicationUser", b =>

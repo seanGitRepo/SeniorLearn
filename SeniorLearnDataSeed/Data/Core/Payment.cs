@@ -8,8 +8,11 @@ namespace SeniorLearnDataSeed.Data.Core
         [Key]
         public int PaymentId { get; set; }
         public PaymentType PaymentType { get; set; }
-        public PaymentStatus PaymentStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
         public double AmountPaid { get; set; }
+        public double? CardNumber {  get; set; }
+        public string? CardExpiry { get; set; }
+        public int? CVV {  get; set; }
         public string? ApplicationUserId { get; set; }
         public ApplicationUser? User { get; set; }
         public DateTime userRegistrationDate { get; set; }
