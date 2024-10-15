@@ -38,14 +38,16 @@ namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserStore<ApplicationUser> userStore,
+            //IUserEmailStore<ApplicationUser> emailStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
+
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _userStore = userStore;
-            
+            _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
@@ -155,6 +157,7 @@ namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                //user.Email = Input.Email;
                 //Populating a new user's inputs from the register screen
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
@@ -163,6 +166,8 @@ namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
                 user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
+
+                
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -174,11 +179,15 @@ namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
                     if (!String.IsNullOrEmpty(Input.Role))
                     {
                         await _userManager.AddToRoleAsync(user, Input.Role);
+                        user.Role = Input.Role;
                     }
                     else
                     {
                         await _userManager.AddToRoleAsync(user, RoleDetail.Role_User_Standard);
+                        user.Role = RoleDetail.Role_User_Standard;
                     }
+
+                    await _userManager.UpdateAsync(user);
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -219,19 +228,19 @@ namespace SeniorLearnDataSeed.Areas.Identity.Pages.Account
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<ApplicationUser>)_userStore;
         }
     }
 }

@@ -15,6 +15,8 @@ namespace SeniorLearnDataSeed.Data.Core
         public string? State { get; set; }
         public string? PostalCode { get; set; }
 
+        public string? Role { get; set; }
+
 
 
         public List<Course>? CreatedCourses { get; set; }
