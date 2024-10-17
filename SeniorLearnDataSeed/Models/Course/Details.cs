@@ -13,6 +13,7 @@ namespace SeniorLearnDataSeed.Models.Course
             CourseId = c.CourseId;
             Name = c.Name;
             Description = c.Description;
+            Category = c.Category;
             ApplicationUserId = c.ApplicationUserId;
 
             Sessions = c.Sessions.Select(s => new Session.SessionDetails(s)).ToList();
@@ -27,6 +28,7 @@ namespace SeniorLearnDataSeed.Models.Course
         // public List<Session> Sessions { get; set; } 
 
         public string Description { get; set; } = default!;
+        public string Category { get; set; } = default!;    
 
         
         public string ApplicationUserId { get; set; }

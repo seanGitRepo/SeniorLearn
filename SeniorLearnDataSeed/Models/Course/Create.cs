@@ -15,6 +15,11 @@ namespace SeniorLearnDataSeed.Models.Course
         [StringLength(500, ErrorMessage = "The description cannot exceed 500 characters.")]
         public string Description { get; set; } = default!;
 
+        [Required]
+        [Display(Name = "Course Category")]
+        [StringLength(30, ErrorMessage = "The category cannot exceed 30 characters.")]
+        public string Category { get; set; } = default!;
+
         // This will link to the member who created the course (foreign key).
         [Required]
         [Display(Name = "Created By (Member ID)")]
@@ -32,7 +37,7 @@ namespace SeniorLearnDataSeed.Models.Course
         {
             Name = course.Name;
             Description = course.Description;
-         
+            Category = course.Category;
             isStandAlone = course.isStandAlone;
         }
 

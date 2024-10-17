@@ -154,6 +154,7 @@ namespace SeniorLearnDataSeed.Controllers
                             {
                                 Name = m.Name,
                                 Description = m.Description,
+                                Category = m.Category,
                                 ApplicationUserId = m.ApplicationUserId,
                                 isStandAlone = m.isStandAlone
                             };
@@ -194,6 +195,7 @@ namespace SeniorLearnDataSeed.Controllers
                     CourseId = course.CourseId,
                     Name = course.Name,
                     Description = course.Description,
+                    Category = course.Category,
                     //ApplicationUserId = course.ApplicationUserId,
                     isStandAlone = course.isStandAlone
                 };
@@ -218,6 +220,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                 course.Name = model.Name;
                 course.Description = model.Description;
+                course.Category = model.Category;
                 //course.ApplicationUserId = model.ApplicationUserId; // not sure if this should be removed
                 course.isStandAlone = model.isStandAlone;
 
