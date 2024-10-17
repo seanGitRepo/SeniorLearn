@@ -32,6 +32,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        <li class="nav-item">
+                            <form class="d-flex" asp-controller="Course" asp-action="StandardMemberIndex" method="get">
+                                <div class="input-group">
+                                    <input type="text" placeholder="search by category"name="searchString" class="form-control" />
+                                </div>
+
+                                <button type="submit" value="Filter" class="btn btn-primary">Search</button>
+
+                            </form>
+                        </li>
                                               <!--This is testing if the link is hidden for pro members-->
                         @if(User.IsInRole(RoleDetail.Role_Admin) || User.IsInRole(RoleDetail.Role_User_Pro) 
                         || User.IsInRole(RoleDetail.Role_User_Hon)){

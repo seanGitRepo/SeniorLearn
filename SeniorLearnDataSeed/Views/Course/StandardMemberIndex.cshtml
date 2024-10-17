@@ -12,7 +12,14 @@
 
 <h1>Available Courses</h1>
 
+<form asp-controller="Course" asp-action="StandardMemberIndex" method="get">
+    <div class="col-6">
+        <input type="text" name="searchString" class="form-control" />
+    </div>
 
+    <button type="submit" value="Filter" class="btn btn-primary">Search</button>
+    
+</form>
 <table class="table">
     <thead>
         <tr>

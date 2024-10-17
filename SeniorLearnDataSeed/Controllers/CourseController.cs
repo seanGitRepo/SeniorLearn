@@ -29,7 +29,9 @@ namespace SeniorLearnDataSeed.Controllers
 
         //GET :course/mycourses
 
-        public async Task<IActionResult> StandardMemberIndex()
+        
+
+        public async Task<IActionResult> StandardMemberIndex(string searchString)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -40,9 +42,18 @@ namespace SeniorLearnDataSeed.Controllers
                     .ToListAsync();
 
                 var cd = new List<Details>();
+
+
                 foreach (var item in courses)
                 {
                     cd.Add(new Models.Course.Details(item));
+                }
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    searchString = searchString.ToUpper();
+                    cd = cd.Where(c => c.Category.ToUpper().Contains(searchString)).ToList();
+                    return View(cd);
                 }
                 if (cd.IsNullOrEmpty())
                 {
