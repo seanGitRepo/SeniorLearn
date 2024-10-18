@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models.Session;
 
@@ -14,6 +15,7 @@ namespace SeniorLearnDataSeed.Models.Course
             Name = c.Name;
             Description = c.Description;
             Category = c.Category;
+            SelectedDifficulty = c.Difficulty;
             ApplicationUserId = c.ApplicationUserId;
 
             Sessions = c.Sessions.Select(s => new Session.SessionDetails(s)).ToList();
@@ -28,9 +30,13 @@ namespace SeniorLearnDataSeed.Models.Course
         // public List<Session> Sessions { get; set; } 
 
         public string Description { get; set; } = default!;
-        public string Category { get; set; } = default!;    
+        public string Category { get; set; } = default!;
 
+       
         
+        public string SelectedDifficulty { get; set; }
+
+
         public string ApplicationUserId { get; set; }
 
         //   [Display(Description = "Created By (Member Name):")]

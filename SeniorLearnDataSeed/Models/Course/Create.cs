@@ -1,4 +1,5 @@
-﻿using SeniorLearnDataSeed.Data.Core;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SeniorLearnDataSeed.Data.Core;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.ExceptionServices;
 
@@ -19,6 +20,10 @@ namespace SeniorLearnDataSeed.Models.Course
         [Display(Name = "Course Category")]
         [StringLength(30, ErrorMessage = "The category cannot exceed 30 characters.")]
         public string Category { get; set; } = default!;
+        [Required(ErrorMessage = "Must select a difficulty")]
+        public List<SelectListItem> CourseDifficulty { get; set; }
+        [Required(ErrorMessage = "Must select a difficulty")]
+        public string SelectedDifficulty { get; set; }
 
         // This will link to the member who created the course (foreign key).
         [Required]
@@ -38,6 +43,8 @@ namespace SeniorLearnDataSeed.Models.Course
             Name = course.Name;
             Description = course.Description;
             Category = course.Category;
+            CourseDifficulty = new List<SelectListItem>();
+            SelectedDifficulty = course.Difficulty;
             isStandAlone = course.isStandAlone;
         }
 
