@@ -44,6 +44,8 @@ namespace SeniorLearnDataSeed.Controllers
                     var userList = new List<userDetails>();
                     foreach (var user in users)
                     {
+                        //ToDo: delete user?.
+                        //ToDo: why does the admin role not get assainged when lisitng. check if the admin is changeable.
 
                         var usert = await _userManager.FindByIdAsync(user.Id);
 
