@@ -11,6 +11,7 @@ using SeniorLearnDataSeed.Helpers;
 using SeniorLearnDataSeed.Models.Session;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
 
 
 //TODO: there is no security when trying to access pages.
@@ -21,10 +22,12 @@ namespace SeniorLearnDataSeed.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<CourseController> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public CourseController(ApplicationDbContext context)
+        public CourseController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _roleManager = roleManager;
         }
 
         //GET :course/mycourses
@@ -100,7 +103,7 @@ namespace SeniorLearnDataSeed.Controllers
         // GET: Course/Index
         public async Task<IActionResult> Index()
         {
-
+           
             if (User.Identity.IsAuthenticated)
             {
                 var c = await _context.Courses.ToListAsync(); //returns all courses
@@ -293,7 +296,9 @@ namespace SeniorLearnDataSeed.Controllers
                   .Include(c => c.Sessions)
                   .FirstOrDefaultAsync(m => m.CourseId == id);
 
+                var roles = _roleManager.Roles.ToList();
 
+               
 
 
                 if (course == null)

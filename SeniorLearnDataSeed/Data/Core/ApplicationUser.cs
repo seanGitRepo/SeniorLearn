@@ -6,6 +6,8 @@ namespace SeniorLearnDataSeed.Data.Core
 {
     public class ApplicationUser : IdentityUser
     {
+        //TODO: do we even need this class
+
         [Required]
         public string FirstName { get; set; }
         [Required]

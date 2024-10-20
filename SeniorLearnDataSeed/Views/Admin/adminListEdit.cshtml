@@ -1,0 +1,40 @@
+﻿@model List<SeniorLearnDataSeed.Models.Admin.userDetails>
+
+<h2>Admin Edit Page</h2>
+
+<form asp-action="AdminEditSubmit" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>UserName</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.EditorFor(m => m[i].userName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m[i].firstName, new { htmlAttributes = new { @class = "form-control" } })
+                    </td>
+                    <td>
+                        @Html.EditorFor(m => m[i].lastName, new { htmlAttributes = new { @class = "form-control" } })
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m[i].role, new SelectList(Model[i].RoleList), "Select a Role", new { @class = "form-control" })
+                    </td>
+                    <td>
+                        @Html.HiddenFor(m => m[i].userId) <!-- Hidden field for the userId -->
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models.Session;
 using SeniorLearnDataSeed.Models.Course;
+using SeniorLearnDataSeed.Models.Admin;
 
 namespace SeniorLearnDataSeed.Data
 {
@@ -45,6 +46,7 @@ namespace SeniorLearnDataSeed.Data
       
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<SeniorLearnDataSeed.Models.Admin.userDetails> userDetails { get; set; } = default!;
         
         
 
