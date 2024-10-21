@@ -7,88 +7,136 @@
 
 @{
     ViewData["Title"] = "StandardMemberIndex";
-
 }
+<div>
+    <h1>Available Courses</h1>
+</div>
+<div class="results-count">
+    <p>@Model.Count() results for your courses</p>
+</div>
 
-<h1>Available Courses</h1>
-
-<form asp-controller="Course" asp-action="StandardMemberIndex" method="get">
-    <div class="col-6">
-        <input type="text" name="searchString" class="form-control" />
+<div class="row">
+    <!-- Filter options, taking 25% width -->
+    <div class="col-md-3">
+        <div class="filter-section">
+            <h4>Filter Options</h4>
+            <form id="filterForm" method="get" action="@Url.Action("StandardMemberIndex", "Course")">
+                <div>
+                    <input type="checkbox" id="allLevels" name="difficulties" value="AllLevels"
+                    @(Context.Request.Query["difficulties"].Contains("AllLevels") ? "checked" : "") />
+                    <label for="allLevels">All Levels</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="beginner" name="difficulties" value="Beginner"
+                    @(Context.Request.Query["difficulties"].Contains("Beginner") ? "checked" : "") />
+                    <label for="beginner">Beginner</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="intermediate" name="difficulties" value="Intermediate"
+                    @(Context.Request.Query["difficulties"].Contains("Intermediate") ? "checked" : "") />
+                    <label for="intermediate">Intermediate</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="advanced" name="difficulties" value="Advanced"
+                    @(Context.Request.Query["difficulties"].Contains("Advanced") ? "checked" : "") />
+                    <label for="advanced">Advanced</label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Filter</button>
+            </form>
+        </div>
     </div>
 
-    <button type="submit" value="Filter" class="btn btn-primary">Search</button>
-    
-</form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SelectedDifficulty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.isStandAlone)
-            </th>
-            <th>Sessions</th> <!--New column for sessions-->
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SelectedDifficulty)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ApplicationUserId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.isStandAlone)
-                </td>
-                <td>
+    <!-- Search bar and course containers, taking 75% width -->
+    <div class="col-md-9">
+        <!-- Search bar -->
+        <div style="margin-bottom: 20px;">
+            <form asp-controller="Course" asp-action="StandardMemberIndex" method="get" style="display: flex; justify-content: center;">
+                <div class="input-group" style="width: 100%; max-width: none;">
+                    <input type="text" placeholder="search by category" name="searchString" class="form-control" />
+                    <button type="submit" value="Filter" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Course containers -->
+        <div class="course-grid">
+            @foreach (var item in Model)
+            {
+                <div class="course-container">
+                    <h4>@item.Name</h4>
+                    <p><strong>Author: </strong>@item.CreatorName</p>
+                    <p><strong>Description: </strong>@item.Description</p>
+                    <p><strong>Category: </strong>@item.Category</p>
+                    <p><strong>Difficulty: </strong>@item.SelectedDifficulty</p>
                     @if (item.Sessions != null && item.Sessions.Any() && item.isStandAlone)
                     {
-                        <a asp-action="EnrollDetailsContinuous" asp-route-id="@item.CourseId">Details</a>
-
+                        <form asp-action="EnrollDetailsContinuous" asp-route-id="@item.CourseId" method="get">
+                            <button type="submit" class="btn btn-primary">Details</button>
+                        </form>
                     }
                     else if (item.Sessions != null && item.Sessions.Any())
                     {
-                        <a asp-action="EnrollDetails" asp-route-id="@item.CourseId">Details</a>
+                        <form asp-action="EnrollDetails" asp-route-id="@item.CourseId" method="get">
+                            <button type="submit" class="btn btn-primary">Details</button>
+                        </form>
                     }
-
-                
                     else
                     {
-                        <span>No sessions available</span>
+                        <p>There are no sessions available yet</p>
                     }
-                </td>
-                
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
-            </tr>
-            
+@section Styles {
+    <style>
+        /* General layout adjustments */
+        .row {
+            display: flex;
+            margin-top: 20px;
         }
-        
-    </tbody>
-</table>
+
+        .col-md-3 {
+            width: 25%;
+        }
+
+        .col-md-9 {
+            width: 75%;
+        }
+
+        /* Force each course container to take up the full width (1 per row) */
+        .course-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Individual course container */
+        .course-container {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            /* Course container styling */
+            .course-container h4 {
+                margin-top: 0;
+                font-size: 1.2em;
+            }
+
+            .course-container p {
+                margin-bottom: 5px;
+                color: #333;
+            }
+
+        /* Results count section */
+        .results-count {
+            margin-bottom: 20px;
+        }
+    </style>
+}

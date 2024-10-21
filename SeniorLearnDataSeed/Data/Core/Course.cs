@@ -18,6 +18,7 @@ namespace SeniorLearnDataSeed.Data.Core
         public string Category { get; set; }
         [Required]
         public string Difficulty { get; set; }
+        public string CreatorName { get; set; }
 
 
         //Foreign Key for who crated the Course.

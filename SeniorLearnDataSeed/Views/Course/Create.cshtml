@@ -4,53 +4,212 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create Course</h1>
+<h1>Create New Course</h1>
 
-<hr />
 <div class="row">
+    <div class="col-md-8">
+        <!-- Box containing the course creation form -->
+        <div class="course-form-container" style="border: 2px solid #ccc; border-radius: 15px; padding: 30px;">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Category Field -->
+                <div class="form-group">
+                    <label asp-for="Category" class="control-label">Category</label>
+                    <input asp-for="Category" class="form-control" />
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+
+                <!-- Difficulty Options (Using buttons) -->
+                <div class="form-group">
+                    <label class="control-label">Difficulty</label>
+                    <div class="difficulty-options">
+                        <button type="button" class="btn btn-secondary difficulty-btn" data-value="All Levels">All Levels</button>
+                        <button type="button" class="btn btn-secondary difficulty-btn" data-value="Beginner">Beginner</button>
+                        <button type="button" class="btn btn-secondary difficulty-btn" data-value="Intermediate">Intermediate</button>
+                        <button type="button" class="btn btn-secondary difficulty-btn" data-value="Expert">Expert</button>
+                    </div>
+                    <input type="hidden" asp-for="SelectedDifficulty" id="SelectedDifficulty" />
+                    <span asp-validation-for="SelectedDifficulty" class="text-danger"></span>
+                </div>
+
+                <!-- Description Field -->
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Standalone Option -->
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input custom-checkbox" asp-for="isStandAlone" /> Is this a standalone course?
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <input type="submit" value="Continue" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Instruction Box -->
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+        <div class="instruction-box">
+            <h3>Create your course</h3>
+            <div class="step">
+                <div class="circle filled">1</div>
+                <p>Add basic information about the course</p>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+            <div class="step">
+                <div class="circle">2</div>
+                <p>Add sessions</p>
             </div>
-            <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <input asp-for="Category" class="form-control" />
-                <span asp-validation-for="Category" class="text-danger"></span>
+            <div class="step">
+                <div class="circle">3</div>
+                <p>Confirmation</p>
             </div>
-            <div class="form-group">
-                <label asp-for="SelectedDifficulty" class="form-label">Difficulty</label>
-                <select asp-for="SelectedDifficulty" class="form-select" asp-items="@Model.CourseDifficulty">
-                    <option value="">Select Difficulty</option>
-                </select>
-            </div>
-          
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="isStandAlone" /> @Html.DisplayNameFor(model => model.isStandAlone)
-                </label>
-            </div>
-           
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-            
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="MyCourses">Back to List</a>
+
+<div style="margin-top: 20px; margin-left: 30px;">
+    <a asp-controller="Home" asp-action="Index">
+        <button type="submit" class="btn btn-primary">Back To Home</button>
+    </a>
 </div>
 
+<script>
+    document.querySelectorAll('.difficulty-btn').forEach(function(button){
+        button.addEventListener('click', function(){
+            document.getElementById('SelectedDifficulty').value = this.getAttribute('data-value');
+            document.querySelectorAll('difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        })
+    })
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<style>
+    .instruction-box {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: left;
+    }
+
+    /* Step container */
+    .step {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    /* Circle styling for the numbers */
+    .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #ccc
+        color: #007bff ;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-right: 15px; 
+        background-color: transparent;
+    }
+
+    .filled{
+        background-color: #f4978e;
+        color: white;
+        border: none;
+    }
+
+    /* Style for text next to the circle */
+    .step p {
+        margin: 0;
+        font-size: 1.1rem;
+        flex-grow: 1;
+        text-align: left;
+    }
+    .custom-checkbox{
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        appearance: none;
+        -webkit-appearance: none; 
+        outline: none;
+        border: 2px solid #007bff; 
+        margin-right: 10px;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .custom-checkbox:checked {
+        background-color: #007bff;
+        border-color: #007bff;
+            position: relative;
+        }
+    }
+
+    .custom-checkbox:checked::after {
+        content: '✔';
+        font-size: 14px;
+        color: white; 
+        position: absolute;
+        top: 0;
+        left: 2px; 
+        font-weight: bold;
+    }
+
+    
+
+    .form-check-label {
+        padding-left: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .course-form-container {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+    }
+
+    .instruction-box {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .difficulty-options button {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+        .difficulty-options button.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+</style>

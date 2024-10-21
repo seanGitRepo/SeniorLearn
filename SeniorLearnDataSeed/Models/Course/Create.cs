@@ -15,6 +15,7 @@ namespace SeniorLearnDataSeed.Models.Course
         [Display(Name = "Course Description")]
         [StringLength(500, ErrorMessage = "The description cannot exceed 500 characters.")]
         public string Description { get; set; } = default!;
+        public string CreatorName { get; set; } = default!;
 
         [Required]
         [Display(Name = "Course Category")]
@@ -43,6 +44,7 @@ namespace SeniorLearnDataSeed.Models.Course
             Name = course.Name;
             Description = course.Description;
             Category = course.Category;
+            CreatorName = course.CreatorName;
             CourseDifficulty = new List<SelectListItem>();
             SelectedDifficulty = course.Difficulty;
             isStandAlone = course.isStandAlone;

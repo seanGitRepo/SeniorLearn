@@ -15,6 +15,7 @@ namespace SeniorLearnDataSeed.Models.Course
             Name = c.Name;
             Description = c.Description;
             Category = c.Category;
+            CreatorName = c.CreatorName;
             SelectedDifficulty = c.Difficulty;
             ApplicationUserId = c.ApplicationUserId;
 
@@ -32,7 +33,7 @@ namespace SeniorLearnDataSeed.Models.Course
         public string Description { get; set; } = default!;
         public string Category { get; set; } = default!;
 
-       
+       public string CreatorName { get; set; } = default!;  
         
         public string SelectedDifficulty { get; set; }
 

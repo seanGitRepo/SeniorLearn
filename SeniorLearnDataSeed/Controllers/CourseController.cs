@@ -34,7 +34,7 @@ namespace SeniorLearnDataSeed.Controllers
 
         
 
-        public async Task<IActionResult> StandardMemberIndex(string searchString)
+        public async Task<IActionResult> StandardMemberIndex(string searchString, string[] difficulties)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -46,6 +46,10 @@ namespace SeniorLearnDataSeed.Controllers
 
                 var cd = new List<Details>();
 
+                if (difficulties != null && difficulties.Length > 0)
+                {
+                    courses = courses.Where(c => difficulties.Contains(c.Difficulty)).ToList();
+                }
 
                 foreach (var item in courses)
                 {
@@ -171,6 +175,12 @@ namespace SeniorLearnDataSeed.Controllers
             {
                 var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
                 var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var user = await _context.Users
+                    .OfType<ApplicationUser>()
+                    .FirstOrDefaultAsync(u => u.Id == userID);
+                string firstName = user.FirstName.ToUpper();
+                string lastName = user.LastName.ToUpper();
+                string creatorName = firstName + " " + lastName;
 
                 if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro")
                 {
@@ -185,13 +195,14 @@ namespace SeniorLearnDataSeed.Controllers
                             Description = m.Description,
                             Category = m.Category,
                             Difficulty = m.SelectedDifficulty,
+                            CreatorName = creatorName,
                             ApplicationUserId = m.ApplicationUserId,
                             isStandAlone = m.isStandAlone
                          };
 
                             _context.Add(course);
                             await _context.SaveChangesAsync();
-                            return RedirectToAction("MyCourses");
+                            return RedirectToAction("Create", "Session", new {courseId = course.CourseId});
                         }
                         catch (Exception ex)
                         {
