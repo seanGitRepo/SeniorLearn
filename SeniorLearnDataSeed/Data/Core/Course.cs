@@ -16,6 +16,8 @@ namespace SeniorLearnDataSeed.Data.Core
         public string Description { get; set; }
         [Required]
         public string Category { get; set; }
+        [Required]
+        public string Difficulty { get; set; }
 
 
         //Foreign Key for who crated the Course.
@@ -36,6 +38,14 @@ namespace SeniorLearnDataSeed.Data.Core
         }
     }
 
+}
+
+public static class Difficulty
+{
+    public const string AllLevels = "All Levels";
+    public const string Beginner = "Beginner";
+    public const string Intermediate = "Intermediate";
+    public const string Advanced = "Advanced";
 }
 
 

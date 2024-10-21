@@ -32,7 +32,9 @@ namespace SeniorLearnDataSeed.Controllers
 
         //GET :course/mycourses
 
-        public async Task<IActionResult> StandardMemberIndex()
+        
+
+        public async Task<IActionResult> StandardMemberIndex(string searchString)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -43,9 +45,18 @@ namespace SeniorLearnDataSeed.Controllers
                     .ToListAsync();
 
                 var cd = new List<Details>();
+
+
                 foreach (var item in courses)
                 {
                     cd.Add(new Models.Course.Details(item));
+                }
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    searchString = searchString.ToUpper();
+                    cd = cd.Where(c => c.Category.ToUpper().Contains(searchString)).ToList();
+                    return View(cd);
                 }
                 if (cd.IsNullOrEmpty())
                 {
@@ -62,7 +73,7 @@ namespace SeniorLearnDataSeed.Controllers
             }
         }
 
-        public async Task<IActionResult> MyCourses()
+        public async Task<IActionResult> MyCourses(string[] difficulties)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -71,6 +82,11 @@ namespace SeniorLearnDataSeed.Controllers
                 var proMemberCourses = await _context.Courses
                     .Where(c => c.ApplicationUserId == userID)
                     .ToListAsync();
+                
+                if(difficulties != null && difficulties.Length > 0)
+                {
+                    proMemberCourses = proMemberCourses.Where(c => difficulties.Contains(c.Difficulty)).ToList();
+                }
 
                 var cd = new List<Details>();
                 foreach (var item in proMemberCourses)
@@ -130,7 +146,17 @@ namespace SeniorLearnDataSeed.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return View();
+
+                var model = new Create
+                {
+                    CourseDifficulty = new List<SelectListItem> {
+                        new SelectListItem { Value = Difficulty.AllLevels, Text = "All Levels"},
+                        new SelectListItem { Value = Difficulty.Beginner, Text = "Beginner"},
+                        new SelectListItem { Value = Difficulty.Intermediate, Text = "Intermediate"},
+                        new SelectListItem { Value = Difficulty.Advanced, Text = "Advanced"}
+                }
+                };
+                return View(model);
             }
 
            return RedirectToAction("HomeScreen","Home"); 
@@ -153,14 +179,15 @@ namespace SeniorLearnDataSeed.Controllers
                         try
                         {
 
-                            var course = new Course
-                            {
-                                Name = m.Name,
-                                Description = m.Description,
-                                Category = m.Category,
-                                ApplicationUserId = m.ApplicationUserId,
-                                isStandAlone = m.isStandAlone
-                            };
+                        var course = new Course
+                        {
+                            Name = m.Name,
+                            Description = m.Description,
+                            Category = m.Category,
+                            Difficulty = m.SelectedDifficulty,
+                            ApplicationUserId = m.ApplicationUserId,
+                            isStandAlone = m.isStandAlone
+                         };
 
                             _context.Add(course);
                             await _context.SaveChangesAsync();
@@ -199,9 +226,17 @@ namespace SeniorLearnDataSeed.Controllers
                     Name = course.Name,
                     Description = course.Description,
                     Category = course.Category,
+                    SelectedDifficulty = course.Difficulty,
+                    CourseDifficulty = new List<SelectListItem> {
+                       new SelectListItem { Value = Difficulty.AllLevels, Text = "All Levels" },
+                       new SelectListItem { Value = Difficulty.Beginner, Text = "Beginner" },
+                       new SelectListItem { Value = Difficulty.Intermediate, Text = "Intermediate" },
+                       new SelectListItem { Value = Difficulty.Advanced, Text = "Advanced" }
+                    },
                     //ApplicationUserId = course.ApplicationUserId,
                     isStandAlone = course.isStandAlone
                 };
+                c.CourseDifficulty.FirstOrDefault(x => x.Value == course.Difficulty).Selected = true;
                 return View(c);
             }
             return RedirectToAction("HomeScreen", "Home");
@@ -224,6 +259,7 @@ namespace SeniorLearnDataSeed.Controllers
                 course.Name = model.Name;
                 course.Description = model.Description;
                 course.Category = model.Category;
+                course.Difficulty = model.SelectedDifficulty;
                 //course.ApplicationUserId = model.ApplicationUserId; // not sure if this should be removed
                 course.isStandAlone = model.isStandAlone;
 

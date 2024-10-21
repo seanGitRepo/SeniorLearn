@@ -26,6 +26,12 @@
                 <input asp-for="Category" class="form-control" />
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="SelectedDifficulty" class="form-label">Difficulty</label>
+                <select asp-for="SelectedDifficulty" class="form-select" asp-items="@Model.CourseDifficulty">
+                    <option value="">Select Difficulty</option>
+                </select>
+            </div>
           
             <div class="form-group form-check">
                 <label class="form-check-label">

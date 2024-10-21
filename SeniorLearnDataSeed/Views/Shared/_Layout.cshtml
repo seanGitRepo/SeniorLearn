@@ -8,13 +8,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SeniorLearnDataSeed</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SeniorLearnDataSeed.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
     <link rel="stylesheet" href="~/css/main.css" />
     <script src="~/js/main.js"></script>
+    @RenderSection("Styles", required: false)
 
 
 </head>
@@ -31,6 +32,16 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <form class="d-flex" asp-controller="Course" asp-action="StandardMemberIndex" method="get">
+                                <div class="input-group">
+                                    <input type="text" placeholder="search by category"name="searchString" class="form-control" />
+                                </div>
+
+                                <button type="submit" value="Filter" class="btn btn-primary">Search</button>
+
+                            </form>
                         </li>
                                               <!--This is testing if the link is hidden for pro members-->
                         @if(User.IsInRole(RoleDetail.Role_Admin) || User.IsInRole(RoleDetail.Role_User_Pro) 
