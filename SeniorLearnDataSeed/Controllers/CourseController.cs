@@ -200,6 +200,8 @@ namespace SeniorLearnDataSeed.Controllers
                             isStandAlone = m.isStandAlone
                          };
 
+
+
                             _context.Add(course);
                             await _context.SaveChangesAsync();
                             return RedirectToAction("Create", "Session", new {courseId = course.CourseId});
