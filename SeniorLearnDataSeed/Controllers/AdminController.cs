@@ -40,7 +40,8 @@ namespace SeniorLearnDataSeed.Controllers
                 if (userRole == "Admin")
                 {
 
-                    var users = _userManager.Users.ToList();
+                    var users = _userManager.Users.OfType<ApplicationUser>().ToList();
+
                     var userList = new List<userDetails>();
                     foreach (var user in users)
                     {
