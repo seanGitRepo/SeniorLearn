@@ -5,67 +5,144 @@
    
 }
 
-<h1>Create</h1>
+<h1>Create a Session</h1>
 
-<h4>SessionCreate</h4>
+
 <hr />
 <div class="row">
+    <div class="col-md-8">
+        <div class="course-form-container" style="border: 2px solid #ccc; border-radius: 15px; padding: 30px;">
+            <form asp-action="Create" id="sessionForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <h4>Date</h4>
+                <div class="form-group">
+                    <label asp-for="StartTime" class="control-label"></label>
+                    <input asp-for="StartTime" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndTime" class="control-label"></label>
+                    <input asp-for="EndTime" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SelectedStatus, "Status")
+                    @Html.DropDownListFor(model => model.SelectedStatus, (SelectList)ViewBag.StatusOptions, "Select Status", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SelectedStatus)
+                </div>
+                <p></p>
+                <h5>Location</h5>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input custom-checkbox"type="checkbox" id="toggleCheckboxOnline" onclick="revealTextOnline"/>Online
+                    </label>
+                    <div id="meetingLink" style="display: none;" >
+                        <label asp-for="MeetingLink" class="control-label"></label>
+                        <input style="margin-bottom:30px;"asp-for="MeetingLink" class="form-control" />
+                        <span asp-validation-for="MeetingLink" class="text-danger"></span>
+                    </div>
+                    
+                </div>
+                <h5 style="margin-top:20px;">On Premise Class </h5>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxOnPrem" onclick="revealTextOnline" />On Premise
+                    </label>
+                    <div id="onPremiseDetails" style="display:none;">
+                        <div>
+                            <label asp-for="StreetNumber" class="control-label"></label>
+                            <input asp-for="StreetNumber" class="form-control" />
+                            <span asp-validation-for="StreetNumber" class="text-danger"></span>
+                        </div>
+                        
+                        <div>
+                            <label asp-for="StreetName" class="control-label"></label>
+                            <input asp-for="StreetName" class="form-control" />
+                            <span asp-validation-for="StreetName" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="Suburb" class="control-label"></label>
+                            <input asp-for="Suburb" class="form-control" />
+                            <span asp-validation-for="Suburb" class="text-danger"></span>
+                        </div>
+                        <p></p>
+                    </div>
+                </div>
+               
+                
+                <!--
+                    <h5>OnLine Class </h5>
+                <div class="form-group">
+                    <label asp-for="MeetingLink" class="control-label"></label>
+                    <input asp-for="MeetingLink" class="form-control" />
+                    <span asp-validation-for="MeetingLink" class="text-danger"></span>
+                </div>
+                -->
+                
+                <input type="hidden" asp-for="CourseId" value="@Model.CourseId" />
+                <div class="form-group">
+                    <input style="margin-top: 20px;"type="submit" value="Continue" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        
+    </div>
+
     <div class="col-md-4">
-        <form asp-action="Create" id="sessionForm">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
+        <div class="instruction-box">
+            <h3>Create your course</h3>
+            <div class="step">
+                <div class="circle ">1</div>
+                <p>Add basic information about the course</p>
             </div>
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
+            <div class="step">
+                <div class="circle filled">2</div>
+                <p>Add sessions</p>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.SelectedStatus, "Status")
-                @Html.DropDownListFor(model => model.SelectedStatus, (SelectList)ViewBag.StatusOptions, "Select Status", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SelectedStatus)
-            </div>
-            <p></p>
-            <h5>On Premise Class </h5>
-            <div class="form-group">
-                <label asp-for="StreetNumber" class="control-label"></label>
-                <input asp-for="StreetNumber" class="form-control" />
-                <span asp-validation-for="StreetNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StreetName" class="control-label"></label>
-                <input asp-for="StreetName" class="form-control" />
-                <span asp-validation-for="StreetName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Suburb" class="control-label"></label>
-                <input asp-for="Suburb" class="form-control" />
-                <span asp-validation-for="Suburb" class="text-danger"></span>
-            </div>
-            <p></p>
-            <h5>OnLine Class </h5>
-            <div class="form-group">
-                <label asp-for="MeetingLink" class="control-label"></label>
-                <input asp-for="MeetingLink" class="form-control" />
-                <span asp-validation-for="MeetingLink" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="CourseId" value="@Model.CourseId" />
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+            
+        </div>
     </div>
 </div>
+<div style="margin-top: 20px; margin-left: 30px;">
+    <a asp-controller="Course" asp-action="Create" asp-route-id="@Model.CourseId">
+        <button type="submit" class="btn btn-primary">Back To Course</button>
+    </a>
+    <a asp-controller="Home" asp-action="Index">
+        <button type="submit" class="btn btn-primary">Back To Home</button>
+    </a>
+</div>
 
-<a asp-controller="Course" asp-action="Details" asp-route-id="@Model.CourseId">Back to course</a>
+
 
 
 @{//Ripped Straight from chat Gpt, (well... learnt then modified)
  }
-<script> //script to check if the member selects an input for both online and onprem.
+ <script>
+     document.getElementById("toggleCheckboxOnPrem").addEventListener("change", function revealText() {
+         const onPremiseDetails = document.getElementById("onPremiseDetails");
+         if (this.checked) {
+             onPremiseDetails.style.display = "block";
+         }
+         else {
+             onPremiseDetails.style.display = "none";
+         }
+     });
+
+ </script>
+ <script>
+     document.getElementById("toggleCheckboxOnline").addEventListener("change", function revealTextOnline() {
+         const meetingLink = document.getElementById("meetingLink");
+         if (this.checked) {
+             meetingLink.style.display = "block";
+         }
+         else {
+             meetingLink.style.display = "none";
+         }
+     });
+
+</script>
+    
+<script> 
     document.getElementById('sessionForm').addEventListener('submit', function (event) {
         var Suburb = document.getElementById('Suburb').value;
         var StreetN = document.getElementById('StreetName').value;
@@ -98,3 +175,119 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial"/>
 }
+
+<style>
+    .instruction-box {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: left;
+    }
+
+    /* Step container */
+    .step {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    /* Circle styling for the numbers */
+    .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #ccc color: #007bff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-right: 15px;
+        background-color: transparent;
+    }
+
+    .filled {
+        background-color: #f4978e;
+        color: white;
+        border: none;
+    }
+
+    /* Style for text next to the circle */
+    .step p {
+        margin: 0;
+        font-size: 1.1rem;
+        flex-grow: 1;
+        text-align: left;
+    }
+
+    .custom-checkbox {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        appearance: none;
+        -webkit-appearance: none;
+        outline: none;
+        border: 2px solid #007bff;
+        margin-right: 10px;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+        margin-bottom: 20px;
+        
+    }
+
+        .custom-checkbox:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+            position: relative;
+        }
+
+    }
+
+    .custom-checkbox:checked::after {
+        content: '✔';
+        font-size: 14px;
+        color: white;
+        position: absolute;
+        top: 0;
+        left: 2px;
+        font-weight: bold;
+    }
+
+
+
+    .form-check-label {
+        padding-left: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    .course-form-container {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+    }
+
+    .instruction-box {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .difficulty-options button {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+        .difficulty-options button.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+</style>

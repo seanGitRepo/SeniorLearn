@@ -1,6 +1,8 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using SeniorLearnWebApi.Controllers;
 using SeniorLearnWebApi.Models;
+using System.Reflection;
 namespace SeniorLearnWebApi.Data
 
 {
@@ -14,26 +16,33 @@ namespace SeniorLearnWebApi.Data
             _blogsCollection = client
                 .GetDatabase("SeniorLearnDB")
                 .GetCollection<Blog>("Blogs");
-            
         }
-        
+
+
+
         private static readonly List<Blog> blogs = new List<Blog>()
         {
             new Blog()
             {
-                BlogId = 1,
-                Title = "Test",
-                Description ="Test"
+                Title ="Test",
+                Description="Test",
 
+            },
+            new Blog()
+            {
+                Title ="Test2",
+                Description="Testing"
             }
+
         };
+        
 
         public IEnumerable<Blog> GetAll()
         {
             return blogs;
         }
 
-        public Blog? GetById(int Id)
+        public Blog? GetById(ObjectId Id)
         {
             var blog = blogs.Where(b => b.BlogId == Id).FirstOrDefault();
 
@@ -42,7 +51,7 @@ namespace SeniorLearnWebApi.Data
 
         public void Save(Blog blog)
         {
-            blog.BlogId = GetNextId();
+            //blog.BlogId = GetNextId();
             blogs.Add(blog);
             _blogsCollection.InsertOne(blog);
         }
@@ -78,26 +87,22 @@ namespace SeniorLearnWebApi.Data
             }
         }
 
-        public void Delete(int Id)
+        public void Delete(ObjectId Id)
         {
-            int index = blogs.FindIndex(b => b.BlogId == Id);
-            if(index == -1)
+            var result = _blogsCollection.DeleteOne(b => b.BlogId == Id);  // if BlogId is the MongoDB identifier
+            if (result.DeletedCount == 0)
             {
-                throw new Exception();
-            }
-            else
-            {
-                blogs.RemoveAt(index);
-                _blogsCollection.DeleteOne(b => b.BlogId == Id);
+                throw new Exception("Blog with the specified ID not found in the database.");
             }
         }
 
-        public int GetNextId()
+        public ObjectId GetNextId()
         {
-            int currentId = blogs.Select(b => b.BlogId)
+            ObjectId currentId = blogs.Select(b => b.BlogId)
                 .Max();
 
-            return currentId + 1;
+            return currentId;
+            //need to add to this
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using MongoDB.Bson;
 using SeniorLearnWebApi.Data;
 using SeniorLearnWebApi.Models;
 
 namespace SeniorLearnWebApi.Controllers
 {
-    //[Route("api/blogs")]
+    [Route("api/blogs")]
     [ApiController]
     public class BlogController : Controller
     {
@@ -16,10 +16,7 @@ namespace SeniorLearnWebApi.Controllers
         {
             _repo = new BlogRepository(config);
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+        
 
         [HttpGet]
         public IActionResult Get()
@@ -29,7 +26,7 @@ namespace SeniorLearnWebApi.Controllers
         }
 
         [HttpGet("{Id}")]
-        public IActionResult GetBlog([FromRoute] int Id)
+        public IActionResult GetBlog([FromRoute] ObjectId Id)
         {
             var blog = _repo.GetById(Id);
             if(blog == null)
@@ -48,13 +45,13 @@ namespace SeniorLearnWebApi.Controllers
             if (ModelState.IsValid)
             {
                 _repo.Save(blog);
-                return CreatedAtAction(nameof(GetBlog), new { BlogId = blog.BlogId }, blog);
+                return CreatedAtAction(nameof(GetBlog), new { Id = blog.BlogId }, blog);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete("{Id}")]
-        public IActionResult Delete([FromRoute] int Id)
+        public IActionResult Delete([FromRoute] ObjectId Id)
         {
             _repo.Delete(Id);
             return Ok();

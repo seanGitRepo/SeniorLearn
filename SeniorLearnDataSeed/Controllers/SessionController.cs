@@ -59,6 +59,12 @@ namespace SeniorLearnDataSeed.Controllers
             return Forbid();
         }
 
+        public IActionResult Confirmation(string courseName)
+        {
+            ViewData["CourseName"] = courseName;
+            return View();
+        }
+
         [HttpPost]
         [Route("/Session/Create/{CourseId}")]
         public async Task<IActionResult> Create(SessionCreate m)
@@ -115,7 +121,7 @@ namespace SeniorLearnDataSeed.Controllers
                     _context.Sessions.Add(session);
                     await _context.SaveChangesAsync();
                     //TODO:Redirect this to the same course page.
-                    return RedirectToAction("Index", "Course");
+                    return View("~/Views/Session/Confirmation.cshtml");
                 }
 
             }
