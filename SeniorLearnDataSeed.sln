@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeniorLearnDataSeed", "Seni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeniorLearnWebApi", "SeniorLearnWebApi\SeniorLearnWebApi.csproj", "{74AA331D-8DE3-4B83-8FBF-950A17280539}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{9FAE7AED-8A33-4FC7-9701-390A4B5B71DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{74AA331D-8DE3-4B83-8FBF-950A17280539}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74AA331D-8DE3-4B83-8FBF-950A17280539}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74AA331D-8DE3-4B83-8FBF-950A17280539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FAE7AED-8A33-4FC7-9701-390A4B5B71DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FAE7AED-8A33-4FC7-9701-390A4B5B71DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FAE7AED-8A33-4FC7-9701-390A4B5B71DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FAE7AED-8A33-4FC7-9701-390A4B5B71DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
