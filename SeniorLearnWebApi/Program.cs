@@ -1,10 +1,14 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnWebApi.Data;
+using System.Text;
 
 namespace SeniorLearnWebApi
 {
@@ -21,7 +25,7 @@ namespace SeniorLearnWebApi
             string? connectionString = builder.Configuration.GetConnectionString("SqlConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+            
 
             builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
                 options.SignIn.RequireConfirmedAccount = true)
@@ -43,6 +47,45 @@ namespace SeniorLearnWebApi
                                         .AllowAnyMethod();
                                   });
             });
+            builder.Services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = "JWT_OR_COOKIE";
+                o.DefaultChallengeScheme = "JWT_OR_COOKIE";
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Jwt:Key"])),
+
+                        //Prevents tokens without an expiry from ever working.
+                        RequireExpirationTime = true,
+
+                        ClockSkew = TimeSpan.Zero
+                    };
+                })
+                .AddPolicyScheme("JWT_OR_COOKIE", null, o =>
+                {
+                    o.ForwardDefaultSelector = c =>
+                    {
+                        string auth = c.Request.Headers[HeaderNames.Authorization];
+                        if (!string.IsNullOrWhiteSpace(auth) && auth.StartsWith("Bearer "))
+                        {
+                            return JwtBearerDefaults.AuthenticationScheme;
+                        }
+
+                        return IdentityConstants.ApplicationScheme;
+                    };
+                });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

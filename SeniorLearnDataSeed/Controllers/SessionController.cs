@@ -22,6 +22,9 @@ namespace SeniorLearnDataSeed.Controllers
         {
             _context = context;
         }
+
+        [HttpGet]
+        [Route("list")]
         public async Task<IActionResult> Index() => View(await _context.Sessions.Select(p => new Models.Session.SessionDetails(p)).ToListAsync());// this will show every session in the databas.
 
 
@@ -58,6 +61,9 @@ namespace SeniorLearnDataSeed.Controllers
 
             return Forbid();
         }
+
+        [HttpGet]
+        [Route("confirmation")]
 
         public IActionResult Confirmation(string courseName)
         {
