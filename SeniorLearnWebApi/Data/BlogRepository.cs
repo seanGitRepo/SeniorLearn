@@ -39,7 +39,9 @@ namespace SeniorLearnWebApi.Data
 
         public IEnumerable<Blog> GetAll()
         {
-            return blogs;
+
+            List<Blog> blogGetAll = _blogsCollection.Find(_ => true).ToList();
+            return blogGetAll;
         }
 
         public Blog? GetById(ObjectId Id)
