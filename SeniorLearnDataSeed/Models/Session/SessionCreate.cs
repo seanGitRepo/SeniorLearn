@@ -1,4 +1,5 @@
-﻿using SeniorLearnDataSeed.Data.Core;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SeniorLearnDataSeed.Data.Core;
 using System.ComponentModel.DataAnnotations;
 
 namespace SeniorLearnDataSeed.Models.Session
@@ -37,7 +38,8 @@ namespace SeniorLearnDataSeed.Models.Session
 
         public int? Frequency { get; set; } = null;
 
-        public TimePeriodFrequency FrequencyByTimePeriod { get; set; }
+        public TimePeriodFrequency SelectedTimePeriod { get; set; }
+        public List<SelectListItem> TimePeriods { get; set; }
 
         
 

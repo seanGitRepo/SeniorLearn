@@ -34,7 +34,7 @@
                 <h5>Location</h5>
                 <div class="form-group form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input custom-checkbox"type="checkbox" id="toggleCheckboxOnline" onclick="revealTextOnline"/>Online
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxOnline" onclick="handleLocationCheckbox('Online');" />Online
                     </label>
                     <div id="meetingLink" style="display: none;" >
                         <label asp-for="MeetingLink" class="control-label"></label>
@@ -46,7 +46,7 @@
                 
                 <div class="form-group form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxOnPrem" onclick="revealText" />On Premise
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxOnPrem" onclick="handleLocationCheckbox('OnPrem');" />On Premise
                     </label>
                     <div id="onPremiseDetails" style="display:none;">
                         <div>
@@ -71,7 +71,7 @@
                 <h5 style="margin-top:20px;">Frequency </h5>
                 <div class="form-group form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxFrequency" onclick="revealTextFrequency" />Every
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxMultiple" onclick="handleFrequencyCheckbox('multiple');" />Multiple
                     </label>
                     <div id="frequency" style="display:none;">
                         <div id="numericFrequency">
@@ -79,10 +79,19 @@
                             <input type="number" asp-for="Frequency" class="form-control" />
                             <span asp-validation-for="Frequency" class="text-danger"></span>
                         </div>
-                        <div id="monthFrequency">
+                        <div style="margin-top: 20px; margin-bottom:20px;">
+                            <label asp-for="SelectedTimePeriod">Select a frequency</label>
+                            <select asp-for="SelectedTimePeriod" class="form-select" asp-items="Model.TimePeriods">
+                                <option value="">Select a frequency</option>
+                            </select>
                         </div>
                     </div>
                     
+                </div>
+                <div class="form-group form-check" id="singleSession">
+                    <label class="form-check-label">
+                        <input class="form-check-input custom-checkbox" id="toggleCheckboxSingle" type="checkbox" onclick="handleFrequencyCheckbox('single');"/>Once
+                    </label>
                 </div>
                
                 
@@ -131,43 +140,71 @@
 
 
 
-@{//Ripped Straight from chat Gpt, (well... learnt then modified)
+@{
  }
+
  <script>
-     document.getElementById("toggleCheckboxOnPrem").addEventListener("change", function revealText() {
-         const onPremiseDetails = document.getElementById("onPremiseDetails");
-         if (this.checked) {
-             onPremiseDetails.style.display = "block";
+     function handleLocationCheckbox(selected){
+        var onlineCheckbox = document.getElementById('toggleCheckboxOnline');
+        var onPremCheckbox = document.getElementById('toggleCheckboxOnPrem');
+        var onPremiseDetails = document.getElementById('onPremiseDetails');
+        var meetingLink = document.getElementById('meetingLink');
+         if (selected === 'Online') {
+             if (onlineCheckbox.checked) {
+                 onPremCheckbox.checked = false;
+                 meetingLink.style.display = "block";
+                 onPremiseDetails.style.display = "none";
+             }
+             else {
+                 meetingLink.style.display = "none";
+             }
          }
-         else {
-             onPremiseDetails.style.display = "none";
+         if (selected === 'OnPrem') {
+             if (onPremCheckbox.checked) {
+                 onlineCheckbox.checked = false;
+                 onPremiseDetails.style.display = "block";
+                 meetingLink.style.display = "none";
+             } else{
+                 onPremiseDetails.style.display = "none";
+             }
          }
-     });
+     }
 
  </script>
- <script>
-     document.getElementById("toggleCheckboxFrequency").addEventListener("change", function revealTextFrequency() {
-         const Frequency = document.getElementById("frequency");
-         if (this.checked) {
-             Frequency.style.display = "block";
-         } else {
-             Frequency.style.display = "none";
-         }
-         
-     })
-</script>
- <script>
-     document.getElementById("toggleCheckboxOnline").addEventListener("change", function revealTextOnline() {
-         const meetingLink = document.getElementById("meetingLink");
-         if (this.checked) {
-             meetingLink.style.display = "block";
-         }
-         else {
-             meetingLink.style.display = "none";
-         }
-     });
 
+ <script>
+     function handleFrequencyCheckbox(selected) {
+         var multipleCheckbox = document.getElementById('toggleCheckboxMultiple');
+         var singleCheckbox = document.getElementById('toggleCheckboxSingle');
+         var frequency = document.getElementById('frequency');
+         if(selected === 'single'){
+             if (singleCheckbox.checked) {
+                multipleCheckbox.checked = false;
+                frequency.style.display = "none";
+             }
+             else{
+                 frequency.style.display = "block";
+             }
+             
+             
+         }
+         if(selected === 'multiple'){
+             if (multipleCheckbox.checked) {
+                 singleCheckbox.checked = false;
+                 frequency.style.display = "block";
+             }
+             else{
+                 frequency.style.display = "none";
+             }
+         }
+     }
 </script>
+ 
+
+ 
+ 
+
+
     
 <script> 
     document.getElementById('sessionForm').addEventListener('submit', function (event) {

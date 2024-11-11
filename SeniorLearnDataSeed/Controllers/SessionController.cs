@@ -41,9 +41,17 @@ namespace SeniorLearnDataSeed.Controllers
 
                 var model = new SessionCreate
                 {
-                    CourseId = courseId
+                    CourseId = courseId,
+                    TimePeriods = Enum.GetValues(typeof(TimePeriodFrequency))
+                    .Cast<TimePeriodFrequency>()
+                    .Select(pt => new SelectListItem
+                    {
+                        Value = pt.ToString(),
+                        Text = pt.ToString()
+                    }).ToList()
 
                 };
+
 
                 var statuslist = new List<string>
                 {
@@ -113,17 +121,17 @@ namespace SeniorLearnDataSeed.Controllers
                         }
                         _context.Sessions.Add(s);
 
-                        if(m.FrequencyByTimePeriod.ToString() == "Month")
+                        if(m.SelectedTimePeriod.ToString() == "Month")
                         {
                             currentStartTime = currentStartTime.AddMonths(1);
                             currentEndTime = currentEndTime.AddMonths(1);
                         }
-                        else if(m.FrequencyByTimePeriod.ToString() == "Day")
+                        else if(m.SelectedTimePeriod.ToString() == "Day")
                         {
                             currentStartTime = currentStartTime.AddDays(1);
                             currentEndTime = currentEndTime.AddDays(1);
                         }
-                        else if(m.FrequencyByTimePeriod.ToString() == "Week")
+                        else if(m.SelectedTimePeriod.ToString() == "Week")
                         {
                             currentStartTime = currentStartTime.AddDays(7);
                             currentEndTime = currentEndTime.AddDays(7);
