@@ -43,10 +43,10 @@
                     </div>
                     
                 </div>
-                <h5 style="margin-top:20px;">On Premise Class </h5>
+                
                 <div class="form-group form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxOnPrem" onclick="revealTextOnline" />On Premise
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxOnPrem" onclick="revealText" />On Premise
                     </label>
                     <div id="onPremiseDetails" style="display:none;">
                         <div>
@@ -67,6 +67,22 @@
                         </div>
                         <p></p>
                     </div>
+                </div>
+                <h5 style="margin-top:20px;">Frequency </h5>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxFrequency" onclick="revealTextFrequency" />Every
+                    </label>
+                    <div id="frequency" style="display:none;">
+                        <div id="numericFrequency">
+                            <label asp-for="Frequency"></label>
+                            <input type="number" asp-for="Frequency" class="form-control" />
+                            <span asp-validation-for="Frequency" class="text-danger"></span>
+                        </div>
+                        <div id="monthFrequency">
+                        </div>
+                    </div>
+                    
                 </div>
                
                 
@@ -129,6 +145,17 @@
      });
 
  </script>
+ <script>
+     document.getElementById("toggleCheckboxFrequency").addEventListener("change", function revealTextFrequency() {
+         const Frequency = document.getElementById("frequency");
+         if (this.checked) {
+             Frequency.style.display = "block";
+         } else {
+             Frequency.style.display = "none";
+         }
+         
+     })
+</script>
  <script>
      document.getElementById("toggleCheckboxOnline").addEventListener("change", function revealTextOnline() {
          const meetingLink = document.getElementById("meetingLink");

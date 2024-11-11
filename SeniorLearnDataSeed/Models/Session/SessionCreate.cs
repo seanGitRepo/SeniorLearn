@@ -35,9 +35,23 @@ namespace SeniorLearnDataSeed.Models.Session
         public string? MeetingLink { get; set; } = null;
 
 
+        public int? Frequency { get; set; } = null;
+
+        public TimePeriodFrequency FrequencyByTimePeriod { get; set; }
+
+        
+
+
         
 
     }
+    public enum TimePeriodFrequency
+    {
+        Month,
+        Week,
+        Day
 
-  
+    }
+
+
 }

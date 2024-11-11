@@ -8,6 +8,7 @@ using SeniorLearnDataSeed.Models.Course;
 using SeniorLearnDataSeed.Models.Session;
 using SeniorLearnDataSeed.Models.Course;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -69,6 +70,76 @@ namespace SeniorLearnDataSeed.Controllers
         {
             ViewData["CourseName"] = courseName;
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMultiple (SessionCreate m)
+        {
+            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro")
+            {
+                if (ModelState.IsValid)
+                {
+
+                    DateTime currentStartTime = m.StartTime;
+                    DateTime currentEndTime = m.EndTime;
+                    
+                    for(int i = 0; i < m.Frequency; i++)
+                    {
+                        Session s;
+                        if(m.StreetName != null )
+                        {
+                             s = new OnPremSession
+                            {
+                                CourseId = m.CourseId,
+                                StartTime = currentStartTime,
+                                EndTime = currentEndTime,
+                                Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                                StreetNumber = m.StreetNumber, // OnPrem specific property
+                                StreetName = m.StreetName,
+                                Suburb = m.Suburb
+                            };
+                        }
+                        else 
+                        {
+                             s = new OnlineSession
+                            {
+                                CourseId = m.CourseId, // Set CourseId for the session
+                                StartTime = currentStartTime,
+                                EndTime = currentEndTime,
+                                Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                                OnlineLink = m.MeetingLink
+                            };
+                        }
+                        _context.Sessions.Add(s);
+
+                        if(m.FrequencyByTimePeriod.ToString() == "Month")
+                        {
+                            currentStartTime = currentStartTime.AddMonths(1);
+                            currentEndTime = currentEndTime.AddMonths(1);
+                        }
+                        else if(m.FrequencyByTimePeriod.ToString() == "Day")
+                        {
+                            currentStartTime = currentStartTime.AddDays(1);
+                            currentEndTime = currentEndTime.AddDays(1);
+                        }
+                        else if(m.FrequencyByTimePeriod.ToString() == "Week")
+                        {
+                            currentStartTime = currentStartTime.AddDays(7);
+                            currentEndTime = currentEndTime.AddDays(7);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return View("~/Views/Session/Confirmation.cshtml");
+                }
+                return View(m);
+                
+            }
+            else
+            {
+                return Forbid();
+            }
         }
 
         [HttpPost]
