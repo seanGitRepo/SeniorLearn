@@ -4,52 +4,187 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit a Course</h1>
 
 <hr />
+<form asp-action="Edit">
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="course-form-container" style="border: 2px solid #ccc; border-radius: 15px; padding: 40px;">
+           
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="10" style="resize: none;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Category" class="control-label"></label>
+                    <input asp-for="Category" class="form-control" />
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectedDifficulty" class="form-label">Difficulty</label>
+                    <select asp-for="SelectedDifficulty" class="form-select" asp-items="@Model.CourseDifficulty">
+                        <option value="">Select Difficulty</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-check" style="margin-bottom: 20px;">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="isStandAlone" /> @Html.DisplayNameFor(model => model.isStandAlone)
+                    </label>
+                </div>
+                
+                <input type="hidden" asp-for="CourseId" />
             
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <input asp-for="Category" class="form-control" />
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SelectedDifficulty" class="form-label">Difficulty</label>
-                <select asp-for="SelectedDifficulty" class="form-select" asp-items="@Model.CourseDifficulty">
-                    <option value="">Select Difficulty</option>
-                </select>
-            </div>
-            
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="isStandAlone" /> @Html.DisplayNameFor(model => model.isStandAlone)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-            <input type="hidden" asp-for="CourseId" />
-        </form>
+        </div>
+        
     </div>
 </div>
 
-<div class="form-group">
+<div class="form-group" style="margin-top:30px; display: flex; gap: 10px">
+    <input type="submit" value="Save" class="btn btn-primary" />
     <a asp-controller="Course" asp-action="MyCourses">
-        <button type="submit" class="btn btn-primary">Back To My Courses</button>
+        <button type="submit" class="btn text-danger">Back To My Courses</button>
     </a>
 </div>
+</form>
+
+
+<style>
+    .instruction-box {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: left;
+    }
+
+    /* Step container */
+    .step {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    /* Circle styling for the numbers */
+    .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #ccc color: #007bff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-right: 15px;
+        background-color: transparent;
+    }
+
+    .filled {
+        background-color: #f4978e;
+        color: white;
+        border: none;
+    }
+
+    /* Style for text next to the circle */
+    .step p {
+        margin: 0;
+        font-size: 1.1rem;
+        flex-grow: 1;
+        text-align: left;
+    }
+
+    .custom-checkbox {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        appearance: none;
+        -webkit-appearance: none;
+        outline: none;
+        border: 2px solid #007bff;
+        margin-right: 10px;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+        .custom-checkbox:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+            position: relative;
+        }
+
+    }
+
+    .custom-checkbox:checked::after {
+        content: '✔';
+        font-size: 14px;
+        color: white;
+        position: absolute;
+        top: 0;
+        left: 2px;
+        font-weight: bold;
+    }
+
+
+
+    .form-check-label {
+        padding-left: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .form-group textarea{
+        width: 100%;
+        height: 150px; 
+        resize: none;
+    }
+    .form-check-label{
+        padding-left: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    .course-form-container {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 40px;
+        width: 200%;
+    }
+
+    .row .col-md-8{
+        max-width: 110%;
+        margin: auto;
+    }
+
+    .instruction-box {
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .difficulty-options button {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+        .difficulty-options button.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+</style>
 

@@ -71,7 +71,7 @@
                 <h5 style="margin-top:20px;">Frequency </h5>
                 <div class="form-group form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxMultiple" onclick="handleFrequencyCheckbox('multiple');" />Multiple
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="toggleCheckboxMultiple" onclick="handleFrequencyCheckbox('multiple'); updateFormAction();" />Multiple
                     </label>
                     <div id="frequency" style="display:none;">
                         <div id="numericFrequency">
@@ -90,7 +90,7 @@
                 </div>
                 <div class="form-group form-check" id="singleSession">
                     <label class="form-check-label">
-                        <input class="form-check-input custom-checkbox" id="toggleCheckboxSingle" type="checkbox" onclick="handleFrequencyCheckbox('single');"/>Once
+                        <input class="form-check-input custom-checkbox" id="toggleCheckboxSingle" type="checkbox" onclick="handleFrequencyCheckbox('single'); updateFormAction();"/>Once
                     </label>
                 </div>
                
@@ -142,7 +142,20 @@
 
 @{
  }
+ <script>
+     function updateFormAction(){
+        var multipleCheckbox = document.getElementById('toggleCheckboxMultiple');
+        var singleCheckbox = document.getElementById('toggleCheckboxSingle');
+        var form = document.getElementById('sessionForm');
 
+        if (multipleCheckbox.checked) {
+            form, action = "/Session/CreateMultiple";
+        } else if (singleCheckbox.checked) {
+            form, action = "/Session/Create";
+        }
+     }
+     
+</script>
  <script>
      function handleLocationCheckbox(selected){
         var onlineCheckbox = document.getElementById('toggleCheckboxOnline');

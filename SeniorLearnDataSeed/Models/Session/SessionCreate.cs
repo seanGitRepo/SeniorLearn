@@ -35,10 +35,12 @@ namespace SeniorLearnDataSeed.Models.Session
 
         public string? MeetingLink { get; set; } = null;
 
-
+        
         public int? Frequency { get; set; } = null;
+        
 
         public TimePeriodFrequency SelectedTimePeriod { get; set; }
+        
         public List<SelectListItem> TimePeriods { get; set; }
 
         
