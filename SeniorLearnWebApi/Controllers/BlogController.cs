@@ -19,6 +19,7 @@ namespace SeniorLearnWebApi.Controllers
         }
         
 
+
         [HttpGet]
         [Authorize]
         public IActionResult Get()
