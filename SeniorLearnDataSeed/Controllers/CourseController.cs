@@ -284,7 +284,7 @@ namespace SeniorLearnDataSeed.Controllers
                 await _context.SaveChangesAsync();
 
 
-                return RedirectToAction("Index");
+                return RedirectToAction("MyCourses", "Course");
             }
             return RedirectToAction("HomeScreen", "Home");
         }

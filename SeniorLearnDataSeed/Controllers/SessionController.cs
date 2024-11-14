@@ -10,6 +10,7 @@ using SeniorLearnDataSeed.Models.Session;
 using SeniorLearnDataSeed.Models.Course;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace SeniorLearnDataSeed.Controllers
 {
@@ -25,6 +26,9 @@ namespace SeniorLearnDataSeed.Controllers
         {
             _context = context;
         }
+
+        [HttpGet]
+        [Route("list")]
         public async Task<IActionResult> Index() => View(await _context.Sessions.Select(p => new Models.Session.SessionDetails(p)).ToListAsync());// this will show every session in the databas.
 
 
@@ -40,9 +44,17 @@ namespace SeniorLearnDataSeed.Controllers
 
                 var model = new SessionCreate
                 {
-                    CourseId = courseId
+                    CourseId = courseId,
+                    TimePeriods = Enum.GetValues(typeof(TimePeriodFrequency))
+                    .Cast<TimePeriodFrequency>()
+                    .Select(pt => new SelectListItem
+                    {
+                        Value = pt.ToString(),
+                        Text = pt.ToString()
+                    }).ToList()
 
                 };
+
 
                 var statuslist = new List<string>
                 {
@@ -62,68 +74,138 @@ namespace SeniorLearnDataSeed.Controllers
             return Forbid();
         }
 
-        [HttpPost]
-        [Route("/Session/Create/{CourseId}")]
-        public async Task<IActionResult> Create(SessionCreate m)
+        [HttpGet]
+        [Route("confirmation")]
+
+        public IActionResult Confirmation(string courseName)
         {
+            ViewData["CourseName"] = courseName;
+            return View();
+        }
 
-            var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        
 
-            if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro") 
+            [HttpPost]
+            [Route("/Session/Create/{CourseId}")]
+            public async Task<IActionResult> Create(SessionCreate m)
             {
 
+                var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
-                if (ModelState.IsValid)
+                if (userRole == "Admin" || userRole == "Honourary" || userRole == "Pro")
                 {
+
+
+
                     Session session;
-
-
-                    // Check session type (discriminator)
-                    if (m.StreetName != null)
+                    if (m.Frequency == null || m.SelectedTimePeriod == null)
                     {
-                        session = new OnPremSession
+                        // Check session type (discriminator)
+                        if (m.StreetName != null)
                         {
+                            session = new OnPremSession
+                            {
 
-                            CourseId = m.CourseId, // Set CourseId for the session
-                            StartTime = m.StartTime,
-                            EndTime = m.EndTime,
-                            Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
-                            StreetNumber = m.StreetNumber, // OnPrem specific property
-                            StreetName = m.StreetName,
-                            Suburb = m.Suburb
+                                CourseId = m.CourseId, // Set CourseId for the session
+                                StartTime = m.StartTime,
+                                EndTime = m.EndTime,
+                                Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                                StreetNumber = m.StreetNumber, // OnPrem specific property
+                                StreetName = m.StreetName,
+                                Suburb = m.Suburb
 
 
-                        };
-                    }
-                    else if (m.MeetingLink != null)
-                    {
-                        session = new OnlineSession
+                            };
+                        }
+                        else if (m.MeetingLink != null)
                         {
-                            CourseId = m.CourseId, // Set CourseId for the session
-                            StartTime = m.StartTime,
-                            EndTime = m.EndTime,
-                            Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
-                            OnlineLink = m.MeetingLink // OnPrem specific property
-                        };
+                            session = new OnlineSession
+                            {
+                                CourseId = m.CourseId, // Set CourseId for the session
+                                StartTime = m.StartTime,
+                                EndTime = m.EndTime,
+                                Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                                OnlineLink = m.MeetingLink // OnPrem specific property
+                            };
+                        }
+                        else
+                        {
+                            Console.WriteLine("failed");
+                            return BadRequest("Invalid session type");
+                        }
+
+
+
+
+                        _context.Sessions.Add(session);
+                        await _context.SaveChangesAsync();
+                        //TODO:Redirect this to the same course page.
+                        return View("~/Views/Session/Confirmation.cshtml");
                     }
-                    else
+                    else if (m.Frequency != null && m.SelectedTimePeriod != null)
                     {
-                        Console.WriteLine("failed");
-                        return BadRequest("Invalid session type");
+                        DateTime currentStartTime = m.StartTime;
+                        DateTime currentEndTime = m.EndTime;
+
+                        for (int i = 0; i < m.Frequency; i++)
+                        {
+                            Session s;
+                            if (m.StreetName != null)
+                            {
+                                s = new OnPremSession
+                                {
+                                    CourseId = m.CourseId,
+                                    StartTime = currentStartTime,
+                                    EndTime = currentEndTime,
+                                    Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                                    StreetNumber = m.StreetNumber, // OnPrem specific property
+                                    StreetName = m.StreetName,
+                                    Suburb = m.Suburb
+                                };
+                            }
+                            else
+                            {
+                                s = new OnlineSession
+                                {
+                                    CourseId = m.CourseId, // Set CourseId for the session
+                                    StartTime = currentStartTime,
+                                    EndTime = currentEndTime,
+                                    Status = (SessionStatus)Enum.Parse(typeof(SessionStatus), m.SelectedStatus),
+                                    OnlineLink = m.MeetingLink
+                                };
+                            }
+                            _context.Sessions.Add(s);
+
+                            if (m.SelectedTimePeriod.ToString() == "Month")
+                            {
+                                currentStartTime = currentStartTime.AddMonths(1);
+                                currentEndTime = currentEndTime.AddMonths(1);
+                            }
+                            else if (m.SelectedTimePeriod.ToString() == "Day")
+                            {
+                                currentStartTime = currentStartTime.AddDays(1);
+                                currentEndTime = currentEndTime.AddDays(1);
+                            }
+                            else if (m.SelectedTimePeriod.ToString() == "Week")
+                            {
+                                currentStartTime = currentStartTime.AddDays(7);
+                                currentEndTime = currentEndTime.AddDays(7);
+                            }
+                        }
+
+                        await _context.SaveChangesAsync();
+                        return View("~/Views/Session/Confirmation.cshtml");
                     }
-
-
-
-
-                    _context.Sessions.Add(session);
-                    await _context.SaveChangesAsync();
-                    //TODO:Redirect this to the same course page.
-                    return RedirectToAction("Index", "Course");
                 }
 
-            }
             return Forbid();
-        }
+
+            }
+
+
+            
+        
+    
 
         [HttpGet]
         [Route("/Session/Edit/{SessionId}", Name = "EditSesh")]
@@ -262,7 +344,7 @@ namespace SeniorLearnDataSeed.Controllers
 
 
                 //TODO: get this to link back to course page.
-                return RedirectToAction("Details", "Course", m.SessionId);
+                return RedirectToAction("MyCourses", "Course", m.SessionId);
 
             }
             return Forbid();

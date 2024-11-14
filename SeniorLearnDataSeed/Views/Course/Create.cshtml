@@ -34,7 +34,7 @@
                         <button type="button" class="btn btn-secondary difficulty-btn" data-value="All Levels">All Levels</button>
                         <button type="button" class="btn btn-secondary difficulty-btn" data-value="Beginner">Beginner</button>
                         <button type="button" class="btn btn-secondary difficulty-btn" data-value="Intermediate">Intermediate</button>
-                        <button type="button" class="btn btn-secondary difficulty-btn" data-value="Expert">Expert</button>
+                        <button type="button" class="btn btn-secondary difficulty-btn" data-value="Advanced">Advanced</button>
                     </div>
                     <input type="hidden" asp-for="SelectedDifficulty" id="SelectedDifficulty" />
                     <span asp-validation-for="SelectedDifficulty" class="text-danger"></span>
@@ -74,16 +74,13 @@
                 <div class="circle">2</div>
                 <p>Add sessions</p>
             </div>
-            <div class="step">
-                <div class="circle">3</div>
-                <p>Confirmation</p>
-            </div>
+            
         </div>
     </div>
 </div>
 
 
-<div style="margin-top: 20px; margin-left: 30px;">
+<div style="margin-top: 40px; margin-left: 30px;">
     <a asp-controller="Home" asp-action="Index">
         <button type="submit" class="btn btn-primary">Back To Home</button>
     </a>
