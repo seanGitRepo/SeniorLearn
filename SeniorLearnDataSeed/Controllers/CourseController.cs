@@ -12,12 +12,14 @@ using SeniorLearnDataSeed.Models.Session;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 
 //TODO: there is no security when trying to access pages.
 
 namespace SeniorLearnDataSeed.Controllers
 {
+    [Authorize]
     public class CourseController : Controller
     {
         private readonly ApplicationDbContext _context;

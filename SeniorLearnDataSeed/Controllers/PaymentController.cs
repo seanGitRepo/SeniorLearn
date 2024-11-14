@@ -5,9 +5,11 @@ using SeniorLearnDataSeed.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Models.Payment;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SeniorLearnDataSeed.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
 
@@ -22,7 +24,7 @@ namespace SeniorLearnDataSeed.Controllers
         {
             return View("SignUp");
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminIndex()
         {
 
@@ -32,6 +34,7 @@ namespace SeniorLearnDataSeed.Controllers
             return View("PaymentAdmin", objPaymentList);
 
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -76,6 +79,7 @@ namespace SeniorLearnDataSeed.Controllers
             }
             
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateAdmin()
         {
             if (User.Identity.IsAuthenticated)
@@ -100,6 +104,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         [HttpPost]
+          [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateAdmin(PaymentRepository model)
         {
             if (User.Identity.IsAuthenticated)
@@ -130,7 +135,7 @@ namespace SeniorLearnDataSeed.Controllers
 
 
                 TempData["success"] = "subscribed successfully";
-                return RedirectToAction("PaymentAdmin");
+                return Redirect("AdminIndex");
             }
             else
             {
@@ -177,7 +182,7 @@ namespace SeniorLearnDataSeed.Controllers
             }
             
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int? PaymentId)
         {
 
@@ -231,6 +236,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? PaymentId, PaymentRepository model)
         {
             try
@@ -274,6 +280,7 @@ namespace SeniorLearnDataSeed.Controllers
             } 
                    
             }
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int? PaymentId)
         {
 
@@ -315,6 +322,7 @@ namespace SeniorLearnDataSeed.Controllers
 
         }
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult>DeletePOST(int? PaymentId, PaymentRepository model)
         {
             try

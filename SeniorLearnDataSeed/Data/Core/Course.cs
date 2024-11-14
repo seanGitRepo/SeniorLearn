@@ -9,7 +9,8 @@ namespace SeniorLearnDataSeed.Data.Core
         [Key]
         public int CourseId { get; set; }
 
-        //TODO: why is "required" here but not in Member class?
+        //
+        //: why is "required" here but not in Member class?
         [Required]
         public string Name { get; set; }
         [Required]
@@ -59,3 +60,7 @@ public static class Difficulty
 
 
 //TODO: have discussion about ui, calender for the sessions.
+//TODO: No way for members to see the courese that they are enrolled in.
+//TODO: Admin can not do the caterogy search, the coureses to not come up 
+//TODO: GO Through all to do's.
+//TODO: Let the user upload a phooto of the course they want to create.

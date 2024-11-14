@@ -29,7 +29,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SeniorLearnDataSeed</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/Images/logo.jpg" alt="SeniorLearn Logo" style="height: 100px; width: auto;">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -50,8 +52,7 @@
                             </form>
                         </li>
                                               <!--This is testing if the link is hidden for pro members-->
-                        @if(User.IsInRole(RoleDetail.Role_Admin) || User.IsInRole(RoleDetail.Role_User_Pro) 
-                        || User.IsInRole(RoleDetail.Role_User_Hon)){
+                        @if( User.IsInRole(RoleDetail.Role_User_Pro)  || User.IsInRole(RoleDetail.Role_User_Hon)){
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="MyCourses">My Created Courses</a>
                             </li>
@@ -62,28 +63,29 @@
                         @if (User.IsInRole(RoleDetail.Role_Admin))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Index">All Courses</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Page</a>
                             </li>
                         }
-                        @if (User.Identity.IsAuthenticated && (User.IsInRole(RoleDetail.Role_User_Standard) || User.IsInRole(RoleDetail.Role_User_Pro) || User.IsInRole(RoleDetail.Role_User_Hon) || User.IsInRole(RoleDetail.Role_Admin)))
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole(RoleDetail.Role_User_Standard) || User.IsInRole(RoleDetail.Role_User_Pro) || User.IsInRole(RoleDetail.Role_User_Hon) ))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="StandardMemberIndex">Available Courses</a>
                             </li>
                         }
 
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.Identity.IsAuthenticated && !(User.IsInRole(RoleDetail.Role_Admin)))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="SignUp">SignUp</a>
                             </li>
                         }
-                        @if(User.Identity.IsAuthenticated && User.IsInRole(RoleDetail.Role_Admin))
+                      @*   @if (User.Identity.IsAuthenticated && !(User.IsInRole(RoleDetail.Role_Admin)))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="AdminIndex">Payment Index Admin</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">My Courses</a>
                             </li>
-                        }
+                        } *@
+                        
 
                     </ul>
                     <partial name="_LoginPartial" />

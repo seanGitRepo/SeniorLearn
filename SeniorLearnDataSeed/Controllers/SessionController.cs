@@ -5,13 +5,16 @@ using Microsoft.Identity.Client;
 using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnDataSeed.Models.Course;
+
 using SeniorLearnDataSeed.Models.Session;
 using SeniorLearnDataSeed.Models.Course;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SeniorLearnDataSeed.Controllers
 {
     [Route("session")]
+    [Authorize]
     public class SessionController : Controller
     {
 
@@ -325,7 +328,7 @@ namespace SeniorLearnDataSeed.Controllers
                     await _context.SaveChangesAsync();
                 }
                 //TODO: get this to redirect back to the course page.
-                return RedirectToAction("Index", "Course");
+                return RedirectToAction("Index", "Session");
             }
             return Forbid();
         }

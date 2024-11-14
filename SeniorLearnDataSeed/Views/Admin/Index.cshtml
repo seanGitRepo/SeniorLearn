@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Admin Home";
+}
+
+<h2>Admin Dashboard</h2>
+<p>Welcome, Admin! Use the links below to manage different sections:</p>
+
+<div class="admin-links">
+    <button type="button" onclick="location.href='@Url.Action("adminUserList", "Admin")'" class="btn btn-primary">User List</button>
+    <button type="button" onclick="location.href='@Url.Action("adminListEdit", "Admin")'" class="btn btn-secondary">Edit User Roles</button>
+    <button type="button" onclick="location.href='@Url.Action("Index", "Course")'" class="btn btn-primary">All Courses</button>
+    <button type="button" onclick="location.href='@Url.Action("AdminIndex", "Payment")'" class="btn btn-primary">Payment</button>
+    <button type="button" onclick="location.href='@Url.Action("AdminEnrollIndex", "Enrollment")'" class="btn btn-primary">Enrollment</button>
+    <button type="button" onclick="location.href='@Url.Action("Index", "Session")'" class="btn btn-primary">Sessions</button>
+</div>
+
+<style>
+    /* Center the container with 15% margins on each side */
+    .admin-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns */
+        gap: 20px; /* Space between the buttons */
+        margin: 0 15%;
+    }
+
+        /* Optional: Style the buttons to have consistent width and height */
+        .admin-links button {
+            width: 100%; /* Make each button take full width of its grid cell */
+            height: 200px;
+            padding: 15px;
+            font-size: 32px;
+        }
+</style>

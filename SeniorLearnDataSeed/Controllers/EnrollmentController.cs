@@ -4,22 +4,77 @@ using SeniorLearnDataSeed.Models.Enrollments;
 using SeniorLearnDataSeed.Data;
 using Microsoft.EntityFrameworkCore;
 using SeniorLearnDataSeed.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SeniorLearnDataSeed.Controllers
 {
+    [Authorize]
     public class EnrollmentController : Controller
 
     {
         private readonly ApplicationDbContext _context;
 
+
+
         public EnrollmentController(ApplicationDbContext context)
         {
             _context = context;
         }
-        public IActionResult Index()
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminEnrollIndex()
         {
-            return View();
+            var enrollments = await _context.Enrollments
+                .Include(e => e.Session)
+                .ThenInclude(s => s.Course) // Including the Course to access IsStandAlone
+                .Include(e => e.ApplicationUser)
+                .ToListAsync();
+
+            // Map enrollments to `EnrollmentRepository` instances
+            var enrollmentRepositories = enrollments.Select(e => new EnrollmentRepository(e)).ToList();
+
+            // Separate standalone and recurring enrollments based on Course's IsStandAlone
+            var standaloneEnrollments = enrollmentRepositories.Where(e => e.standalone).ToList();
+            var recurringEnrollments = enrollmentRepositories.Where(e => !e.standalone).ToList();
+
+            var viewModel = new AdminEnrollIndexViewModel
+            {
+                StandaloneEnrollments = standaloneEnrollments,
+                RecurringEnrollments = recurringEnrollments
+            };
+
+            return View("AdminEnrollIndex",viewModel);
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+       public async Task<IActionResult> DeleteEnrollment(int id)
+        {
+            // Find the enrollment by ID
+            var enrollment = await _context.Enrollments.FindAsync(id);
+
+            if (enrollment == null)
+            {
+                TempData["error"] = "Enrollment not found";
+                return RedirectToAction(nameof(AdminEnrollIndex));
+            }
+
+            try
+            {
+                // Remove the enrollment from the database
+                _context.Enrollments.Remove(enrollment);
+                await _context.SaveChangesAsync();
+
+                TempData["success"] = "Enrollment deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Error deleting enrollment: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(AdminEnrollIndex));
+        }
+
 
         public IActionResult EnrollContinuousConfirmation(int courseId, int sessionId)
         {
@@ -101,12 +156,6 @@ namespace SeniorLearnDataSeed.Controllers
                     return Forbid();
 
                 }
-
-
-
-
-
-
 
             }
             else

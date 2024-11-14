@@ -46,6 +46,11 @@ namespace SeniorLearnDataSeed.Controllers
         public async Task<IActionResult> HomeScreen()
         {
 
+            if (User.Identity.IsAuthenticated)
+            {
+                return Redirect("HomeScreenLogged");
+            }
+
             List<SessionDetails> ListToSend = new List<SessionDetails>();
 
             var c = await _context.Courses.ToListAsync();
@@ -73,6 +78,39 @@ namespace SeniorLearnDataSeed.Controllers
 
             return View();
         }
+        [Authorize]
+        public async Task<IActionResult> HomeScreenLogged()
+        {
+            List<SessionDetails> ListToSend = new List<SessionDetails>();
+
+            var courses = await _context.Courses.ToListAsync();
+
+            foreach (var item in courses)
+            {
+                var listCourseSessions = await SessionDetailsList(item.CourseId);
+
+                foreach (var session in listCourseSessions)
+                {
+                    ListToSend.Add(session);
+                }
+            }
+
+            var user = User.Identity.Name;
+            ViewBag.UserName = user;
+            ViewData["Events"] = JSONListHelper.GetEventListJsonString(ListToSend);
+
+            // Retrieve and pass distinct categories for the dropdown
+            ViewBag.Categories = await _context.Courses
+                .Select(c => c.Category)
+                .Distinct()
+                .ToListAsync();
+
+
+
+
+            return View();
+        }
+
 
 
 

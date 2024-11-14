@@ -1,0 +1,148 @@
+﻿@model List<SeniorLearnDataSeed.Models.Session.SessionDetails>
+
+<h1 class="page-title">Sessions</h1>
+
+<!-- Sessions Table -->
+<table class="session-table">
+    <thead>
+        <tr>
+            <th>Session ID</th>
+            <th>Course Name</th>
+            <th>Start Date</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var session in Model)
+        {
+            <tr>
+                <td>@session.SessionId</td>
+                <td>@session.CourseName</td>
+                <td>@session.StartTime.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>@session.eventLocation</td>
+                <td>@session.status</td>
+                <td class="action-cell">
+                    <!-- View Button -->
+                    <a href="@Url.Action("Edit", "Session", new { id = session.SessionId })" class="btn btn-primary">Edit</a>
+                    <p></p>
+                    <!-- Delete Button -->
+                    <form asp-action="Delete" asp-route-id="@session.SessionId" method="post" style="display:inline-block;">
+                        <button type="submit" class="btn btn-secondary">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Back to the Admin List Button -->
+<div >
+    <button type="button" onclick="location.href='@Url.Action("Index", "Admin")'" class="btn btn-primary">Admin List</button>
+</div>
+
+<!-- Styling -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    .session-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+
+        .session-table th,
+        .session-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .session-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .session-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .session-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .action-cell {
+        text-align: center;
+    }
+
+    .btn-view {
+        padding: 6px 12px;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+        .btn-view:hover {
+            background-color: #388E3C;
+        }
+
+    .btn-delete {
+        padding: 6px 12px;
+        background-color: #f44336;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+        .btn-delete:hover {
+            background-color: #d32f2f;
+        }
+
+    .back-button-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn-back {
+        padding: 10px 20px;
+        background-color: #2196F3;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+        .btn-back:hover {
+            background-color: #1976D2;
+        }
+
+    .btn-primary {
+        padding: 10px 20px;
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #1976D2;
+        }
+</style>

@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senior Learn</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Welcome to Senior Learn</h1>
+    </header>
+
+    <!-- Search and Navigation Section -->
+    <div class="search-navigation">
+        <nav>
+            <ul>
+                <li><a class="nav-link" asp-area="" asp-controller="Course" asp-action="StandardMemberIndex">Available Courses</a></li>
+                <li><a class="nav-link" asp-area="" asp-controller="Payment" asp-action="SignUp">SignUp</a></li>
+                <li><a href="#">My Enrollments</a></li>
+            </ul>
+            <div class="user-icons">
+                <span class="icon-circle"></span>
+                <span class="icon-circle"></span>
+            </div>
+        </nav>
+
+        <!-- Categories Dropdown -->
+        <div class="categories">
+            <h5>Categories</h5>
+            <div class="dropdown">
+                <div class="dropdown-content">
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <a href="@Url.Action("StandardMemberIndex", "Course", new { searchString = category })">
+                            @category
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="main-content" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+        <div class="welcome-text" style="flex: 1; max-width: 60%;">
+            <p>
+                SeniorLearn is an intuitive online learning platform tailored specifically for older adults, offering a diverse range of courses designed to support lifelong learning, social connection, and personal growth. Through easy-to-navigate interfaces and user-friendly features, SeniorLearn enables members to browse, enroll, and participate in both one-time and recurring courses. The platform also provides role-based memberships—Standard, Professional, and Honorary—each offering unique benefits and access levels. Additionally, administrators have robust tools to manage enrollments, sessions, and user interactions, ensuring that each learning experience is well-organized and accessible. With thoughtful design elements, such as larger text, clear visuals, and simple navigation, SeniorLearn empowers seniors to engage with educational content at their own pace, fostering a sense of community and curiosity.
+            </p>
+        </div>
+        <div class="main-image" style="flex: 1; max-width: 40%;">
+            <img src="~/Images/oldpeopleinclassroom.jpg" alt="Course Image" style="width: 100%; height: auto; object-fit: cover; border-radius: 15px;">
+        </div>
+    </div>
+
+    <!-- Popular Courses Section -->
+    <div class="popular-courses" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-around;">
+        <div class="course-tile" style="width: 30%; background-color: #f1f1f1; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <h3>A Popular Course</h3>
+            <p>Short course description goes here.</p>
+        </div>
+        <div class="course-tile" style="width: 30%; background-color: #f1f1f1; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <h3>Another Popular Course</h3>
+            <p>Short course description goes here.</p>
+        </div>
+    </div>
+
+    <!-- Footer Section (if needed) -->
+    <footer>
+        <p>&copy; 2024 Senior Learn. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

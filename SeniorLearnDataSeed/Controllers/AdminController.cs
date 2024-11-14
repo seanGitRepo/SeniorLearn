@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 using System.Linq;
 using SeniorLearnDataSeed.Migrations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SeniorLearnDataSeed.Controllers
 {
+
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
 
@@ -55,6 +58,7 @@ namespace SeniorLearnDataSeed.Controllers
 
                         userDetails m = new userDetails
                         {
+                            
                             userName = user.UserName,
                             firstName = user.FirstName,
                             lastName = user.LastName,
@@ -76,6 +80,14 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         }
+
+
+        public IActionResult Index()
+        {
+
+            return View();
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> adminListEdit()
@@ -110,6 +122,9 @@ namespace SeniorLearnDataSeed.Controllers
 
                         };
 
+
+                    
+
                         userList.Add(m);
 
                     }
@@ -137,19 +152,41 @@ namespace SeniorLearnDataSeed.Controllers
 
                 if (userRole == "Admin")
                 {
+                    var roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
                     foreach (var userDetails in userList)
                     {
+                      
                         var user = await _userManager.FindByIdAsync(userDetails.userId);
+
                         if (user != null)
                         {
-                            user.FirstName = userDetails.firstName;
-                            user.LastName = userDetails.lastName;
 
-                            var currentRoles = await _userManager.GetRolesAsync(user);
-                            await _userManager.RemoveFromRolesAsync(user, currentRoles);
-                            await _userManager.AddToRoleAsync(user, userDetails.role);
+                            if (user.Id == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                            {// if the user is currently the system admin
 
-                            await _userManager.UpdateAsync(user);
+                                user.FirstName = userDetails.firstName;
+                                user.LastName = userDetails.lastName;
+
+                                await _userManager.UpdateAsync(user);
+
+                            }
+                            else
+                            {
+                                user.FirstName = userDetails.firstName;
+                                user.LastName = userDetails.lastName;
+
+
+                               
+
+                                var currentRoles = await _userManager.GetRolesAsync(user);
+
+                                await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+                                await _userManager.AddToRoleAsync(user, userDetails.role);
+
+                                await _userManager.UpdateAsync(user);
+                            }
+                            
                         }
                     }
 
