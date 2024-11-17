@@ -74,8 +74,43 @@ namespace SeniorLearnDataSeed.Controllers
 
             return RedirectToAction(nameof(AdminEnrollIndex));
         }
+        [Authorize]
+        public async Task<IActionResult> MemberIndex()
+        {
+
+            if (User.Identity.IsAuthenticated)
+            {
+
+                var user = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                var e = await _context.Enrollments
+                   .Where(c => c.ApplicationUserId == user)
+                   .Include(e => e.Session)
+                   .ThenInclude(s => s.Course) // Including the Course to access IsStandAlone
+                   .Include(e => e.ApplicationUser)
+                   .ToListAsync();
+
+                // Map enrollments to `EnrollmentRepository` instances
+                var enrollmentRepositories = e.Select(m => new EnrollmentRepository(m)).ToList();
+
+                // Separate standalone and recurring enrollments based on Course's IsStandAlone
+                var standaloneEnrollments = enrollmentRepositories.Where(e => e.standalone).ToList();
+                var recurringEnrollments = enrollmentRepositories.Where(e => !e.standalone).ToList();
+
+                var vm = new AdminEnrollIndexViewModel
+                {
+                    StandaloneEnrollments = standaloneEnrollments,
+                    RecurringEnrollments = recurringEnrollments
+                };
 
 
+                return View("MemberIndex", vm);
+
+        }
+            return RedirectToAction("HomeScreen", "Home");
+    }
+
+        [Authorize]
         public IActionResult EnrollContinuousConfirmation(int courseId, int sessionId)
         {
             var course = _context.Courses.FirstOrDefault(x => x.CourseId == courseId);
@@ -96,6 +131,7 @@ namespace SeniorLearnDataSeed.Controllers
         
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnrollContinuous(EnrollmentRepository enrollmentRepository, int courseId, int sessionId)
         {
@@ -167,6 +203,7 @@ namespace SeniorLearnDataSeed.Controllers
     
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Enroll(EnrollmentRepository enrollmentRepository, int courseId)
         {
             if (User.Identity.IsAuthenticated)

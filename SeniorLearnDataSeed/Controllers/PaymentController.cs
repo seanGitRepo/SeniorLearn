@@ -24,14 +24,52 @@ namespace SeniorLearnDataSeed.Controllers
         {
             return View("SignUp");
         }
+        
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminIndex()
         {
 
+           var objPaymentList = _context.Payments
+                .Include(c => c.User)
+                .ToList();
+
+            List<PaymentRepository> expriedRegistration = new List<PaymentRepository>();
+            List<PaymentRepository> inDateRegistration = new List<PaymentRepository>();
+            foreach (var item in objPaymentList)
+            {
+
+                var dateDiff = item.userRegistrationDate - DateTime.Now;
+
+                if (dateDiff.Days >= -365) // if true then this is an ok date diff
+                {
+
+                    PaymentRepository inDate = new PaymentRepository(item);
+
+                    inDateRegistration.Add(inDate);
+                }
+                else
+                {
+                    PaymentRepository expired = new PaymentRepository(item);
+
+                    expriedRegistration.Add(expired);
+                }
+
+            }
 
 
-            var objPaymentList = _context.Payments.ToList();
-            return View("PaymentAdmin", objPaymentList);
+
+
+
+
+            AdminIndexView x = new AdminIndexView
+            {
+                expriedRegistration = expriedRegistration,
+                inDateRegistration = inDateRegistration
+            };
+
+
+            return View("PaymentAdmin", x);
 
         }
         [Authorize(Roles = "Admin")]
@@ -55,8 +93,7 @@ namespace SeniorLearnDataSeed.Controllers
             
         }
 
-        //I was thinking that before the customer can access the homepage, there needs to be a check before accessing any page.
-
+        [Authorize]
         public IActionResult Create()
         {
             if (User.Identity.IsAuthenticated)
@@ -118,7 +155,7 @@ namespace SeniorLearnDataSeed.Controllers
                     PaymentType = model.SelectedPaymentType,
                     AmountPaid = model.AmountPaid,
                     ApplicationUserId = userID,
-                    userRegistrationDate = DateTime.UtcNow,
+                    userRegistrationDate = DateTime.Now.AddDays(-DateTime.Today.Day).AddMonths(1),
                 };
 
                 if (model.SelectedPaymentType == PaymentType.EFT || model.SelectedPaymentType == PaymentType.CreditCard)
@@ -144,6 +181,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(PaymentRepository model)
         {
             if (User.Identity.IsAuthenticated)
@@ -157,7 +195,7 @@ namespace SeniorLearnDataSeed.Controllers
                     PaymentType = model.SelectedPaymentType,
                     AmountPaid = model.AmountPaid,
                     ApplicationUserId = userID,
-                    userRegistrationDate = DateTime.UtcNow,
+                    userRegistrationDate = DateTime.Now.AddDays(-DateTime.Today.Day).AddMonths(1),
                 };
 
                 if(model.SelectedPaymentType == PaymentType.EFT || model.SelectedPaymentType == PaymentType.CreditCard)

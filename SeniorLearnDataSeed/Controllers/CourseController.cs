@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using SeniorLearnDataSeed.Models.Enrollments;
 
 
 //TODO: there is no security when trying to access pages.
@@ -78,7 +79,7 @@ namespace SeniorLearnDataSeed.Controllers
                 return RedirectToAction("HomeScreen", "Home");
             }
         }
-
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> MyCourses(string[] difficulties)
         {
             if (User.Identity.IsAuthenticated)
@@ -123,6 +124,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         // GET: Course/Index
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> Index()
         {
            
@@ -147,6 +149,7 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         // GET: Course/Create
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public IActionResult Create()
         {
 
@@ -171,6 +174,7 @@ namespace SeniorLearnDataSeed.Controllers
 
         // POST: Course/Create
         [HttpPost]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> Create(Create m)
         {
             if (User.Identity.IsAuthenticated)
@@ -223,6 +227,7 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         // GET: Course/Edit/5
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> Edit(int id)
         {
             if (User.Identity.IsAuthenticated)
@@ -259,6 +264,7 @@ namespace SeniorLearnDataSeed.Controllers
 
         // POST: Course/Edit/5
         [HttpPost]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> Edit(Edit model)
         {
             if (User.Identity.IsAuthenticated)
@@ -290,6 +296,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         // GET: Course/Delete/5
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> Delete(int id)
         {
             if (User.Identity.IsAuthenticated)
@@ -313,6 +320,7 @@ namespace SeniorLearnDataSeed.Controllers
 
         // POST: Course/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (User.Identity.IsAuthenticated)
@@ -335,7 +343,8 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         // GET: Course/Details/5
-        
+
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         public async Task<IActionResult> Details(int? id)
         {
             //TODO:have a button on the details page that selects edit, which brings up all the buttons to make changes, rather than having all the buttons at once.
@@ -481,6 +490,9 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         }
+
+      
+
         public async Task<List<SessionDetails>> SessionDetailsList(int CourseID)
         {
 

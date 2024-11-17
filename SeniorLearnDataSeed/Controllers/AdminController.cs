@@ -32,6 +32,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> adminUserList()
         {
             
@@ -90,6 +91,7 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> adminListEdit()
         {
             if (User.Identity.IsAuthenticated)
@@ -144,6 +146,7 @@ namespace SeniorLearnDataSeed.Controllers
         //post 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminEditSubmit(List<userDetails> userList)
         {
             if (User.Identity.IsAuthenticated)

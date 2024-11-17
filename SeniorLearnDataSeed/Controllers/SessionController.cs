@@ -29,10 +29,12 @@ namespace SeniorLearnDataSeed.Controllers
 
         [HttpGet]
         [Route("list")]
+        [Authorize]
         public async Task<IActionResult> Index() => View(await _context.Sessions.Select(p => new Models.Session.SessionDetails(p)).ToListAsync());// this will show every session in the databas.
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         [Route("/Session/Create/{CourseId}", Name = "CreaterSesh")]
         public IActionResult Create(int courseId)
         {
@@ -208,6 +210,7 @@ namespace SeniorLearnDataSeed.Controllers
     
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         [Route("/Session/Edit/{SessionId}", Name = "EditSesh")]
         public async Task<IActionResult> Edit(int SessionId)
         {
@@ -274,6 +277,7 @@ namespace SeniorLearnDataSeed.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         [Route("/Session/Edit/{SessionId}")]
         public async Task<IActionResult> Edit(SessionEdit m)
         {
@@ -352,6 +356,7 @@ namespace SeniorLearnDataSeed.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         [Route("/Session/Delete/{SessionId}", Name = "DeleteSesh")]
         public async Task<IActionResult> Delete(int SessionId)
         {
@@ -387,6 +392,7 @@ namespace SeniorLearnDataSeed.Controllers
 
         // POST: Course/Delete/5
         [HttpPost]
+        [Authorize(Roles = "Admin,Honourary,Pro")]
         [Route("/Session/Delete/{SessionId}")]
         public async Task<IActionResult> DeleteConfirmed(int SessionId)
         {

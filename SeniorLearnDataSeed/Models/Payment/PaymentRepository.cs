@@ -18,6 +18,7 @@ namespace SeniorLearnDataSeed.Models.Payment
             CardExpiry = p.CardExpiry;
             CVV = p.CVV;
             userRegistrationDate = p.userRegistrationDate;
+            User = p.User;
         }
 
         public PaymentRepository()
