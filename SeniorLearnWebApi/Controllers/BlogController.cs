@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
+using SeniorLearnDataSeed.Data;
+using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnWebApi.Data;
 using SeniorLearnWebApi.Models;
+
 
 namespace SeniorLearnWebApi.Controllers
 {
@@ -12,10 +17,14 @@ namespace SeniorLearnWebApi.Controllers
     {
 
         private readonly BlogRepository _repo;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BlogController(IConfiguration config)
+        public BlogController(IConfiguration config, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _repo = new BlogRepository(config);
+            _context = context;
+            _userManager = userManager;
         }
         
 
@@ -47,6 +56,16 @@ namespace SeniorLearnWebApi.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var user = _context.Users
+                    .OfType<ApplicationUser>()
+                    .FirstOrDefault(u => u.Id == userID);
+                //var user1 =  _userManager.FindByNameAsync(model.Username);
+                string fName = user.FirstName;
+                string lName = user.LastName;
+                string fullName = fName + " " + lName;
+                blog.ApplicationUserId = userID;
+                blog.CreatorName = fullName;
                 _repo.Save(blog);
                 return CreatedAtAction(nameof(GetBlog), new { Id = blog.BlogId }, blog);
             }

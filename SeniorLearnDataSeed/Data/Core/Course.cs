@@ -34,6 +34,7 @@ namespace SeniorLearnDataSeed.Data.Core
         public bool isStandAlone { get; set; }
 
 
+
         public Course()
         {
             Sessions = new List<Session>();

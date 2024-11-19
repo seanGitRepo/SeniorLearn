@@ -1,14 +1,21 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using SeniorLearnDataSeed.Data;
+using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnWebApi.Controllers;
 using SeniorLearnWebApi.Models;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace SeniorLearnWebApi.Data
 
 {
     public class BlogRepository
     {
         private readonly IMongoCollection<Blog> _blogsCollection;
+        private readonly ApplicationDbContext _context;
         public BlogRepository(IConfiguration config)
         {
             var connectionString = config.GetConnectionString("MongoDb");
@@ -16,6 +23,8 @@ namespace SeniorLearnWebApi.Data
             _blogsCollection = client
                 .GetDatabase("SeniorLearnDB")
                 .GetCollection<Blog>("Blogs");
+
+            
         }
 
 
@@ -54,6 +63,7 @@ namespace SeniorLearnWebApi.Data
         public void Save(Blog blog)
         {
             //blog.BlogId = GetNextId();
+            
             blogs.Add(blog);
             _blogsCollection.InsertOne(blog);
         }

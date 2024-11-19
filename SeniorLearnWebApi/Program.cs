@@ -49,6 +49,7 @@ namespace SeniorLearnWebApi
             });
             builder.Services.AddAuthentication(o =>
             {
+                o.DefaultAuthenticateScheme = "JWT_OR_COOKIE";
                 o.DefaultScheme = "JWT_OR_COOKIE";
                 o.DefaultChallengeScheme = "JWT_OR_COOKIE";
             })
@@ -61,7 +62,7 @@ namespace SeniorLearnWebApi
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-
+                        ValidateIssuerSigningKey = true,
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidAudience = builder.Configuration["Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Jwt:Key"])),

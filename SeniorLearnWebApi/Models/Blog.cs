@@ -12,7 +12,7 @@ namespace SeniorLearnWebApi.Models
         }
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("blog_id")]
+        [BsonElement("_id")]
         public ObjectId BlogId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
