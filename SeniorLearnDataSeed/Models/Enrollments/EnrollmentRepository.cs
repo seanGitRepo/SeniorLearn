@@ -15,8 +15,9 @@ namespace SeniorLearnDataSeed.Models.Enrollments
             standalone = e.Session.Course.isStandAlone; // Assuming `IsStandalone` is available in Session
             CourseName = e.Session.Course.Name;  // Assuming Course and Name are accessible
             UserName = e.ApplicationUser.UserName; // Assuming ApplicationUser and UserName are accessible
+            CourseId = e.Session.CourseId;
         }
-
+        public int? CourseId { get; set; }
         public int EnrollmentId { get; set; }
         public string ApplicationUserId { get; set; }
         public int SessionId { get; set; }
