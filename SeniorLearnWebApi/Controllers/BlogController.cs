@@ -7,6 +7,7 @@ using SeniorLearnDataSeed.Data;
 using SeniorLearnDataSeed.Data.Core;
 using SeniorLearnWebApi.Data;
 using SeniorLearnWebApi.Models;
+using System.Security.Claims;
 
 
 namespace SeniorLearnWebApi.Controllers
@@ -33,13 +34,25 @@ namespace SeniorLearnWebApi.Controllers
         [Authorize]
         public IActionResult Get()
         {
-            var result = _repo.GetAll();
+
+            var result = _repo.GetAll()
+                .Select(b => new
+                {
+                    BlogId = b.BlogId.ToString(),
+                    b.Title,
+                    b.Description,
+                    b.ApplicationUserId,
+                    b.CreatorName,
+                    b.PostDate
+                }).ToList();
             return Ok(result);
         }
 
         [HttpGet("{Id}")]
         public IActionResult GetBlog([FromRoute] ObjectId Id)
         {
+            
+
             var blog = _repo.GetById(Id);
             if(blog == null)
             {
@@ -56,7 +69,12 @@ namespace SeniorLearnWebApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userID = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userID))
+                {
+                    return Unauthorized("User ID not found");
+                }
+                    //User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 var user = _context.Users
                     .OfType<ApplicationUser>()
                     .FirstOrDefault(u => u.Id == userID);
@@ -75,8 +93,22 @@ namespace SeniorLearnWebApi.Controllers
         [HttpDelete("{Id}")]
         public IActionResult Delete([FromRoute] ObjectId Id)
         {
-            _repo.Delete(Id);
-            return Ok();
+            try
+            {
+                if(Id == ObjectId.Empty)
+                {
+                    return BadRequest(new { Error = "Invalid ObjectId provided." });
+                }
+                _repo.Delete(Id);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                Console.Error.WriteLine($"Error deleting blog: {ex.Message}");
+                return StatusCode(500, new {Error = ex.Message});
+                return StatusCode(500, new {Error = ex.Message});
+            }
+            
         }
     }
 }
