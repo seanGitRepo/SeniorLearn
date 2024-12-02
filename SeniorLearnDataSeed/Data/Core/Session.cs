@@ -65,6 +65,7 @@ namespace SeniorLearnDataSeed.Data.Core
         public Session Session { get; set; }
 
         public DateTime EnrolledDate = DateTime.Now;
+        
     }
 
 

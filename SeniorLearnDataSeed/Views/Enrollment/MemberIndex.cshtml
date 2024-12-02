@@ -53,6 +53,7 @@
                 <td>@enrollment.CourseName</td>
                 <td>@enrollment.UserName</td>
                 <td>@enrollment.EnrolledDate.ToShortDateString()</td>
+                <td>@enrollment.</td>
                 <td class="action-cell">
                       <button type="button"
                 onclick="location.href='@Url.Action("EnrollDetailsContinuous", "Course", new { id = enrollment.CourseId })'"
@@ -66,9 +67,7 @@
 </table>
 
 <!-- Back to the list button -->
-<div class="back-button-container">
-    <button type="button" onclick="location.href='@Url.Action("Index", "Admin")'" class="btn btn-primary">Admin List</button>
-</div>
+
 
 <!-- Clean Styling -->
 <style>

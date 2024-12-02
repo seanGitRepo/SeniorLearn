@@ -79,7 +79,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="SignUp">SignUp</a>
                             </li>
                         }
-                      @*   @if (User.Identity.IsAuthenticated && !(User.IsInRole(RoleDetail.Role_Admin)))
+                        @if(User.Identity.IsAuthenticated && !(User.IsInRole(RoleDetail.Role_Admin)))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Enrollment" asp-action="MemberIndex">My Enrollments</a>
+                            </li>
+                        }
+                        @*   @if (User.Identity.IsAuthenticated && !(User.IsInRole(RoleDetail.Role_Admin)))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">My Courses</a>
