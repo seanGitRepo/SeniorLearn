@@ -109,6 +109,7 @@ namespace SeniorLearnWebApi.Controllers
 
             existingBlog.Title = blog.Title;
             existingBlog.Description = blog.Description;
+            existingBlog.UrgencyStatus = blog.UrgencyStatus;
 
             _repo.Update(existingBlog);
 
