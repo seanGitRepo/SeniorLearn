@@ -41,7 +41,7 @@ namespace SeniorLearnWebApi.Controllers
                     BlogId = b.BlogId.ToString(),
                     b.Title,
                     b.Description,
-                    b.ApplicationUserId,
+                    CreatorId = b.ApplicationUserId,
                     b.CreatorName,
                     b.PostDate
                 }).ToList();
@@ -67,6 +67,8 @@ namespace SeniorLearnWebApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Blog blog)
         {
+
+            
             if (ModelState.IsValid)
             {
                 var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -90,15 +92,16 @@ namespace SeniorLearnWebApi.Controllers
             return BadRequest(ModelState);
         }
         [HttpPut("{id}")]
-        public IActionResult Put([FromRoute] ObjectId Id, [FromBody] Blog blog)
+        public IActionResult Put([FromRoute] string Id, [FromBody] Blog blog)
         {
+            var blogId = new ObjectId(Id);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);   
             }
 
 
-            var existingBlog = _repo.GetById(Id);
+            var existingBlog = _repo.GetById(blogId);
             if (existingBlog == null)
             {
                 return NotFound($"Blog with ID {Id} not found.");
@@ -117,16 +120,17 @@ namespace SeniorLearnWebApi.Controllers
         }
 
         [HttpDelete("{Id}")]
-        public IActionResult Delete([FromRoute] ObjectId Id)
+        public IActionResult Delete([FromRoute] string Id)
         {
             try
             {
-                if(Id == ObjectId.Empty)
+                var blogId = new ObjectId(Id);
+                if(blogId == ObjectId.Empty)
                 {
                     return BadRequest(new { Error = "Invalid ObjectId provided." });
                 }
 
-                var blog = _repo.GetById(Id);
+                var blog = _repo.GetById(blogId);
                 if (blog == null)
                 {
                     return NotFound(new { Error = "Blog not found." });
@@ -139,7 +143,7 @@ namespace SeniorLearnWebApi.Controllers
                 {
                     return Forbid();
                 }
-                _repo.Delete(Id);
+                _repo.Delete(blogId);
                 return Ok();
             }
             catch(Exception ex)

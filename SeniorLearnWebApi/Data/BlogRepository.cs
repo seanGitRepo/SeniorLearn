@@ -29,21 +29,7 @@ namespace SeniorLearnWebApi.Data
 
 
 
-        private static readonly List<Blog> blogs = new List<Blog>()
-        {
-            new Blog()
-            {
-                Title ="Test",
-                Description="Test",
-
-            },
-            new Blog()
-            {
-                Title ="Test2",
-                Description="Testing"
-            }
-
-        };
+        
         
 
         public IEnumerable<Blog> GetAll()
@@ -55,7 +41,7 @@ namespace SeniorLearnWebApi.Data
 
         public Blog? GetById(ObjectId Id)
         {
-            var blog = blogs.Where(b => b.BlogId == Id).FirstOrDefault();
+            var blog = _blogsCollection.Find(b => b.BlogId == Id).FirstOrDefault();
 
             return blog;
         }
@@ -64,14 +50,14 @@ namespace SeniorLearnWebApi.Data
         {
             //blog.BlogId = GetNextId();
             
-            blogs.Add(blog);
+            //blogs.Add(blog);
             _blogsCollection.InsertOne(blog);
         }
 
         public void Update(Blog blog)
         {
-            var blogToUpdate = blogs
-                .Where(b => b.BlogId == blog.BlogId)
+            var blogToUpdate = _blogsCollection
+                .Find(b => b.BlogId == blog.BlogId)
                 .FirstOrDefault();
             
 
@@ -95,7 +81,7 @@ namespace SeniorLearnWebApi.Data
             }
             else
             {
-                throw new Exception("Bog not found.");
+                throw new Exception("Blog not found.");
             }
         }
 
@@ -108,13 +94,13 @@ namespace SeniorLearnWebApi.Data
             }
         }
 
-        public ObjectId GetNextId()
-        {
-            ObjectId currentId = blogs.Select(b => b.BlogId)
-                .Max();
+        //public ObjectId GetNextId()
+        //{
+        //    ObjectId currentId = _blogsCollection.Find(b => b.BlogId)
+        //        .Max();
 
-            return currentId;
-            //need to add to this
-        }
+        //    return currentId;
+        //    //need to add to this
+        //}
     }
 }
