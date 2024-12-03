@@ -19,5 +19,14 @@ namespace SeniorLearnWebApi.Models
         public string? ApplicationUserId { get; set; }
         public string? CreatorName { get; set; }
         public DateTime PostDate { get; set; } = DateTime.Now;
+        public Urgency UrgencyStatus { get; set; }
     }
+}
+
+
+public enum Urgency
+{
+    NonUrgent,
+    Urgent,
+
 }

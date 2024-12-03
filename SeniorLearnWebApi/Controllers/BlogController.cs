@@ -89,6 +89,32 @@ namespace SeniorLearnWebApi.Controllers
             }
             return BadRequest(ModelState);
         }
+        [HttpPut("{id}")]
+        public IActionResult Put([FromRoute] ObjectId Id, [FromBody] Blog blog)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);   
+            }
+
+
+            var existingBlog = _repo.GetById(Id);
+            if (existingBlog == null)
+            {
+                return NotFound($"Blog with ID {Id} not found.");
+            }
+
+            existingBlog.Title = blog.Title;
+            existingBlog.Description = blog.Description;
+
+            _repo.Update(existingBlog);
+
+            return Ok(existingBlog);
+
+            
+                
+            
+        }
 
         [HttpDelete("{Id}")]
         public IActionResult Delete([FromRoute] ObjectId Id)
@@ -98,6 +124,20 @@ namespace SeniorLearnWebApi.Controllers
                 if(Id == ObjectId.Empty)
                 {
                     return BadRequest(new { Error = "Invalid ObjectId provided." });
+                }
+
+                var blog = _repo.GetById(Id);
+                if (blog == null)
+                {
+                    return NotFound(new { Error = "Blog not found." });
+                }
+
+                var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var isAdmin = User.IsInRole("Admin");
+
+                if(blog.ApplicationUserId != currentUserId && !isAdmin)
+                {
+                    return Forbid();
                 }
                 _repo.Delete(Id);
                 return Ok();
